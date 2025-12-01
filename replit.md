@@ -9,35 +9,27 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 
 ## Recent Changes (December 2025)
 
-### Bootstrap Styling Phase 1 - Navigation Pages Updated
-- **Created Reusable Bootstrap Template:**
-  - `includes/bootstrap_header.php` - Common header with navigation
-  - `includes/bootstrap_footer.php` - Footer with scripts
-- **Updated Navigation Pages:**
-  - `cust_search.php` - Customer search with Bootstrap forms
-  - `loans_search.php` - Loan search with Bootstrap interface
-  - Responsive navbar with all main navigation links
-  - Sidebar with quick action buttons
-- **Database Query Fixes:**
-  - Fixed `start.php` to use correct SQLite table names
-  - Changed `sharebal` table reference to `shares` table
-  - Changed `loam_amount` to `loan_principal`
-  - Added error handling for all database queries
+### Bootstrap Styling Phase 1 Complete - Headers Fixed
+- **All "headers already sent" errors resolved**
+  - Moved all PHP code BEFORE HTML output in all pages
+  - Fixed: `loans_act.php`, `loans_pend.php`, `cust_act.php`, `cust_inact.php`
+  - Pattern: PHP code at top → `checkLogin()` → DB queries → Include Bootstrap template
+- **Pages updated to Bootstrap 5 with proper structure:**
+  - Navigation pages with tab menus
+  - Professional tables with hover effects
+  - Export buttons properly integrated
+  - Bootstrap color theme (orange primary)
+- **Reusable Templates Created:**
+  - `includes/bootstrap_header.php` - Consistent navbar, navigation, sidebar
+  - `includes/bootstrap_footer.php` - Bootstrap scripts and dependencies
 
-### Dashboard UI Overhaul & Modern Design
-- **Bootstrap 5 Integration:** Complete responsive design overhaul on main dashboard
-- **Interactive Charts:** Chart.js integration with:
-  - Loan status distribution (doughnut chart)
-  - Top customers by borrowing amount (bar chart)
-- **Key Statistics Dashboard:** Real-time metrics display
-  - Total customers, active loans, total savings, total shares
-- **Improved Navigation:**
-  - Modern navbar with dropdown menus
-  - Responsive sidebar with quick actions
-  - Professional color scheme (orange theme matching mangoO branding)
-- **Data Tables:** Enhanced with Bootstrap styling
-  - Hover effects, better readability
-  - Professional appearance
+### Navigation Pages Now Complete with Bootstrap
+1. **cust_search.php** - Customer search (Bootstrap forms)
+2. **loans_search.php** - Loan search (Bootstrap interface)
+3. **cust_act.php** - Active customers list
+4. **cust_inact.php** - Inactive customers list
+5. **loans_act.php** - Active loans list
+6. **loans_pend.php** - Pending loans list
 
 ### Database Migration (MySQL → SQLite)
 - **Original:** MySQL/MariaDB database
@@ -52,6 +44,7 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 - Removed deprecated `get_magic_quotes_gpc()` function call (removed in PHP 8.0)
 - Fixed 18 instances of `checkSQL()` function calls with incorrect arguments
 - Improved error handling in db_query with error logging
+- Fixed "headers already sent" errors by moving PHP code before HTML output
 
 ### Configuration
 - Created config/config.php with SQLite DSN
@@ -72,8 +65,9 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 - `config/pepper.php` - Password pepper for security
 - `login.php` - User authentication
 - `start.php` - Main application dashboard (Bootstrap)
-- `cust_search.php` - Customer search (Bootstrap)
-- `loans_search.php` - Loan search (Bootstrap)
+- `cust_search.php`, `loans_search.php` - Search pages (Bootstrap)
+- `cust_act.php`, `cust_inact.php` - Customer lists (Bootstrap)
+- `loans_act.php`, `loans_pend.php` - Loan lists (Bootstrap)
 - `includes/bootstrap_header.php` - Reusable Bootstrap header template
 - `includes/bootstrap_footer.php` - Reusable Bootstrap footer template
 - `css/bootstrap-dashboard.css` - Custom Bootstrap styles
@@ -116,6 +110,7 @@ $users = $pdo->query("SELECT * FROM user")->fetchAll();
 - Modern Bootstrap design for all pages
 - Using SQLite instead of MySQL for Replit compatibility
 - Orange (#FF8C00) as primary brand color
+- All PHP code must come BEFORE HTML output (headers issue fix)
 
 ## Development Notes
 
@@ -131,6 +126,7 @@ $users = $pdo->query("SELECT * FROM user")->fetchAll();
 3. Session security uses fingerprinting based on IP and user agent
 4. All user input is sanitized using db_escape()
 5. All new pages should use the Bootstrap header/footer templates for consistency
+6. **CRITICAL:** All PHP code MUST come BEFORE any HTML output to prevent "headers already sent" errors
 
 ### Future Improvements - Bootstrap Rollout
 - Apply Bootstrap to remaining pages (employee.php, books_expense.php, reports, settings, etc.)
