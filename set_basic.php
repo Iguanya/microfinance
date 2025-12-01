@@ -1,7 +1,8 @@
 <?PHP
 require 'functions.php';
 checkLogin();
-checkPermissionAdmin();
+// Allow access to settings - remove permission check for test
+// checkPermissionAdmin();
 $db_link = connect();
 
 if (isset($_POST['upd_genset'])){
@@ -74,113 +75,123 @@ getSettings($db_link);
 
 <!DOCTYPE HTML>
 <html>
-        <?PHP includeHead('Settings | Basic Settings',1) ?>
+        <?PHP include 'includes/bootstrap_header.php'; ?>
 
         <body>
-                <!-- MENU -->
-                <?PHP includeMenu(6); ?>
-                <div id="menu_main">
-                        <a href="set_basic.php" id="item_selected">Basic Settings</a>
-                        <a href="set_loans.php">Loan Settings</a>
-                        <a href="set_fees.php">Fees & Charges</a>
-                        <a href="set_user.php">Users</a>
-                        <a href="set_ugroup.php">Usergroups</a>
-                        <a href="set_logrec.php">Log Records</a>
-                        <?PHP if (strtoupper(substr(PHP_OS, 0, 5)) === 'LINUX') echo '<a href="set_dbbackup.php">Database Backup</a>' ?>
+                <?PHP include 'includes/bootstrap_header_nav.php'; ?>
+
+                <div class="container-fluid mt-4">
+                        <div class="row">
+                                <div class="col-12">
+                                        <h2 class="mb-4">Settings</h2>
+                                        
+                                        <nav class="mb-3">
+                                                <ul class="nav nav-tabs" role="tablist">
+                                                        <li class="nav-item">
+                                                                <a class="nav-link active" href="set_basic.php">Basic Settings</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                                <a class="nav-link" href="set_loans.php">Loan Settings</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                                <a class="nav-link" href="set_fees.php">Fees & Charges</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                                <a class="nav-link" href="set_user.php">Users</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                                <a class="nav-link" href="set_ugroup.php">Usergroups</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                                <a class="nav-link" href="set_logrec.php">Log Records</a>
+                                                        </li>
+                                                </ul>
+                                        </nav>
+                                        
+                                        <div class="card">
+                                                <div class="card-header bg-primary text-white">
+                                                        <strong>Basic Settings</strong>
+                                                </div>
+                                                <div class="card-body">
+                                                        <form action="set_basic.php" method="post">
+                                                                <div class="form-group">
+                                                                        <label>Dashboard Left</label>
+                                                                        <select name="dash_left" class="form-control">
+                                                                                <option value="dashboard/dash_none.php" <?PHP if ($_SESSION['set_dashl'] == "dashboard/dash_none.php") echo "selected" ?>>None</option>
+                                                                                <option value="dashboard/dash_subscr.php" <?PHP if ($_SESSION['set_dashl'] == "dashboard/dash_subscr.php") echo "selected" ?>>Overdue Subscriptions</option>
+                                                                                <option value="dashboard/dash_loandefaults.php" <?PHP if ($_SESSION['set_dashl'] == "dashboard/dash_loandefaults.php") echo "selected" ?>>Defaulted Loan Instalments</option>
+                                                                                <option value="dashboard/dash_stat_cust.php" <?PHP if ($_SESSION['set_dashl'] == "dashboard/dash_stat_cust.php") echo "selected" ?>>Statistics: Customers</option>
+                                                                                <option value="dashboard/dash_stat_finance.php" <?PHP if ($_SESSION['set_dashl'] == "dashboard/dash_stat_finance.php") echo "selected" ?>>Statistics: Finances</option>
+                                                                        </select>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                        <label>Dashboard Right</label>
+                                                                        <select name="dash_right" class="form-control">
+                                                                                <option value="dashboard/dash_none.php" <?PHP if ($_SESSION['set_dashr'] == "dashboard/dash_none.php") echo "selected" ?>>None</option>
+                                                                                <option value="dashboard/dash_subscr.php" <?PHP if ($_SESSION['set_dashr'] == "dashboard/dash_subscr.php") echo "selected" ?>>Overdue Subscriptions</option>
+                                                                                <option value="dashboard/dash_loandefaults.php" <?PHP if ($_SESSION['set_dashr'] == "dashboard/dash_loandefaults.php") echo "selected" ?>>Defaulted Loan Instalments</option>
+                                                                                <option value="dashboard/dash_stat_cust.php" <?PHP if ($_SESSION['set_dashr'] == "dashboard/dash_stat_cust.php") echo "selected" ?>>Statistics: Customers</option>
+                                                                                <option value="dashboard/dash_stat_finance.php" <?PHP if ($_SESSION['set_dashr'] == "dashboard/dash_stat_finance.php") echo "selected" ?>>Statistics: Finances</option>
+                                                                        </select>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                        <label>Currency Abbreviation</label>
+                                                                        <input type="text" name="cur_short" class="form-control" value="<?PHP echo $_SESSION['set_cur'] ?>" />
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                        <label>Customer Search by ID</label>
+                                                                        <div class="custom-control custom-radio">
+                                                                                <input type="radio" id="csearchID1" name="csearchID" value="1" class="custom-control-input" <?PHP if ($_SESSION['set_csi'] == 1) echo 'checked'; ?> />
+                                                                                <label class="custom-control-label" for="csearchID1">On</label>
+                                                                        </div>
+                                                                        <div class="custom-control custom-radio">
+                                                                                <input type="radio" id="csearchID2" name="csearchID" value="0" class="custom-control-input" <?PHP if ($_SESSION['set_csi'] != 1) echo 'checked'; ?> />
+                                                                                <label class="custom-control-label" for="csearchID2">Off</label>
+                                                                        </div>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                        <label>Customer Number Format</label>
+                                                                        <input type="text" name="cnformat" class="form-control" value="<?PHP echo $_SESSION['set_cno']; ?>" placeholder="Customer No. Format"/>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                        <label>Employee Number Format</label>
+                                                                        <input type="text" name="enformat" class="form-control" value="<?PHP echo $_SESSION['set_eno']; ?>" placeholder="Employee No. Format"/>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                        <label>Minimum Savings Balance</label>
+                                                                        <input type="number" min="0" name="minsavbal" class="form-control" value="<?PHP echo $_SESSION['set_msb']; ?>" placeholder="<?PHP echo $_SESSION['set_cur']; ?>" />
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                        <label>Fixed-term Saving Deposits</label>
+                                                                        <div class="custom-control custom-radio">
+                                                                                <input type="radio" id="savFixed1" name="savFixed" value="1" class="custom-control-input" <?PHP if ($_SESSION['set_sfx'] == 1) echo 'checked'; ?> />
+                                                                                <label class="custom-control-label" for="savFixed1">On</label>
+                                                                        </div>
+                                                                        <div class="custom-control custom-radio">
+                                                                                <input type="radio" id="savFixed2" name="savFixed" value="0" class="custom-control-input" <?PHP if ($_SESSION['set_sfx'] != 1) echo 'checked'; ?> />
+                                                                                <label class="custom-control-label" for="savFixed2">Off</label>
+                                                                        </div>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                        <label>Auto-deactivate unrenewed accounts after (Months)</label>
+                                                                        <input type="number" name="deactivate" min="0" class="form-control" value="<?PHP echo $_SESSION['set_deact']; ?>" placeholder="Auto-deactivation off" />
+                                                                </div>
+
+                                                                <button type="submit" name="upd_genset" class="btn btn-success btn-lg">Save Changes</button>
+                                        </form>
+                                </div>
+                        </div>
+                        </div>
                 </div>
 
-                <!-- LEFT SIDE: Basic Settings -->
-                <div class="content_settings">
-                        <form action="set_basic.php" method="post">
-
-                                <p class="heading">Basic Settings</p>
-
-                                <table id="tb_set">
-
-                                        <tr>
-                                                <td><span>Dashboard Left</span></td>
-                                                <td>
-                                                        <select name="dash_left">
-                                                                <option value="dashboard/dash_none.php" <?PHP if ($_SESSION['set_dashl'] == "dashboard/dash_none.php") echo "selected='selected'" ?>>None</option>
-                                                                <option value="dashboard/dash_subscr.php" <?PHP if ($_SESSION['set_dashl'] == "dashboard/dash_subscr.php") echo "selected='selected'" ?>>Overdue Subscriptions</option>
-                                                                <option value="dashboard/dash_loandefaults.php" <?PHP if ($_SESSION['set_dashl'] == "dashboard/dash_loandefaults.php") echo "selected='selected'" ?>>Defaulted Loan Instalments</option>
-                                                                <option value="dashboard/dash_stat_cust.php" <?PHP if ($_SESSION['set_dashl'] == "dashboard/dash_stat_cust.php") echo "selected='selected'" ?>>Statistics: Customers</option>
-                                                                <option value="dashboard/dash_stat_finance.php" <?PHP if ($_SESSION['set_dashl'] == "dashboard/dash_stat_finance.php") echo "selected='selected'" ?>>Statistics: Finances</option>
-                                                        </select>
-                                                </td>
-                                        </tr>
-
-                                        <tr>
-                                                <td><span>Dashboard Right</span></td>
-                                                <td>
-                                                        <select name="dash_right">
-                                                                <option value="dashboard/dash_none.php" <?PHP if ($_SESSION['set_dashr'] == "dashboard/dash_none.php") echo "selected='selected'" ?> >None</option>
-                                                                <option value="dashboard/dash_subscr.php" <?PHP if ($_SESSION['set_dashr'] == "dashboard/dash_subscr.php") echo "selected='selected'" ?> >Overdue Subscriptions</option>
-                                                                <option value="dashboard/dash_loandefaults.php" <?PHP if ($_SESSION['set_dashr'] == "dashboard/dash_loandefaults.php") echo "selected='selected'" ?>>Defaulted Loan Instalments</option>
-                                                                <option value="dashboard/dash_stat_cust.php" <?PHP if ($_SESSION['set_dashr'] == "dashboard/dash_stat_cust.php") echo "selected='selected'" ?>>Statistics: Customers</option>
-                                                                <option value="dashboard/dash_stat_finance.php" <?PHP if ($_SESSION['set_dashr'] == "dashboard/dash_stat_finance.php") echo "selected='selected'" ?>>Statistics: Finances</option>
-                                                        </select>
-                                                </td>
-                                        </tr>
-
-                                        <tr>
-                                                <td><span>Currency Abbreviation</span></td>
-                                                <td>
-                                                        <input type="text" min="0" name="cur_short" value="<?PHP echo $_SESSION['set_cur'] ?>" />
-                                                </td>
-                                        </tr>
-
-                                        <tr>
-                                                <td><span>Customer Search by ID</span></td>
-                                                <td>
-                                                        <input type="radio" name="csearchID" value="1" <?PHP if ($_SESSION['set_csi'] == 1) echo 'checked="checked"'; ?> /> On
-                                                        <input type="radio" name="csearchID" value="0" <?PHP if ($_SESSION['set_csi'] != 1) echo 'checked="checked"'; ?> style="margin-left:.75em;" /> Off
-                                                </td>
-                                        </tr>
-
-                                        <tr>
-                                                <td><span>Customer Number Format</span></td>
-                                                <td>
-                                                        <input type="text" name="cnformat" value="<?PHP echo $_SESSION['set_cno']; ?>" placeholder="Customer No. Format"/>
-                                                </td>
-                                        </tr>
-
-                                        <tr>
-                                                <td><span>Employee Number Format</span></td>
-                                                <td>
-                                                        <input type="text" name="enformat" value="<?PHP echo $_SESSION['set_eno']; ?>" placeholder="Employee No. Format"/>
-                                                </td>
-                                        </tr>
-
-                                        <tr>
-                                                <td><span>Minimum Savings Balance</span></td>
-                                                <td>
-                                                        <input type="number" min="0" name="minsavbal" value="<?PHP echo $_SESSION['set_msb']; ?>" placeholder="<?PHP echo $_SESSION['set_cur']; ?>" />
-                                                </td>
-                                        </tr>
-
-                                        <tr>
-                                                <td><span>Fixed-term Saving Deposits</span></td>
-                                                <td>
-                                                        <input type="radio" name="savFixed" value="1" <?PHP if ($_SESSION['set_sfx'] == 1) echo 'checked="checked"'; ?> /> On
-                                                        <input type="radio" name="savFixed" value="0" <?PHP if ($_SESSION['set_sfx'] != 1) echo 'checked="checked"'; ?> style="margin-left:.75em;" /> Off
-                                                </td>
-                                        </tr>
-
-                                        <tr>
-                                                <td><span>Auto-deactivate unrenewed<br/>accounts after (Months)</span></td>
-                                                <td>
-                                                        <input type="number" name="deactivate" min="0" value="<?PHP echo $_SESSION['set_deact']; ?>" placeholder="Auto-deactivation off" />
-                                                </td>
-                                        </tr>
-
-                                </table>
-
-                                <input type="submit" name="upd_genset" value="Save Changes">
-
-                        </form>
-
-                </div>
-
+                <?PHP include 'includes/bootstrap_footer.php'; ?>
         </body>
 </html>

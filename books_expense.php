@@ -36,111 +36,130 @@ checkSQL($db_link, $query_exptype);
 
 <!DOCTYPE HTML>
 <html>
-        <?PHP includeHead('Expenses',0) ?>      
-                <script>
-                        function validate(form){
-                                fail = validateDate(form.exp_date.value)
-                                fail += validateAmount(form.exp_amount.value)
-                                fail += validateRecipient(form.exp_recipient.value)
-                                fail += validateVoucher(form.exp_voucher.value)
-                                if (fail == "") return true
-                                else { alert(fail); return false }
-                        }
-                </script>
-                <script src="functions_validate.js"></script>
-                <script src="function_randCheck.js"></script>
-        </head>
-        
+        <?PHP include 'includes/bootstrap_header.php'; ?>
+
         <body>
-        
-                <!-- MENU -->
-                <?PHP includeMenu(4); ?>
-                <div id="menu_main">
-                        <a href="start.php">Back</a>
-                        <a href="books_expense.php" id="item_selected">Expenses</a>
-                        <a href="books_income.php">Incomes</a>
-                        <a href="books_annual.php">Annual Accounts</a>
+                <?PHP include 'includes/bootstrap_header_nav.php'; ?>
+
+                <div class="container-fluid mt-4">
+                        <div class="row">
+                                <div class="col-12">
+                                        <h2 class="mb-4">Expenses Management</h2>
+                                        
+                                        <nav class="mb-3">
+                                                <ul class="nav nav-tabs" role="tablist">
+                                                        <li class="nav-item">
+                                                                <a class="nav-link" href="start.php">Dashboard</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                                <a class="nav-link active" href="books_expense.php">Expenses</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                                <a class="nav-link" href="books_income.php">Incomes</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                                <a class="nav-link" href="books_annual.php">Annual Accounts</a>
+                                                        </li>
+                                                </ul>
+                                        </nav>
+
+                                        <div class="row">
+                                                <div class="col-md-5">
+                                                        <div class="card mb-4">
+                                                                <div class="card-header bg-primary text-white">
+                                                                        <strong>New Expense Entry</strong>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                        <form action="books_expense.php" method="post">
+                                                                                <div class="form-group">
+                                                                                        <label>Date</label>
+                                                                                        <input type="text" id="datepicker" name="exp_date" class="form-control" value="<?PHP echo date("d.m.Y", $timestamp); ?>"/>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                        <label>Type</label>
+                                                                                        <select name="exptype_id" class="form-control">
+                                                                                                <?PHP
+                                                                                                while ($row_exptype = db_fetch_assoc($query_exptype)){
+                                                                                                        echo '<option value="'.$row_exptype['exptype_id'].'">'.$row_exptype['exptype_type'].'</option>';
+                                                                                                }
+                                                                                                ?>
+                                                                                        </select>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                        <label>Amount</label>
+                                                                                        <input type="number" name="exp_amount" class="form-control" placeholder="<?PHP echo $_SESSION['set_cur']; ?>" />
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                        <label>Paid To</label>
+                                                                                        <input type="text" name="exp_recipient" class="form-control"/>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                        <label>Voucher No</label>
+                                                                                        <input type="text" name="exp_voucher" class="form-control"/>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                        <label>Receipt No</label>
+                                                                                        <input type="text" name="exp_receipt" class="form-control" placeholder="if any"/>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                        <label>Details</label>
+                                                                                        <input type="text" name="exp_text" class="form-control"/>
+                                                                                </div>
+                                                                                <button type="submit" name="expnew" class="btn btn-success btn-lg btn-block">Add Expense</button>
+                                                                        </form>
+                                                                </div>
+                                                        </div>
+                                                </div>
+                                                
+                                                <div class="col-md-7">
+                                                        <div class="card">
+                                                                <div class="card-header bg-success text-white">
+                                                                        <strong>Recent Expenses (Last 60 Days)</strong>
+                                                                </div>
+                                                                <div class="card-body table-responsive">
+                                                                        <table class="table table-striped table-hover table-sm">
+                                                                                <thead class="thead-dark">
+                                                                                        <tr>
+                                                                                                <th>Date</th>
+                                                                                                <th>Type</th>
+                                                                                                <th>Amount</th>
+                                                                                                <th>Paid To</th>
+                                                                                                <th>Details</th>
+                                                                                                <th>Voucher</th>
+                                                                                                <th width="50px"></th>
+                                                                                        </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                        <?PHP
+                                                                                        while ($row_expcur = db_fetch_assoc($query_expcur)){
+                                                                                                if ($row_expcur['cust_id'] != 0 AND $row_expcur['cust_id'] != NULL){
+                                                                                                        $result_cust = getCustomer($row_expcur['cust_id']);
+                                                                                                        $exp_recipient = $result_cust['cust_name'];
+                                                                                                }
+                                                                                                else $exp_recipient = $row_expcur['exp_recipient'];
+                                                                                                echo '<tr>      
+                                                                                                        <td>'.date("d.m.Y",$row_expcur['exp_date']).'</td>
+                                                                                                        <td>'.$row_expcur['exptype_type'].'</td>
+                                                                                                        <td class="text-right">'.number_format($row_expcur['exp_amount']).' '.$_SESSION['set_cur'].'</td>
+                                                                                                        <td>'.$exp_recipient.'</td>
+                                                                                                        <td>'.$row_expcur['exp_text'].'</td>
+                                                                                                        <td>'.$row_expcur['exp_voucher'].'</td>
+                                                                                                        <td>';
+                                                                                                        if ($_SESSION['log_delete'] == 1) echo '<a href="books_expense_del.php?exp_id='.$row_expcur['exp_id'].'" class="btn btn-sm btn-danger">Delete</a>';
+                                                                                                echo '</td>
+                                                                                                </tr>';
+                                                                                        }
+                                                                                        ?>
+                                                                                </tbody>
+                                                                        </table>
+                                                                </div>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
                 </div>
-                
-                        
-                <!-- LEFT SIDE: Form for entering new expense -->
-                <div class="content_left">
-                        
-                        <p class="heading_narrow">New Expense</p>
-                        <form action="books_expense.php" method="post" onSubmit="return validate(this)">
-                                
-                                <table id="tb_fields">
-                                        <tr>
-                                                <td>Date:</td>
-                                                <td><input type="text" id="datepicker" name="exp_date" value="<?PHP echo date("d.m.Y", $timestamp); ?>"/></td>
-                                                <td>Type:</td>
-                                                <td>
-                                                        <select name="exptype_id">
-                                                                <?PHP
-                                                                while ($row_exptype = db_fetch_assoc($query_exptype)){
-                                                                        echo '<option value="'.$row_exptype['exptype_id'].'">'.$row_exptype['exptype_type'].'</option>';
-                                                                }
-                                                                ?>
-                                                        </select>
-                                                </td>
-                                        </tr>
-                                        <tr>
-                                                <td>Amount:</td>
-                                                <td><input type="number" name="exp_amount" placeholder="<?PHP echo $_SESSION['set_cur']; ?>" /></td>
-                                                <td>Payed to:</td>
-                                                <td><input type="text" name="exp_recipient"/></td>
-                                        </tr>
-                                        <tr>
-                                                <td>Voucher No:</td>
-                                                <td><input type="text" name="exp_voucher"/></td>
-                                                <td>Receipt No:</td>
-                                                <td><input type="text" name="exp_receipt" placeholder="if any"/></td>
-                                        </tr>
-                                        <tr>
-                                                <td>Details:</td>
-                                                <td><input type="text" name="exp_text"/></td>
-                                        </tr>
-                                </table>
-                                <input type="submit" name="expnew" value="New Entry" />
-                        </form>
-                </div>
-                
-                <!-- RIGHT SIDE: Recent Expenses -->
-                <div class="content_right">
-                        <table id="tb_table">
-                                <tr>
-                                        <th class="title" colspan="7">Recent Expenses</th>
-                                </tr>
-                                <tr>
-                                        <th>Date</th>
-                                        <th>Type</th>
-                                        <th>Amount</th>
-                                        <th>Payed to</th>
-                                        <th>Details</th>
-                                        <th>Voucher</th>
-                                        <th>Delete</th>
-                                </tr>
-                        <?PHP
-                        while ($row_expcur = db_fetch_assoc($query_expcur)){
-                                if ($row_expcur['cust_id'] != 0 AND $row_expcur['cust_id'] != NULL){
-                                        $result_cust = getCustomer($row_expcur['cust_id']);
-                                        $exp_recipient = $result_cust['cust_name'].' (<a href="customer.php?cust='.$row_expcur['cust_id'].'">'.$result_cust['cust_no'].'</a>)';
-                                }
-                                else $exp_recipient = $row_expcur['exp_recipient'];
-                                echo '<tr>      
-                                                                <td>'.date("d.m.Y",$row_expcur['exp_date']).'</td>
-                                                                <td>'.$row_expcur['exptype_type'].'</td>
-                                                                <td>'.number_format($row_expcur['exp_amount']).' '.$_SESSION['set_cur'].'</td>
-                                                                <td>'.$exp_recipient.'</td>
-                                                                <td>'.$row_expcur['exp_text'].'</td>
-                                                                <td>'.$row_expcur['exp_voucher'].'</td>
-                                                                <td>';
-                                                                if ($_SESSION['log_delete'] == 1) echo '<a href="books_expense_del.php?exp_id='.$row_expcur['exp_id'].'" onClick="return randCheck();" ><i class="fa fa-remove fa-lg"></i></a>';
-                                echo '  </td>
-                                                        </tr>';
-                        }
-                        ?>
-                        </table>
-                </div>
-        </body> 
+
+                <?PHP include 'includes/bootstrap_footer.php'; ?>
+        </body>
 </html>
