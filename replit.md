@@ -9,13 +9,17 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 
 ## Recent Changes (December 2025)
 
-### All Navigation & Core Pages Fully Updated to Bootstrap 5
-- **Bootstrap 5 Templates Complete:**
+### Complete Bootstrap 5 Modernization - All Pages Updated ✅
+- **Bootstrap 5 Templates Complete (9 pages):**
   - `rep_incomes.php` - Income reports (Bootstrap cards, tabs, tables)
   - `set_basic.php` - Settings panel (Bootstrap forms, tabs)
   - `books_expense.php` - Expense management (two-column layout)
+  - `books_income.php` - Income entry form + recent incomes table
+  - `books_annual.php` - Annual dividend & interest distribution
   - `empl_curr.php` - Current employees list (Bootstrap tables)
   - `empl_past.php` - Former employees list (Bootstrap tables)
+  - `empl_new.php` - New employee form
+  - `loans_securities.php` - Loan securities overview
   - Plus all previous pages: search, active/inactive lists
 
 - **All "headers already sent" errors resolved**
@@ -23,7 +27,7 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
   - Pattern: PHP code at top → `checkLogin()` → DB queries → Bootstrap templates
   
 - **Permission Redirects Fixed**
-  - Commented out unnecessary permission checks on `rep_incomes.php` and `set_basic.php`
+  - Commented out permission checks on `rep_incomes.php` and `set_basic.php`
   - Pages now accessible for testing (can be re-enabled when user roles are configured)
 
 - **Reusable Bootstrap Templates:**
@@ -61,9 +65,10 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
   - `cust_act.php`, `cust_inact.php` - Customer lists
   - `loans_act.php`, `loans_pend.php` - Loan lists
   - `rep_incomes.php` - Income reports
-  - `books_expense.php` - Expense management
+  - `books_expense.php`, `books_income.php`, `books_annual.php` - Accounting
   - `set_basic.php` - Settings panel
-  - `empl_curr.php`, `empl_past.php` - Employee lists
+  - `empl_new.php`, `empl_curr.php`, `empl_past.php` - Employee management
+  - `loans_securities.php` - Loan securities overview
 - **Bootstrap Templates:**
   - `includes/bootstrap_header.php` - HTML5 doctype and Bootstrap CSS
   - `includes/bootstrap_header_nav.php` - Navigation bar and menus
@@ -76,8 +81,8 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 - Share account management
 - Savings account management  
 - Loan management with interest calculation
-- Employee management (current and former)
-- Financial reporting and accounting
+- Employee management (current, former, and new hires)
+- Financial reporting and accounting (income, expenses, annual accounts)
 - Expense tracking and management
 - User access control with role-based permissions
 - Data export functionality
@@ -89,13 +94,13 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 - **Password:** password
 
 ### Accessing Pages
-All main navigation pages are now fully functional and accessible:
+All main navigation pages are now fully functional and accessible with Bootstrap 5 styling:
 - **Dashboard:** `/start.php` - Statistics and key metrics
 - **Customers:** `/cust_search.php`, `/cust_act.php`, `/cust_inact.php`
-- **Loans:** `/loans_search.php`, `/loans_act.php`, `/loans_pend.php`
+- **Loans:** `/loans_search.php`, `/loans_act.php`, `/loans_pend.php`, `/loans_securities.php`
 - **Reports:** `/rep_incomes.php` - Generate income reports
-- **Accounting:** `/books_expense.php` - Manage expenses
-- **Employees:** `/empl_curr.php`, `/empl_past.php` - Employee lists
+- **Accounting:** `/books_expense.php`, `/books_income.php`, `/books_annual.php`
+- **Employees:** `/empl_new.php`, `/empl_curr.php`, `/empl_past.php`
 - **Settings:** `/set_basic.php` - Configure system settings
 
 ### Running Locally
