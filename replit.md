@@ -63,6 +63,11 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 - **Username:** admin
 - **Password:** password
 
+### Setup & Migration
+Before first use or after deployment, access the setup panel:
+- **URL:** `/setup/`
+- **Features:** Check database status and run migrations
+
 ### Running Locally
 The application runs automatically via the "Start Application" workflow:
 ```bash
@@ -100,7 +105,21 @@ None documented yet.
 - Update to modern PHP framework (optional)
 
 ## Deployment
-Configured for Replit autoscale deployment. The app will run on port 5000 when deployed.
+
+### Production Considerations
+The SQLite database file (mangoo.db) persists in production. To ensure all test data is available on first deployment:
+
+**Manual Migration (One-time):**
+1. Access `/setup/` after deployment
+2. Click "Run Migration Now" to check for and insert missing data
+3. Verify all tables show record counts
+
+**CLI Migration:**
+```bash
+php setup/db_migrate.php
+```
+
+The application is configured for Replit autoscale deployment and will run on port 5000 when deployed.
 
 ## License
 GNU General Public License 3.0 (see LICENCE file)
