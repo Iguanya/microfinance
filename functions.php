@@ -18,19 +18,32 @@
         }
 
 /**
+        * Store the last database error for debugging
+        */
+        $GLOBALS['db_last_error'] = '';
+
+/**
         * Execute a query (PDO wrapper for mysqli_query)
+        * @param PDO $db_link Database connection
+        * @param string $sql SQL query to execute
+        * @return PDOStatement|bool Statement on success, false on failure
         */
         function db_query($db_link, $sql) {
                 try {
                         $stmt = $db_link->query($sql);
+                        $GLOBALS['db_last_error'] = '';
                         return $stmt;
                 } catch (PDOException $e) {
+                        $GLOBALS['db_last_error'] = $e->getMessage();
+                        error_log("Database query error: " . $e->getMessage() . " | SQL: " . substr($sql, 0, 200));
                         return false;
                 }
         }
 
 /**
         * Fetch associative array (PDO wrapper for mysqli_fetch_assoc)
+        * @param PDOStatement|bool $stmt Statement to fetch from
+        * @return array|false Associative array on success, false on failure
         */
         function db_fetch_assoc($stmt) {
                 if ($stmt instanceof PDOStatement) {
@@ -41,6 +54,8 @@
 
 /**
         * Fetch array (PDO wrapper for mysqli_fetch_array)
+        * @param PDOStatement|bool $stmt Statement to fetch from
+        * @return array|false Array on success, false on failure
         */
         function db_fetch_array($stmt) {
                 if ($stmt instanceof PDOStatement) {
@@ -51,8 +66,13 @@
 
 /**
         * Get error message (PDO wrapper for mysqli_error)
+        * @param PDO $db_link Database connection
+        * @return string Error message or empty string
         */
         function db_error($db_link) {
+                if (!empty($GLOBALS['db_last_error'])) {
+                        return $GLOBALS['db_last_error'];
+                }
                 if ($db_link instanceof PDO) {
                         $errorInfo = $db_link->errorInfo();
                         return isset($errorInfo[2]) ? $errorInfo[2] : '';
@@ -61,13 +81,17 @@
         }
 
 /**
-        * Escape string (PDO wrapper for mysqli_real_escape_string)
+        * Escape string for safe SQL insertion (PDO wrapper for mysqli_real_escape_string)
+        * @param PDO $db_link Database connection
+        * @param string $string String to escape
+        * @return string Escaped string
         */
         function db_escape($db_link, $string) {
                 if ($db_link instanceof PDO) {
-                        return substr($db_link->quote($string), 1, -1);
+                        $quoted = $db_link->quote($string);
+                        return substr($quoted, 1, -1);
                 }
-                return $string;
+                return addslashes($string);
         }
 
 /**
@@ -164,7 +188,7 @@
         function getSettings($db_link){
                 $sql_settings = "SELECT * FROM settings";
                 $query_settings = db_query($db_link, $sql_settings);
-                checkSQL($db_link, $query_settings, $db_link);
+                checkSQL($db_link, $query_settings);
                 while($row_settings = db_fetch_assoc($query_settings)){
 
                         switch ($row_settings['set_short']){
@@ -232,7 +256,7 @@
         function getFees($db_link){
                 $sql_fees = "SELECT * FROM fees";
                 $query_fees = db_query($db_link, $sql_fees);
-                checkSQL($db_link, $query_fees, $db_link);
+                checkSQL($db_link, $query_fees);
                 while ($row_fees = db_fetch_assoc($query_fees)){
                         switch ($row_fees['fee_short']){
                                 case "FEE_ENT":
@@ -276,7 +300,7 @@
         function getShareValue($db_link){
                 $sql_shareval = "SELECT shareval_value FROM shareval WHERE shareval_id IN (SELECT MAX(shareval_id) FROM shareval)";
                 $query_shareval = db_query($db_link, $sql_shareval);
-                checkSQL($db_link, $query_shareval, $db_link);
+                checkSQL($db_link, $query_shareval);
                 $result_shareval = db_fetch_assoc($query_shareval);
                 $_SESSION['share_value'] = $result_shareval['shareval_value'];
         }
@@ -287,7 +311,6 @@
         * @return string var : Secured and sanitized User Input
         */
         function sanitize($db_link, $var) {
-                if(get_magic_quotes_gpc()) $var = stripslashes($var);
                 $var = htmlentities($var);
                 $var = strip_tags($var);
                 $var = db_escape($db_link, $var);
@@ -463,7 +486,7 @@
                 $timestamp = time();
                 $sql_savbal_upd = "UPDATE savbalance SET savbal_balance = (SELECT SUM(sav_amount) FROM savings WHERE cust_id = $cust_id), savbal_fixed = (SELECT SUM(sav_amount) FROM savings WHERE cust_id = $cust_id and sav_fixed > $timestamp) WHERE cust_id = $cust_id";
                 $query_savbal_upd = db_query($db_link, $sql_savbal_upd);
-                checkSQL($db_link, $query_savbal_upd, $db_link);
+                checkSQL($db_link, $query_savbal_upd);
         }
 
 /**
@@ -472,7 +495,7 @@
         function updateSavingsBalanceAll($db_link){
                 $sql_savbal_upd_all = "UPDATE savbalance SET savbalance.savbal_balance = (SELECT SUM(savings.sav_amount) FROM savings WHERE savings.cust_id = savbalance.cust_id)";
                 $query_savbal_upd_all = db_query($db_link, $sql_savbal_upd_all);
-                checkSQL($db_link, $query_savbal_upd_all, $db_link);
+                checkSQL($db_link, $query_savbal_upd_all);
         }
 
 /**
@@ -483,7 +506,7 @@
                 //Select Loan Balance from LTRANS
                 $sql_balances = "SELECT ltrans_principaldue, ltrans_interestdue, ltrans_principal, ltrans_interest FROM ltrans WHERE ltrans.loan_id = '$loan_id'";
                 $query_balances = db_query($db_link, $sql_balances);
-                checkSQL($db_link, $query_balances, $db_link);
+                checkSQL($db_link, $query_balances);
 
                 //Calculate outstanding balances
                 $loan_balances = array(
@@ -511,7 +534,7 @@
         function getShareBalance($db_link, $cust_id){
                 $sql_sharebal = "SELECT share_amount, share_value FROM shares WHERE cust_id = $cust_id";
                 $query_sharebal = db_query($db_link, $sql_sharebal);
-                checkSQL($db_link, $query_sharebal, $db_link);
+                checkSQL($db_link, $query_sharebal);
                 $sharebal = array("amount" => "0", "value" => "0");
                 while($row_sharebal = db_fetch_assoc($query_sharebal)){
                         $sharebal['amount'] = $sharebal['amount'] + $row_sharebal['share_amount'];
@@ -527,7 +550,7 @@
         function getCustomer($db_link, $custID){
                 $sql_cust = "SELECT * FROM customer LEFT JOIN custsex ON customer.custsex_id = custsex.custsex_id LEFT JOIN custmarried ON customer.custmarried_id = custmarried.custmarried_id LEFT JOIN custsick ON customer.custsick_id = custsick.custsick_id LEFT JOIN user ON customer.user_id = user.user_id WHERE cust_id = '$custID'";
                 $query_cust = db_query($db_link, $sql_cust);
-                checkSQL($db_link, $query_cust, $db_link);
+                checkSQL($db_link, $query_cust);
                 $result_cust = db_fetch_assoc($query_cust);
 
                 return $result_cust;
@@ -540,7 +563,7 @@
         function getCustOther($db_link){
                 $sql_custother = "SELECT * FROM customer LEFT JOIN custsex ON custsex.custsex_id = customer.custsex_id WHERE cust_id NOT IN (0, $_SESSION[cust_id]) ORDER BY cust_id";
                 $query_custother = db_query($db_link, $sql_custother);
-                checkSQL($db_link, $query_custother, $db_link);
+                checkSQL($db_link, $query_custother);
 
                 return $query_custother;
         }
@@ -552,7 +575,7 @@
         function getCustAct($db_link){
                 $sql_custact = "SELECT * FROM customer LEFT JOIN custsex ON custsex.custsex_id = customer.custsex_id WHERE cust_id != 0 AND cust_active = 1 ORDER BY cust_id";
                 $query_custact = db_query($db_link, $sql_custact);
-                checkSQL($db_link, $query_custact, $db_link);
+                checkSQL($db_link, $query_custact);
 
                 return $query_custact;
         }
@@ -564,7 +587,7 @@
         function getCustInact($db_link){
                 $sql_custinact = "SELECT * FROM customer LEFT JOIN custsex ON custsex.custsex_id = customer.custsex_id WHERE cust_id != 0 AND cust_active != 1 ORDER BY cust_id";
                 $query_custinact = db_query($db_link, $sql_custinact);
-                checkSQL($db_link, $query_custinact, $db_link);
+                checkSQL($db_link, $query_custinact);
 
                 return $query_custinact;
         }
@@ -576,7 +599,7 @@
         function getCustAll($db_link){
                 $sql_custall = "SELECT * FROM customer LEFT JOIN custsex ON custsex.custsex_id = customer.custsex_id WHERE cust_id !=0";
                 $query_custall = db_query($db_link, $sql_custall);
-                checkSQL($db_link, $query_custall, $db_link);
+                checkSQL($db_link, $query_custall);
 
                 return $query_custall;
         }
@@ -589,7 +612,7 @@
                 $last_subscr = time() - convertDays(365); //Seconds for 365 days
                 $sql_custoverdue = "SELECT * FROM customer WHERE cust_active = 1 AND cust_lastsub < $last_subscr ORDER BY cust_lastsub, cust_id";
                 $query_custoverdue = db_query($db_link, $sql_custoverdue);
-                checkSQL($db_link, $query_custoverdue, $db_link);
+                checkSQL($db_link, $query_custoverdue);
 
                 return $query_custoverdue;
         }
@@ -642,7 +665,7 @@
         function getEmployee($db_link, $empl_id){
                 $sql_empl = "SELECT * FROM employee LEFT JOIN user ON employee.empl_id = user.empl_id WHERE employee.empl_id = $empl_id";
                 $query_empl = db_query($db_link, $sql_empl);
-                checkSQL($db_link, $query_empl, $db_link);
+                checkSQL($db_link, $query_empl);
                 $result_empl = db_fetch_assoc($query_empl);
 
                 return $result_empl;
@@ -656,7 +679,7 @@
                 $timestamp = time();
                 $sql_emplcurr = "SELECT * FROM employee LEFT JOIN emplsex ON employee.emplsex_id = emplsex.emplsex_id LEFT JOIN emplmarried ON employee.emplmarried_id = emplmarried.emplmarried_id WHERE empl_id != 0 AND (empl_out > $timestamp OR empl_out IS NULL) ORDER BY empl_id";
                 $query_emplcurr = db_query($db_link, $sql_emplcurr);
-                checkSQL($db_link, $query_emplcurr, $db_link);
+                checkSQL($db_link, $query_emplcurr);
 
                 return $query_emplcurr;
         }
@@ -669,7 +692,7 @@
                 $timestamp = time();
                 $sql_emplpast = "SELECT * FROM employee LEFT JOIN emplsex ON employee.emplsex_id = emplsex.emplsex_id LEFT JOIN emplmarried ON employee.emplmarried_id = emplmarried.emplmarried_id WHERE empl_id != 0 AND empl_out < $timestamp ORDER BY empl_id";
                 $query_emplpast = db_query($db_link, $sql_emplpast);
-                checkSQL($db_link, $query_emplpast, $db_link);
+                checkSQL($db_link, $query_emplpast);
 
                 return $query_emplpast;
         }
@@ -682,7 +705,7 @@
                 // Determine biggest employee ID
                 $sql_maxID = "SELECT MAX(empl_id) AS maxid FROM employee";
                 $query_maxID = db_query($db_link, $sql_maxID);
-                checkSQL($db_link, $query_maxID, $db_link);
+                checkSQL($db_link, $query_maxID);
                 $result_maxID = db_fetch_array($query_maxID);
 
                 // Read employee number format
@@ -723,7 +746,7 @@
                 $timestamp = time();
                 $sql_overdue = "SELECT * FROM ltrans LEFT JOIN loans ON ltrans.loan_id = loans.loan_id LEFT JOIN customer ON loans.cust_id = customer.cust_id WHERE ltrans_due <= $timestamp AND ltrans_date IS NULL AND loanstatus_id = 2 ORDER BY ltrans_due";
                 $query_overdue = db_query($db_link, $sql_overdue);
-                checkSQL($db_link, $query_overdue, $db_link);
+                checkSQL($db_link, $query_overdue);
                 return $query_overdue;
         }
 
