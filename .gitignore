@@ -44,13 +44,18 @@ Temporary Items
 
 # Individual files
 throw.php
-config/config.php
 *.odt#
 uploads/securities/L-5-1_Security-01.JPG
-config/pepper.php
 database/makeFresh.sql
-config/config.php
 
 # Idea Directories
 .idea
 *.iml
+
+# PHP temporary files
+*.log
+.phpunit.result.cache
+
+# Database conversion output
+database/mangoo_sqlite.sql
+convert_mysql_to_sqlite.php
