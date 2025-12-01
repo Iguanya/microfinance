@@ -4,7 +4,7 @@
 
 	// Connect to database
 	$db_link = mysqli_connect($_SESSION['db_host'], $_SESSION['db_user'], $_SESSION['db_pass'], $_SESSION['db_name']);
-	if(!$db_link) die('Could not connect to server '.$_SESSION['db_host'].': '.mysqli_error($db_link));
+	if(!$db_link) die('Could not connect to server '.$_SESSION['db_host'].': '.db_error($db_link));
 
 	require_once 'functions.php';
 
@@ -23,7 +23,7 @@
 
 		// Insert new admin user into database
 		$sql_makeadmin = "INSERT INTO user (user_name, user_pw, ugroup_id, empl_id, user_created) VALUES ('$admin_name', '$admin_pass', '1', '0', '$timestamp')";
-		$query_makeadmin = mysqli_query($db_link, $sql_makeadmin);
+		$query_makeadmin = db_query($db_link, $sql_makeadmin);
 		checkSQL($db_link, $query_makeadmin);
 
 		// Forward to setup_makeconf.php

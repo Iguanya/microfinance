@@ -32,7 +32,7 @@
 
 		//Insert into SHARES
 		$sql_insert_sh = "INSERT INTO shares (cust_id, share_date, share_amount, share_value, share_receipt, share_created, user_id) VALUES ('$_SESSION[cust_id]', '$share_date', '$share_amount', '$share_value', '$share_receipt', $timestamp, '$_SESSION[log_id]')";
-		$query_insert_sh = mysqli_query($db_link, $sql_insert_sh);
+		$query_insert_sh = db_query($db_link, $sql_insert_sh);
 		checkSQL($db_link, $query_insert_sh);
 
 		header('Location: acc_share_sale.php?cust='.$_SESSION['cust_id']);

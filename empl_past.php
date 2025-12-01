@@ -62,7 +62,7 @@
 			</tr>
 			<?PHP
 			$count = 0;
-			while ($row_emplpast = mysqli_fetch_assoc($query_emplpast)){
+			while ($row_emplpast = db_fetch_assoc($query_emplpast)){
 				echo '<tr>
 								<td><a href="employee.php?empl='.$row_emplpast['empl_id'].'">'.$row_emplpast['empl_no'].'</a></td>
 								<td>'.$row_emplpast['empl_name'].'</td>

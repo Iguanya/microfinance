@@ -1,7 +1,7 @@
 <?PHP
 //Select SHARES from database
 $sql_sha = "SELECT * FROM shares, user WHERE shares.user_id = user.user_id AND cust_id = '$_SESSION[cust_id]' ORDER BY share_date DESC";
-$query_sha = mysqli_query($db_link, $sql_sha);
+$query_sha = db_query($db_link, $sql_sha);
 checkSQL($db_link, $query_sha);
 
 //Make array for exporting data
@@ -38,7 +38,7 @@ $_SESSION['share_exp_title'] = $_SESSION['cust_id'].'_shares_'.$share_exp_date;
 	<?PHP
 	$amount_balance = 0;
 	$value_balance = 0;
-	while($row_sha = mysqli_fetch_assoc($query_sha)){
+	while($row_sha = db_fetch_assoc($query_sha)){
 		echo '<tr>
 						<td>'.date("d.m.Y",$row_sha['share_date']).'</td>
 						<td>'.$row_sha['share_amount'].'</td>

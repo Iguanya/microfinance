@@ -36,7 +36,7 @@
 
 		//Update CUSTOMER
 		$sql_update = "UPDATE customer SET cust_no = '$cust_no', cust_name = '$cust_name', cust_dob = $cust_dob, custsex_id = $custsex_id, cust_address = '$cust_address', cust_phone = '$cust_phone', cust_email = '$cust_email', cust_occup = '$cust_occup', custmarried_id = $custmarried_id, cust_heir = '$cust_heir', cust_heirrel = '$cust_heirrel', custsick_id = $custsick_id, cust_active = '$cust_active', cust_lastupd = $timestamp, user_id = $_SESSION[log_id] WHERE cust_id = $_SESSION[cust_id]";
-		$query_update = mysqli_query($db_link, $sql_update);
+		$query_update = db_query($db_link, $sql_update);
 		checkSQL($db_link, $query_update);
 		header('Location: customer.php?cust='.$_SESSION['cust_id']);
 	}
@@ -54,33 +54,33 @@
 
 	//Select Marital Status from custmarried for dropdown-menu
 	$sql_mstat = "SELECT * FROM custmarried";
-	$query_mstat = mysqli_query($db_link, $sql_mstat);
+	$query_mstat = db_query($db_link, $sql_mstat);
 	checkSQL($db_link, $query_mstat);
 
 	//Select Sicknesses from custsick for dropdown-menu
 	$sql_sick = "SELECT * FROM custsick";
-	$query_sick = mysqli_query($db_link, $sql_sick);
+	$query_sick = db_query($db_link, $sql_sick);
 	checkSQL($db_link, $query_sick);
 
 	//Select Sexes from custsex for dropdown-menu
 	$sql_sex = "SELECT * FROM custsex";
-	$query_sex = mysqli_query($db_link, $sql_sex);
+	$query_sex = db_query($db_link, $sql_sex);
 	checkSQL($db_link, $query_sex);
 
 	//Select Shares from SHARES
 	$sql_sha = "SELECT * FROM shares WHERE cust_id = '$_SESSION[cust_id]'";
-	$query_sha = mysqli_query($db_link, $sql_sha);
+	$query_sha = db_query($db_link, $sql_sha);
 	checkSQL($db_link, $query_sha);
 	$share_amount = 0;
 	$share_value = 0;
-	while($row_shares = mysqli_fetch_assoc($query_sha)){
+	while($row_shares = db_fetch_assoc($query_sha)){
 		$share_amount = $share_amount + $row_shares['share_amount'];
 		$share_value = $share_value + $row_shares['share_value'];
 	}
 
 	//Select the five most recent savings transactions for display
 	$sql_sav = "SELECT * FROM savings, savtype WHERE savings.savtype_id = savtype.savtype_id AND cust_id = '$_SESSION[cust_id]' ORDER BY sav_date DESC, sav_id DESC LIMIT 5" ;
-	$query_sav = mysqli_query($db_link, $sql_sav);
+	$query_sav = db_query($db_link, $sql_sav);
 	checkSQL($db_link, $query_sav);
 ?>
 
@@ -174,7 +174,7 @@
 										<td>Marital Status:</td>
 										<td>
 											<select name="custmarried_id" size="1" tabindex="9">';
-								while ($row_mstat = mysqli_fetch_assoc($query_mstat)){
+								while ($row_mstat = db_fetch_assoc($query_mstat)){
 									if($row_mstat ['custmarried_id'] == $result_cust['custmarried_id']){
 										echo '<option selected value="'.$row_mstat['custmarried_id'].'">'.$row_mstat['custmarried_status'].'</option>';
 									}
@@ -187,7 +187,7 @@
 										<td>Gender:</td>
 										<td>
 											<select name="custsex_id" size="1" tabindex="3">';
-								while ($row_sex = mysqli_fetch_assoc($query_sex)){
+								while ($row_sex = db_fetch_assoc($query_sex)){
 									if($row_sex ['custsex_id'] == $result_cust['custsex_id']){
 										echo '<option selected value="'.$row_sex['custsex_id'].'">'.$row_sex['custsex_name'].'</option>';
 									}
@@ -214,7 +214,7 @@
 										<td>Sickness:</td>
 										<td>
 											<select name="custsick_id" size="1" tabindex="12">';
-												while ($row_sick = mysqli_fetch_assoc($query_sick)){
+												while ($row_sick = db_fetch_assoc($query_sick)){
 													if($row_sick['custsick_id'] == $result_cust['custsick_id']){
 														echo '<option selected value="'.$row_sick['custsick_id'].'">'.$row_sick['custsick_name'].'</option>';
 													}
@@ -282,7 +282,7 @@
 					<th>Receipt/Slip</th>
 				</tr>
 			 <?PHP
-			 	while($row_sav = mysqli_fetch_assoc($query_sav)) {
+			 	while($row_sav = db_fetch_assoc($query_sav)) {
 					echo '<tr>
 									<td>'.date("d.m.Y",$row_sav['sav_date']).'</td>
 									<td>'.$row_sav['savtype_type'].'</td>
@@ -320,16 +320,16 @@
 				<?PHP
 				//Select all loans for current customer
 				$sql_loans = "SELECT * FROM loans, loanstatus WHERE loans.loanstatus_id = loanstatus.loanstatus_id AND cust_id = '$_SESSION[cust_id]'";
-				$query_loans = mysqli_query($db_link, $sql_loans);
+				$query_loans = db_query($db_link, $sql_loans);
 				checkSQL($db_link, $query_loans);
 
-				while ($row_loan = mysqli_fetch_assoc($query_loans)){
+				while ($row_loan = db_fetch_assoc($query_loans)){
 
 					//Select last unpaid Due Date from LTRANS
 					$sql_ltrans = "SELECT MIN(ltrans_due) FROM ltrans, loans WHERE ltrans.loan_id = loans.loan_id AND loans.loanstatus_id = '2' AND loans.loan_id = '$row_loan[loan_id]' AND ltrans_due IS NOT NULL AND ltrans_date IS NULL";
-					$query_ltrans = mysqli_query($db_link, $sql_ltrans);
+					$query_ltrans = db_query($db_link, $sql_ltrans);
 					checkSQL($db_link, $query_ltrans);
-					$next_due = mysqli_fetch_assoc($query_ltrans);
+					$next_due = db_fetch_assoc($query_ltrans);
 
 					// Get loan balances
 					$loan_balances = getLoanBalance($db_link, $row_loan['loan_id']);

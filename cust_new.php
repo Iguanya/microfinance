@@ -28,24 +28,24 @@
 
 		//Insert new Customer into CUSTOMER
 		$sql_insert = "INSERT INTO customer (cust_no, cust_name, cust_dob, custsex_id, cust_address, cust_phone, cust_email, cust_occup, custmarried_id, cust_heir, cust_heirrel, cust_since, custsick_id, cust_lastsub, cust_active, cust_lastupd, user_id) VALUES ('$cust_no', '$cust_name', '$cust_dob', '$custsex_id', '$cust_address', '$cust_phone', '$cust_email', '$cust_occup', $custmarried_id, '$cust_heir', '$cust_heirrel', $cust_since, $custsick_id, $cust_since, '1', $timestamp, $_SESSION[log_id])";
-		$query_insert = mysqli_query($db_link, $sql_insert);
+		$query_insert = db_query($db_link, $sql_insert);
 		checkSQL($db_link, $query_insert);
 
 		//Get new Customer's ID from CUSTOMER
 		$sql_maxid = "SELECT MAX(cust_id) FROM customer";
-		$query_maxid = mysqli_query($db_link, $sql_maxid);
+		$query_maxid = db_query($db_link, $sql_maxid);
 		checkSQL($db_link, $query_maxid);
-		$maxid = mysqli_fetch_assoc($query_maxid);
+		$maxid = db_fetch_assoc($query_maxid);
 		$_SESSION['cust_id'] = $maxid['MAX(cust_id)'];
 
 		//Insert Entrance Fee and Stationary Sales into INCOMES
 		$sql_insert_fee = "INSERT INTO incomes (cust_id, inctype_id, 	inc_amount, inc_date, inc_receipt, inc_created, user_id) VALUES ($_SESSION[cust_id], '1', $_SESSION[fee_entry], $cust_since, '$_SESSION[receipt_no]', $timestamp, $_SESSION[log_id]), ($_SESSION[cust_id], '6', $_SESSION[fee_stationary], $cust_since, '$_SESSION[receipt_no]', '$timestamp', '$_SESSION[log_id]')";
-		$query_insert_fee = mysqli_query($db_link, $sql_insert_fee);
+		$query_insert_fee = db_query($db_link, $sql_insert_fee);
 		checkSQL($db_link, $query_insert_fee);
 
 		//Create a new empty SAVBALANCE entry for the new customer
 		$sql_insert_savbal = "INSERT INTO savbalance (cust_id, savbal_balance, savbal_date, savbal_created, user_id) VALUES ('$_SESSION[cust_id]', '0', '$timestamp', '$timestamp', '$_SESSION[log_id]')";
-		$query_insert_savbal = mysqli_query($db_link, $sql_insert_savbal);
+		$query_insert_savbal = db_query($db_link, $sql_insert_savbal);
 		checkSQL($db_link, $query_insert_savbal);
 
 		//Refer to cust_new_pic.php
@@ -54,17 +54,17 @@
 
 	//Select Marital Status for Drop-down-Menu
 	$sql_mstat = "SELECT * FROM custmarried";
-	$query_mstat = mysqli_query($db_link, $sql_mstat);
+	$query_mstat = db_query($db_link, $sql_mstat);
 	checkSQL($db_link, $query_mstat);
 
 	//Select Sicknesses for Drop-down-Menu
 	$sql_sick = "SELECT * FROM custsick";
-	$query_sick = mysqli_query($db_link, $sql_sick);
+	$query_sick = db_query($db_link, $sql_sick);
 	checkSQL($db_link, $query_sick);
 
 	//Select Sexes from custsex for dropdown-menu
 	$sql_sex = "SELECT * FROM custsex";
-	$query_sex = mysqli_query($db_link, $sql_sex);
+	$query_sex = db_query($db_link, $sql_sex);
 	checkSQL($db_link, $query_sex);
 
 	//Build new CUST_NO
@@ -135,7 +135,7 @@
 						<td>
 							<select name="custsex_id" size="1" tabindex="3">';
 								<?PHP
-									while ($row_sex = mysqli_fetch_assoc($query_sex)){
+									while ($row_sex = db_fetch_assoc($query_sex)){
 										echo '<option value="'.$row_sex['custsex_id'].'">'.$row_sex['custsex_name'].'</option>';
 									}
 								?>
@@ -159,7 +159,7 @@
 						<td>
 							<select name="custmarried_id" size="1" tabindex="5">';
 								<?PHP
-								while ($row_mstat = mysqli_fetch_assoc($query_mstat)){
+								while ($row_mstat = db_fetch_assoc($query_mstat)){
 									echo '<option value="'.$row_mstat['custmarried_id'].'">'.$row_mstat['custmarried_status'].'</option>';
 								}
 								?>
@@ -169,7 +169,7 @@
 						<td>
 							<select name="custsick_id" size="1" tabindex="10">
 								<?PHP
-								while ($row_sick = mysqli_fetch_assoc($query_sick)){
+								while ($row_sick = db_fetch_assoc($query_sick)){
 									echo '<option value="'.$row_sick['custsick_id'].'">'.$row_sick['custsick_name'].'</option>';
 								}
 								?>

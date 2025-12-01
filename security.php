@@ -18,7 +18,7 @@
 
 		//Update SECURITY
 		$sql_update = "UPDATE securities SET sec_name = '$sec_name', sec_returned = '$sec_returned', sec_lastupd = $timestamp, user_id = $_SESSION[log_id] WHERE sec_id = $_SESSION[sec_id]";
-		$query_update = mysqli_query($db_link, $sql_update);
+		$query_update = db_query($db_link, $sql_update);
 		checkSQL($db_link, $query_update);
 
 		//Forward to this page

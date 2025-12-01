@@ -11,29 +11,29 @@
 	$users = array();
 	$user_names = array();
 	$sql_users = "SELECT user.user_id, user.user_name, user.user_created, ugroup.ugroup_id, ugroup.ugroup_name, employee.empl_id, employee.empl_name FROM user LEFT JOIN ugroup ON ugroup.ugroup_id = user.ugroup_id LEFT JOIN employee ON user.empl_id = employee.empl_id WHERE user.user_id != 0 ORDER BY user_name";
-	$query_users = mysqli_query($db_link, $sql_users);
+	$query_users = db_query($db_link, $sql_users);
 	checkSQL($db_link, $query_users);
-	while($row_users = mysqli_fetch_assoc($query_users)){
+	while($row_users = db_fetch_assoc($query_users)){
 		$users[] = $row_users;
 		$user_names[] = $row_users['user_name'];
 	}
 
 	//Select all usergroups from UGROUP
 	$sql_ugroup = "SELECT ugroup_id, ugroup_name FROM ugroup";
-	$query_ugroup = mysqli_query($db_link, $sql_ugroup);
+	$query_ugroup = db_query($db_link, $sql_ugroup);
 	checkSQL($db_link, $query_ugroup);
 
 	// Select all employees from EMPLOYEE
 	$sql_employees = "SELECT empl_id, empl_name FROM employee WHERE empl_id != 0";
-	$query_employees = mysqli_query($db_link, $sql_employees);
+	$query_employees = db_query($db_link, $sql_employees);
 	checkSQL($db_link, $query_employees);
 
 	// Select employees from EMPLOYEE who are already associated with a user
 	$sql_empl_assoc = "SELECT empl_id FROM employee WHERE empl_id != 0 AND empl_id IN (SELECT empl_id FROM user)";
-	$query_empl_assoc = mysqli_query($db_link, $sql_empl_assoc);
+	$query_empl_assoc = db_query($db_link, $sql_empl_assoc);
 	checkSQL($db_link, $query_empl_assoc);
 	$empl_assoc = array();
-	while($row_empl_assoc = mysqli_fetch_assoc($query_empl_assoc)){
+	while($row_empl_assoc = db_fetch_assoc($query_empl_assoc)){
 		$empl_assoc[] = $row_empl_assoc['empl_id'];
 	}
 
@@ -70,13 +70,13 @@
 		if($user_id == 0){
 			// Insert new user into USER
 			$sql_user_ins = "INSERT INTO user (user_name, user_pw, ugroup_id, empl_id, user_created) VALUES ('$user_name', '$user_pw', '$ugroup', '$empl_id', '$timestamp')";
-			$query_user_ins = mysqli_query($db_link, $sql_user_ins);
+			$query_user_ins = db_query($db_link, $sql_user_ins);
 			checkSQL($db_link, $query_user_ins);
 		}
 		else {
 			// Update existing user
 			$sql_user_upd = "UPDATE user SET user_name = '$user_name', user_pw = '$user_pw', ugroup_id = $ugroup, empl_id = $empl_id, user_created = $timestamp WHERE user_id = $user_id";
-			$query_user_upd = mysqli_query($db_link, $sql_user_upd);
+			$query_user_upd = db_query($db_link, $sql_user_upd);
 			checkSQL($db_link, $query_user_upd);
 		}
 		header('Location:set_user.php');
@@ -139,7 +139,7 @@
 							<td class="center">
 								<select name="ugroup" size="1" <?PHP if ($user_id == 1) echo ' disabled="disabled"'; ?> >
 									<?PHP
-									while ($row_ugroup = mysqli_fetch_assoc($query_ugroup)){
+									while ($row_ugroup = db_fetch_assoc($query_ugroup)){
 											echo '<option value="'.$row_ugroup['ugroup_id'].'"';
 											if (isset($user_ugroup) and $row_ugroup['ugroup_id'] == $user_ugroup) echo ' selected="selected	"';
 											echo '>'.$row_ugroup['ugroup_name'].'</option>';
@@ -154,7 +154,7 @@
 								<select name="empl_id" size="1">';
 									<option value="0">None</option>
 									<?PHP
-										while ($row_employees = mysqli_fetch_assoc($query_employees)){
+										while ($row_employees = db_fetch_assoc($query_employees)){
 											echo '<option value="'.$row_employees['empl_id'].'"';
 											if (isset($employee) and $row_employees['empl_id'] == $employee) echo ' selected="selected	"';
 											echo '>'.$row_employees['empl_name'].'</option>';

@@ -19,53 +19,53 @@
 		//Update Minimum Savings Balance
 		$new_minsavbal = sanitize($db_link, $_POST['minsavbal']);
 		$sql_upd_minsavbal = "UPDATE settings SET set_value = '$new_minsavbal' WHERE set_short = 'SET_MSB'";
-		$query_upd_minsavbal = mysqli_query($db_link, $sql_upd_minsavbal);
+		$query_upd_minsavbal = db_query($db_link, $sql_upd_minsavbal);
 		checkSQL($db_link, $query_upd_minsavbal);
 
 		//Update Account Deactivation option
 		$new_deact = sanitize($db_link, $_POST['deactivate']);
 		$sql_upd_deact = "UPDATE settings SET set_value = '$new_deact' WHERE set_short = 'SET_DEA'";
-		$query_upd_deact = mysqli_query($db_link, $sql_upd_deact);
+		$query_upd_deact = db_query($db_link, $sql_upd_deact);
 		checkSQL($db_link, $query_upd_deact);
 
 		//Update Dashboard Settings Left
 		$new_dash_left = sanitize($db_link, $_POST['dash_left']);
 		if ($new_deact != NULL )$new_dash_left = "dashboard/dash_subscr.php";
 		$sql_upd_dashl = "UPDATE settings SET set_value = '$new_dash_left' WHERE set_short = 'SET_DBL'";
-		$query_upd_dashl = mysqli_query($db_link, $sql_upd_dashl);
+		$query_upd_dashl = db_query($db_link, $sql_upd_dashl);
 		checkSQL($db_link, $query_upd_dashl);
 
 		//Update Dashboard Settings Right
 		$new_dash_right = sanitize($db_link, $_POST['dash_right']);
 		if ($_SESSION['set_auf'] != NULL) $new_dash_right = "dashboard/dash_loandefaults.php";
 		$sql_upd_dashr = "UPDATE settings SET set_value = '$new_dash_right' WHERE set_short = 'SET_DBR'";
-		$query_upd_dashr = mysqli_query($db_link, $sql_upd_dashr);
+		$query_upd_dashr = db_query($db_link, $sql_upd_dashr);
 		checkSQL($db_link, $query_upd_dashr);
 
 		//Update Customer Number Format
 		$new_cno = sanitize($db_link, $_POST['cnformat']);
 		$sql_upd_cno = "UPDATE settings SET set_value = '$new_cno' WHERE set_short = 'SET_CNO'";
-		$query_upd_cno = mysqli_query($db_link, $sql_upd_cno);
+		$query_upd_cno = db_query($db_link, $sql_upd_cno);
 		checkSQL($db_link, $query_upd_cno);
 
 		//Update Employee Number Format
 		$new_eno = sanitize($db_link, $_POST['enformat']);
 		$sql_upd_eno = "UPDATE settings SET set_value = '$new_eno' WHERE set_short = 'SET_ENO'";
-		$query_upd_eno = mysqli_query($db_link, $sql_upd_eno);
+		$query_upd_eno = db_query($db_link, $sql_upd_eno);
 		checkSQL($db_link, $query_upd_eno);
 
 		//Update Fixed-term Savings Deposits
 		if (isset($_POST['savFixed'])) $new_savFixed = sanitize($db_link, $_POST['savFixed']);
 		else $new_savFixed = 0;
 		$sql_upd_savFixed = "UPDATE settings SET set_value = '$new_savFixed' WHERE set_short = 'SET_SFX'";
-		$query_upd_savFixed = mysqli_query($db_link, $sql_upd_savFixed);
+		$query_upd_savFixed = db_query($db_link, $sql_upd_savFixed);
 		checkSQL($db_link, $query_upd_savFixed);
 
 		//Update Customer Search by ID
 		if (isset($_POST['csearchID'])) $new_csearchID = sanitize($db_link, $_POST['csearchID']);
 		else $new_csearchID = 0;
 		$sql_upd_csearchID = "UPDATE settings SET set_value = '$new_csearchID' WHERE set_short = 'SET_CSI'";
-		$query_upd_csearchID = mysqli_query($db_link, $sql_upd_csearchID);
+		$query_upd_csearchID = db_query($db_link, $sql_upd_csearchID);
 		checkSQL($db_link, $query_upd_csearchID);
 	}
 

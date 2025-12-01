@@ -4,7 +4,7 @@ $query_customers = getCustAll($db_link);
 
 // Fill array
 $customers = array();
-while ($row_customers = mysqli_fetch_assoc($query_customers)) {
+while ($row_customers = db_fetch_assoc($query_customers)) {
     $customers[] = $row_customers;
 }
 

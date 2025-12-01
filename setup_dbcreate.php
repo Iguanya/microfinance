@@ -41,8 +41,8 @@ if (!preg_match('/^[A-Za-z0-9_\-]+$/', $dbName)) {
 
 // Create database
 $sql = "CREATE DATABASE IF NOT EXISTS `" . $dbName . "` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
-if (!mysqli_query($mysqli, $sql)) {
-    $err = mysqli_error($mysqli);
+if (!db_query($mysqli, $sql)) {
+    $err = db_error($mysqli);
     mysqli_close($mysqli);
     http_response_code(500);
     die('Could not create database "' . htmlspecialchars($dbName) . '": ' . $err);

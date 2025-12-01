@@ -15,10 +15,10 @@
 
 		//Calculate new Loan Number
 		$sql_loanno = "SELECT loan_id FROM loans WHERE cust_id = '$_SESSION[cust_id]'";
-		$query_loanno = mysqli_query($db_link, $sql_loanno);
+		$query_loanno = db_query($db_link, $sql_loanno);
 		checkSQL($db_link, $query_loanno);
 		$numberofloans = array();
-		while ($row_loanno = mysqli_fetch_array($query_loanno)) $numberofloans[] = $row_loanno;
+		while ($row_loanno = db_fetch_array($query_loanno)) $numberofloans[] = $row_loanno;
 		$loan_no = 'L-'.$result_cust['cust_no'].'-'.(count($numberofloans) + 1);
 
 		//Sanitize user input
@@ -49,31 +49,31 @@
 
 		//Insert Loan into LOANS
 		$sql_insert_loan = "INSERT INTO loans (cust_id, loanstatus_id, loan_no, loan_date, loan_issued, loan_principal, loan_interest, loan_appfee_receipt, loan_fee, loan_insurance, loan_rate, loan_period, loan_repaytotal, loan_purpose, loan_guarant1, loan_guarant2, loan_guarant3, loan_created, loan_xtra1, loan_xtraFee1, user_id) VALUES ('$_SESSION[cust_id]', '1', '$loan_no', '$loan_date', '0', '$loan_principal', '$loan_interest', '$loan_appfee_receipt', '$loan_fee', '$loan_insurance', '$loan_rate', '$loan_period', $loan_repaytotal, '$loan_purpose', '$loan_guarant1', '$loan_guarant2', '$loan_guarant3', $timestamp, '$loan_xtra1', '$loan_xtraFee1', '$_SESSION[log_id]')";
-		$query_insert_loan = mysqli_query($db_link, $sql_insert_loan);
+		$query_insert_loan = db_query($db_link, $sql_insert_loan);
 		checkSQL($db_link, $query_insert_loan);
 
 		//Retrieve LOAN_ID of newly created loan from LOANS and pass to SESSION variable
 		$sql_newloanid = "SELECT MAX(loan_id) FROM loans WHERE cust_id = '$_SESSION[cust_id]'";
-		$query_newloanid = mysqli_query($db_link, $sql_newloanid);
+		$query_newloanid = db_query($db_link, $sql_newloanid);
 		checkSQL($db_link, $query_newloanid);
-		$result_newloanid = mysqli_fetch_assoc($query_newloanid);
+		$result_newloanid = db_fetch_assoc($query_newloanid);
 		$_SESSION['loan_id'] = $result_newloanid['MAX(loan_id)'];
 
 		//Insert loan securities into SECURITIES
 		if($loan_sec1 != ""){
 			$sql_insert_sec1 = "INSERT INTO securities (cust_id, loan_id, sec_no, sec_name, sec_value, sec_path, sec_returned) VALUES ($_SESSION[cust_id], $_SESSION[loan_id], '1', '$loan_sec1', 0, '', 0)";
-			$query_insert_sec1 = mysqli_query($db_link, $sql_insert_sec1);
+			$query_insert_sec1 = db_query($db_link, $sql_insert_sec1);
 			checkSQL($db_link, $query_insert_sec1);
 		}
 		if($loan_sec2 != ""){
 			$sql_insert_sec2 = "INSERT INTO securities (cust_id, loan_id, sec_no, sec_name, sec_value, sec_path, sec_returned) VALUES ($_SESSION[cust_id], $_SESSION[loan_id], '2', '$loan_sec2', 0, '', 0)";
-			$query_insert_sec2 = mysqli_query($db_link, $sql_insert_sec2);
+			$query_insert_sec2 = db_query($db_link, $sql_insert_sec2);
 			checkSQL($db_link, $query_insert_sec2);
 		}
 
 		//Insert Loan Application Fee into INCOMES
 		$sql_inc_laf = "INSERT INTO incomes (cust_id, loan_id, inctype_id, inc_amount, inc_date, inc_receipt, inc_created, user_id) VALUES ('$_SESSION[cust_id]', '$_SESSION[loan_id]', '7', '$_SESSION[fee_loanappl]', '$loan_date', '$loan_appfee_receipt', $timestamp, '$_SESSION[log_id]')";
-		$query_inc_laf = mysqli_query($db_link, $sql_inc_laf);
+		$query_inc_laf = db_query($db_link, $sql_inc_laf);
 		checkSQL($db_link, $query_inc_laf);
 
 		//Refer to LOAN_SEC.PHP
@@ -87,23 +87,23 @@
 
 	$guarantors = array();
 	if ($_SESSION['set_maxguar'] == ""){
-		while ($row_cust = mysqli_fetch_assoc($query_cust)){
+		while ($row_cust = db_fetch_assoc($query_cust)){
 			if ($row_cust['cust_active'] == 1) $guarantors[] = $row_cust;
 		}
 	}
 	else {
 		//Select all guarantors of active loans
 		$sql_guarantact = "SELECT loan_guarant1, loan_guarant2, loan_guarant3 FROM loans WHERE loanstatus_id = 2";
-		$query_guarantact = mysqli_query($db_link, $sql_guarantact);
+		$query_guarantact = db_query($db_link, $sql_guarantact);
 		checkSQL($db_link, $query_guarantact);
 		$guarantact = array();
-		while($row_guarantact = mysqli_fetch_assoc($query_guarantact)){
+		while($row_guarantact = db_fetch_assoc($query_guarantact)){
 			$guarantact[] = $row_guarantact;
 		}
 
 		//Choose only those customers as legitimate guarantors who are not guarantors for more than a specified number of active loans
 
-		while ($row_cust = mysqli_fetch_assoc($query_cust)){
+		while ($row_cust = db_fetch_assoc($query_cust)){
 			$guarant_count = 0;
 
 			foreach($guarantact as $ga){

@@ -10,62 +10,62 @@
 		//Update Interest Calculation Method
 		$new_intcalcmethod = sanitize($db_link, $_POST['intcalcmethod']);
 		$sql_upd_intcalcmethod = "UPDATE settings SET set_value = '$new_intcalcmethod' WHERE set_short = 'SET_ICL'";
-		$query_upd_intcalcmethod = mysqli_query($db_link, $sql_upd_intcalcmethod);
+		$query_upd_intcalcmethod = db_query($db_link, $sql_upd_intcalcmethod);
 		checkSQL($db_link, $query_upd_intcalcmethod);
 
 		//Update Interest Rate
 		$new_loaninterest = sanitize($db_link, $_POST['loaninterest']);
 		$sql_upd_loaninterest = "UPDATE fees SET fee_value = '$new_loaninterest' WHERE fee_short = 'FEE_LIR'";
-		$query_upd_loaninterest = mysqli_query($db_link, $sql_upd_loaninterest);
+		$query_upd_loaninterest = db_query($db_link, $sql_upd_loaninterest);
 		checkSQL($db_link, $query_upd_loaninterest);
 
 		//Update Minimum Loan Principal
 		$new_minLP = sanitize($db_link, $_POST['minLP']);
 		$sql_upd_minLP = "UPDATE settings SET set_value = '$new_minLP' WHERE set_short = 'SET_MLP'";
-		$query_upd_minLP = mysqli_query($db_link, $sql_upd_minLP);
+		$query_upd_minLP = db_query($db_link, $sql_upd_minLP);
 		checkSQL($db_link, $query_upd_minLP);
 
 		//Update Maximum Loan Principal
 		$new_maxLP = sanitize($db_link, $_POST['maxLP']);
 		$sql_upd_maxLP = "UPDATE settings SET set_value = '$new_maxLP' WHERE set_short = 'SET_XLP'";
-		$query_upd_maxLP = mysqli_query($db_link, $sql_upd_maxLP);
+		$query_upd_maxLP = db_query($db_link, $sql_upd_maxLP);
 		checkSQL($db_link, $query_upd_maxLP);
 
 		//Update Maximum Principal-Savings Ratio
 		$new_maxPSR = sanitize($db_link, $_POST['maxPSR']);
 		$sql_upd_maxPSR = "UPDATE settings SET set_value = '$new_maxPSR' WHERE set_short = 'SET_PSR'";
-		$query_upd_maxPSR = mysqli_query($db_link, $sql_upd_maxPSR);
+		$query_upd_maxPSR = db_query($db_link, $sql_upd_maxPSR);
 		checkSQL($db_link, $query_upd_maxPSR);
 
 		//Update Maximum Number of Guarantees any member can give
 		$new_maxGuar = sanitize($db_link, $_POST['maxGuar']);
 		$sql_upd_maxGuar = "UPDATE settings SET set_value = '$new_maxGuar' WHERE set_short = 'SET_GUA'";
-		$query_upd_maxGuar = mysqli_query($db_link, $sql_upd_maxGuar);
+		$query_upd_maxGuar = db_query($db_link, $sql_upd_maxGuar);
 		checkSQL($db_link, $query_upd_maxGuar);
 
 		//Update Minimum Length of Membership before Loan Application
 		$new_minMemb = sanitize($db_link, $_POST['minMemb']);
 		$sql_upd_minMemb = "UPDATE settings SET set_value = '$new_minMemb' WHERE set_short = 'SET_MEM'";
-		$query_upd_minMemb = mysqli_query($db_link, $sql_upd_minMemb);
+		$query_upd_minMemb = db_query($db_link, $sql_upd_minMemb);
 		checkSQL($db_link, $query_upd_minMemb);
 
 		//Update Auto-fine option
 		$new_auf = sanitize($db_link, $_POST['autofine']);
 		$sql_upd_auf = "UPDATE settings SET set_value = '$new_auf' WHERE set_short = 'SET_AUF'";
-		$query_upd_auf = mysqli_query($db_link, $sql_upd_auf);
+		$query_upd_auf = db_query($db_link, $sql_upd_auf);
 		checkSQL($db_link, $query_upd_auf);
 
 		//Update Additional Loans Input Field
 		$new_xl1 = sanitize($db_link, $_POST['xtraField1']);
 		$sql_upd_xl1 = "UPDATE settings SET set_value = '$new_xl1' WHERE set_short = 'SET_XL1'";
-		$query_upd_xl1 = mysqli_query($db_link, $sql_upd_xl1);
+		$query_upd_xl1 = db_query($db_link, $sql_upd_xl1);
 		checkSQL($db_link, $query_upd_xl1);
 
 		//If auto-fine option is enabled, make sure dashboard shows loan default list
 		if ($new_auf != NULL){
 			$new_dash_right = "dashboard/dash_loandefaults.php";
 			$sql_upd_dashr = "UPDATE settings SET set_value = '$new_dash_right' WHERE set_short = 'SET_DBR'";
-			$query_upd_dashr = mysqli_query($db_link, $sql_upd_dashr);
+			$query_upd_dashr = db_query($db_link, $sql_upd_dashr);
 			checkSQL($db_link, $query_upd_dashr);
 		}
 	}

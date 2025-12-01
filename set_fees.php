@@ -17,74 +17,74 @@
 		//Update Entrance Fee
 		$new_entryfee = sanitize($db_link, $_POST['entryfee']);
 		$sql_upd_entryfee = "UPDATE fees SET fee_value = '$new_entryfee' WHERE fee_id = 1";
-		$query_upd_entryfee = mysqli_query($db_link, $sql_upd_entryfee);
+		$query_upd_entryfee = db_query($db_link, $sql_upd_entryfee);
 		checkSQL($db_link, $query_upd_entryfee);
 
 		//Update Share Value
 		$new_shareval = sanitize($db_link, $_POST['shareval']);
 		if($new_shareval != $_SESSION['share_value']){
 			$sql_upd_shareval = "INSERT INTO shareval (shareval_date, shareval_value) VALUES ('$timestamp', '$new_shareval')";
-			$query_upd_shareval = mysqli_query($db_link, $sql_upd_shareval);
+			$query_upd_shareval = db_query($db_link, $sql_upd_shareval);
 			checkSQL($db_link, $query_upd_shareval);
 		}
 
 		//Update Withdrawal Fee
 		$new_withdrawfee = sanitize($db_link, $_POST['withdrawfee']);
 		$sql_upd_withdrawfee = "UPDATE fees SET fee_value = '$new_withdrawfee' WHERE fee_id = 2";
-		$query_upd_withdrawfee = mysqli_query($db_link, $sql_upd_withdrawfee);
+		$query_upd_withdrawfee = db_query($db_link, $sql_upd_withdrawfee);
 		checkSQL($db_link, $query_upd_withdrawfee);
 
 		//Update Price for Stationary Sales
 		$new_stationary = sanitize($db_link, $_POST['stationary']);
 		$sql_upd_stationary = "UPDATE fees SET fee_value = '$new_stationary' WHERE fee_id = 3";
-		$query_upd_stationary = mysqli_query($db_link, $sql_upd_stationary);
+		$query_upd_stationary = db_query($db_link, $sql_upd_stationary);
 		checkSQL($db_link, $query_upd_stationary);
 
 		//Update Annual Subscription Fee
 		$new_subscripfee = sanitize($db_link, $_POST['subscripfee']);
 		$sql_upd_subscripfee = "UPDATE fees SET fee_value = '$new_subscripfee' WHERE fee_id = 4";
-		$query_upd_subscripfee = mysqli_query($db_link, $sql_upd_subscripfee);
+		$query_upd_subscripfee = db_query($db_link, $sql_upd_subscripfee);
 		checkSQL($db_link, $query_upd_subscripfee);
 
 		//Update Loan Fee
 		$new_loanfeerate = sanitize($db_link, $_POST['loanfeerate']);
 		$sql_upd_loanfeerate = "UPDATE fees SET fee_value = '$new_loanfeerate' WHERE fee_id = 5";
-		$query_upd_loanfeerate = mysqli_query($db_link, $sql_upd_loanfeerate);
+		$query_upd_loanfeerate = db_query($db_link, $sql_upd_loanfeerate);
 		checkSQL($db_link, $query_upd_loanfeerate);
 
 		//Update Loan Application Fee
 		$new_lappfee = sanitize($db_link, $_POST['lappfee']);
 		$sql_upd_lappfee = "UPDATE fees SET fee_value = '$new_lappfee' WHERE fee_id = 6";
-		$query_upd_lappfee = mysqli_query($db_link, $sql_upd_lappfee);
+		$query_upd_lappfee = db_query($db_link, $sql_upd_lappfee);
 		checkSQL($db_link, $query_upd_lappfee);
 
 		//Update Loan Default Fine
 		$new_ldefaultfine = sanitize($db_link, $_POST['ldefaultfine']);
 		$sql_upd_ldefaultfine = "UPDATE fees SET fee_value = '$new_ldefaultfine' WHERE fee_id = 7";
-		$query_upd_ldefaultfine = mysqli_query($db_link, $sql_upd_ldefaultfine);
+		$query_upd_ldefaultfine = db_query($db_link, $sql_upd_ldefaultfine);
 		checkSQL($db_link, $query_upd_ldefaultfine);
 
 		//Update Loan Insurance Rate
 		$new_insurance = sanitize($db_link, $_POST['insurance']);
 		$sql_upd_insurance = "UPDATE fees SET fee_value = '$new_insurance' WHERE fee_short = 'FEE_INS'";
-		$query_upd_insurance = mysqli_query($db_link, $sql_upd_insurance);
+		$query_upd_insurance = db_query($db_link, $sql_upd_insurance);
 		checkSQL($db_link, $query_upd_insurance);
 
 		//Update Additional Fee on Loans
 		$new_xFee1 = sanitize($db_link, $_POST['xtraFee1']);
 		$new_xFee1_name = sanitize($db_link, $_POST['xtraFee1_name']);
 		$sql_upd_xFee1 = "UPDATE fees SET fee_name= '$new_xFee1_name', fee_value = '$new_xFee1' WHERE fee_short = 'FEE_XL1'";
-		$query_upd_xFee1 = mysqli_query($db_link, $sql_upd_xFee1);
+		$query_upd_xFee1 = db_query($db_link, $sql_upd_xFee1);
 		checkSQL($db_link, $query_upd_xFee1);
 		$sql_upd_inctype = "UPDATE inctype SET inctype_type = '$new_xFee1_name' WHERE inctype_short = 'INC_XL1'";
-		$query_upd_inctype = mysqli_query($db_link, $sql_upd_inctype);
+		$query_upd_inctype = db_query($db_link, $sql_upd_inctype);
 		checkSQL($db_link, $query_upd_inctype);
 
 		//Update option to include or exclude fixed deposits in coverage of default fines
 		if (isset($_POST['fixed4Fine'])) $new_f4f = sanitize($db_link, $_POST['fixed4Fine']);
 		else $new_f4f = 0;
 		$sql_upd_f4f = "UPDATE settings SET set_value = '$new_f4f' WHERE set_short = 'SET_F4F'";
-		$query_upd_f4f = mysqli_query($db_link, $sql_upd_f4f);
+		$query_upd_f4f = db_query($db_link, $sql_upd_f4f);
 		checkSQL($db_link, $query_upd_f4f);
 
 	}

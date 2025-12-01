@@ -31,7 +31,7 @@
 
 		//Update EMPLOYEE
 		$sql_update = "UPDATE employee SET empl_no = '$empl_no', empl_name = '$empl_name', empl_dob = $empl_dob, emplsex_id = $emplsex_id, emplmarried_id = '$emplmarried_id', empl_position = '$empl_position', empl_salary = '$empl_salary', empl_address = '$empl_address', empl_phone = '$empl_phone', empl_email = '$empl_email', empl_in = '$empl_in', empl_out = $empl_out, empl_lastupd = $timestamp, user_id = $_SESSION[log_id] WHERE empl_id = $_SESSION[empl_id]";
-		$query_update = mysqli_query($db_link, $sql_update);
+		$query_update = db_query($db_link, $sql_update);
 		checkSQL($db_link, $query_update);
 
 		// Forward to this page
@@ -40,12 +40,12 @@
 
 	//Select Sexes from EMPLSEX for dropdown-menu
 	$sql_sex = "SELECT * FROM emplsex";
-	$query_sex = mysqli_query($db_link, $sql_sex);
+	$query_sex = db_query($db_link, $sql_sex);
 	checkSQL($db_link, $query_sex);
 
 	//Select Marital Status from EMPLMARRIED for dropdown-menu
 	$sql_mstat = "SELECT * FROM emplmarried";
-	$query_mstat = mysqli_query($db_link, $sql_mstat);
+	$query_mstat = db_query($db_link, $sql_mstat);
 	checkSQL($db_link, $query_mstat);
 
 	//Select employee from EMPLOYEE
@@ -126,7 +126,7 @@
 										<td>Gender:</td>
 										<td>
 											<select name="emplsex_id" size="1" tabindex=3>';
-								while ($row_sex = mysqli_fetch_assoc($query_sex)){
+								while ($row_sex = db_fetch_assoc($query_sex)){
 									if($row_sex ['emplsex_id'] == $result_empl['emplsex_id']){
 										echo '<option selected value="'.$row_sex['emplsex_id'].'">'.$row_sex['emplsex_name'].'</option>';
 									}
@@ -149,7 +149,7 @@
 										<td>Maritial Status:</td>
 										<td>
 											<select name="emplmarried_id" size="1" tabindex=5>';
-											while ($row_mstat = mysqli_fetch_assoc($query_mstat)){
+											while ($row_mstat = db_fetch_assoc($query_mstat)){
 												if($row_mstat ['emplmarried_id'] == $result_empl['emplmarried_id']){
 													echo '<option selected value="'.$row_mstat['emplmarried_id'].'">'.$row_mstat['emplmarried_status'].'</option>';
 												}

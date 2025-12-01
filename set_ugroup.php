@@ -10,9 +10,9 @@
 	//Select all Usergroups from UGROUP
 	$ugroups = array();
 	$sql_ugroups = "SELECT * FROM ugroup";
-	$query_ugroups = mysqli_query($db_link, $sql_ugroups);
+	$query_ugroups = db_query($db_link, $sql_ugroups);
 	checkSQL($db_link, $query_ugroups);
-	while($row_ugroups = mysqli_fetch_assoc($query_ugroups)){
+	while($row_ugroups = db_fetch_assoc($query_ugroups)){
 		$ugroups[] = $row_ugroups;
 		$ugroup_names[] = $row_ugroups['ugroup_name'];
 	}
@@ -54,14 +54,14 @@
 		if ($ugroup_id == 0){
 			//Insert new usergroup into UGROUP
 			$sql_ugroup_insert = "INSERT INTO ugroup (ugroup_name, ugroup_admin, ugroup_delete, ugroup_report, ugroup_created) VALUES ('$ugroup_name', '$ugroup_admin', '$ugroup_delete', '$ugroup_report', '$timestamp')";
-			$query_ugroup_insert = mysqli_query($db_link, $sql_ugroup_insert);
+			$query_ugroup_insert = db_query($db_link, $sql_ugroup_insert);
 			checkSQL($db_link, $query_ugroup_insert);
 		}
 
 		else{
 			//Update existing usergroup
 			$sql_ugroup_upd = "UPDATE ugroup SET ugroup_name = '$ugroup_name',  ugroup_admin=$ugroup_admin, ugroup_delete=$ugroup_delete, ugroup_report=$ugroup_report, ugroup_created=$timestamp WHERE ugroup_id = $ugroup_id";
-			$query_ugroup_upd = mysqli_query($db_link, $sql_ugroup_upd);
+			$query_ugroup_upd = db_query($db_link, $sql_ugroup_upd);
 			checkSQL($db_link, $query_ugroup_upd);
 		}
 

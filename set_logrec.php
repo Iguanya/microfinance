@@ -44,9 +44,9 @@
 				</tr>
 				<?PHP
 				$sql_logrec = "SELECT * FROM logrec, user WHERE logrec.user_id = user.user_id ORDER BY logrec_id DESC LIMIT 500";
-				$query_logrec = mysqli_query($db_link, $sql_logrec);
+				$query_logrec = db_query($db_link, $sql_logrec);
 				checkSQL($db_link, $query_logrec);
-				while ($row_logrec = mysqli_fetch_assoc($query_logrec)){
+				while ($row_logrec = db_fetch_assoc($query_logrec)){
 					echo '<tr>
 									<td>'.$row_logrec['logrec_id'].'</td>
 									<td>'.date("d.m.Y,  H:i:s", $row_logrec['logrec_start']).'</td>

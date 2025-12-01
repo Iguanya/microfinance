@@ -68,11 +68,11 @@
 			/*** CASE 1: Summarised Report ***/
 			if ($_POST['rep_form'] == 'a'){
 				$sql_expendit = "SELECT * FROM expenses WHERE exp_date BETWEEN $firstDay AND $lastDay ORDER BY exp_date";
-				$query_expendit = mysqli_query($db_link, $sql_expendit);
+				$query_expendit = db_query($db_link, $sql_expendit);
 				checkSQL($db_link, $query_expendit);
 
 				$sql_exptype = "SELECT * FROM exptype";
-				$query_exptype = mysqli_query($db_link, $sql_exptype);
+				$query_exptype = db_query($db_link, $sql_exptype);
 				checkSQL($db_link, $query_exptype);
 				?>
 
@@ -97,12 +97,12 @@
 					<?PHP
 
 					$exptype = array();
-					while($row_exptype = mysqli_fetch_assoc($query_exptype)){
+					while($row_exptype = db_fetch_assoc($query_exptype)){
 						$exptype[] = $row_exptype;
 					}
 
 					$expendit = array();
-					while($row_expendit = mysqli_fetch_assoc($query_expendit)){
+					while($row_expendit = db_fetch_assoc($query_expendit)){
 						$expendit[] = $row_expendit;
 					}
 
@@ -128,7 +128,7 @@
 			/*** CASE 2: Detailed Report ***/
 			else{
 				$sql_expendit = "SELECT * FROM expenses, exptype WHERE expenses.exptype_id = exptype.exptype_id AND exp_date BETWEEN $firstDay AND $lastDay ORDER BY exp_date";
-				$query_expendit = mysqli_query($db_link, $sql_expendit);
+				$query_expendit = db_query($db_link, $sql_expendit);
 				checkSQL($db_link, $query_expendit);
 				?>
 
@@ -162,7 +162,7 @@
 					</tr>
 					<?PHP
 					$total_exp = 0;
-					while($row_expendit = mysqli_fetch_assoc($query_expendit)){
+					while($row_expendit = db_fetch_assoc($query_expendit)){
 						echo '<tr>
 										<td>'.date("d.m.Y",$row_expendit['exp_date']).'</td>
 										<td>'.$row_expendit['exptype_type'].'</td>

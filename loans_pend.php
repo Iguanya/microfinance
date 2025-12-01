@@ -13,7 +13,7 @@
 
 	//Select Pending Loans from LOANS
 	$sql_loanpend = "SELECT * FROM loans LEFT JOIN loanstatus ON loans.loanstatus_id = loanstatus.loanstatus_id LEFT JOIN customer ON loans.cust_id = customer.cust_id WHERE loans.loanstatus_id = 1 ORDER BY loan_date, loan_no";
-	$query_loanpend = mysqli_query($db_link, $sql_loanpend);
+	$query_loanpend = db_query($db_link, $sql_loanpend);
 	checkSQL($db_link, $query_loanpend);
 ?>
 <html>
@@ -63,7 +63,7 @@
 				<?PHP
 				$total_loanpend = 0;
 				$count = 0;
-				while($row_loanpend = mysqli_fetch_assoc($query_loanpend)){
+				while($row_loanpend = db_fetch_assoc($query_loanpend)){
 					echo '<tr>
 									<td><a href="loan.php?lid='.$row_loanpend['loan_id'].'">'.$row_loanpend['loan_no'].'</a></td>
 									<td>'.$row_loanpend['cust_name'].' ('.$row_loanpend['cust_no'].')</td>

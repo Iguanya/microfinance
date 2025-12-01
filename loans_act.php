@@ -13,7 +13,7 @@
 
 	//Select Active Loans from LOANS
 	$sql_loans = "SELECT * FROM loans LEFT JOIN loanstatus ON loans.loanstatus_id = loanstatus.loanstatus_id LEFT JOIN customer ON loans.cust_id = customer.cust_id WHERE loans.loanstatus_id = 2 ORDER BY loan_dateout, loans.cust_id";
-	$query_loans = mysqli_query($db_link, $sql_loans);
+	$query_loans = db_query($db_link, $sql_loans);
 	checkSQL($db_link, $query_loans);
 ?>
 <html>
@@ -61,7 +61,7 @@
 				</tr>
 				<?PHP
 				$count = 0;
-				while ($row_loans = mysqli_fetch_assoc($query_loans)){
+				while ($row_loans = db_fetch_assoc($query_loans)){
 
 					$loan_balances = getLoanBalance($db_link, $row_loans['loan_id']);
 

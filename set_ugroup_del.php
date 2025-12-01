@@ -9,15 +9,15 @@
 
 	//Check dependencies for usergroup and delete
 	$sql_depending = "SELECT * FROM user WHERE ugroup_id = $ugroup_id";
-	$query_depending = mysqli_query($db_link, $sql_depending);
-	$result_depending = mysqli_fetch_array($query_depending);
+	$query_depending = db_query($db_link, $sql_depending);
+	$result_depending = db_fetch_array($query_depending);
 
 	if($result_depending){
 		header('Location: set_ugroup.php?error=dep');
 	}
 	else{
 		$sql_del = "DELETE FROM ugroup WHERE ugroup_id = $ugroup_id";
-		$query_del = mysqli_query($db_link, $sql_del);
+		$query_del = db_query($db_link, $sql_del);
 		checkSQL($db_link, $query_del);
 		header('Location: set_ugroup.php');
 	}

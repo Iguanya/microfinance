@@ -29,7 +29,7 @@
 					$files[] = resizeImage($width, $height, $path);
 				}
 				$sql_picpath = "UPDATE employee SET empl_pic = '$files[1]' WHERE empl_id = '$_SESSION[empl_id]'";
-				$query_picpath = mysqli_query($db_link, $sql_picpath);
+				$query_picpath = db_query($db_link, $sql_picpath);
 				checkSQL($db_link, $query_picpath);
 
 				// Forward to EMPLOYEE.PHP

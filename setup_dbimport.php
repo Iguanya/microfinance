@@ -88,11 +88,11 @@ while (microtime(true) < $deadline && ($line = fgets($fp, 102400))) {
     // Completed SQL statement?
     if (substr(trim($query), -1) === ';') {
 
-        if (!mysqli_query($db, $query)) {
+        if (!db_query($db, $query)) {
 
             $error = "Error running query:\n"
                 . $query . "\n"
-                . "MySQL error: " . mysqli_error($db);
+                . "MySQL error: " . db_error($db);
 
             file_put_contents($errorFilename, $error);
             exit;

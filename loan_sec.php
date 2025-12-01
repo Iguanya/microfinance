@@ -8,9 +8,9 @@
 
 	//Retrieve loan_id and loan_no of newly created loan from LOANS.
 	$sql_loan = "SELECT loan_id, loan_no FROM loans WHERE loan_id = '$_SESSION[loan_id]'";
-	$query_loan = mysqli_query($db_link, $sql_loan);
+	$query_loan = db_query($db_link, $sql_loan);
 	checkSQL($db_link, $query_loan);
-	$result_loan = mysqli_fetch_assoc($query_loan);
+	$result_loan = db_fetch_assoc($query_loan);
 
 	// Select Securities from SECURITIES
 	$securities = getLoanSecurities($db_link, $_SESSION['loan_id']);
@@ -48,7 +48,7 @@
 
 			//UPDATE file path for security 1 in SECURITIES
 			$sql_update_sec1_path = "UPDATE securities SET sec_path = '$target_path1' WHERE sec_id = '$security1[sec_id]'";
-			$query_update_sec1_path = mysqli_query($db_link, $sql_update_sec1_path);
+			$query_update_sec1_path = db_query($db_link, $sql_update_sec1_path);
 			checkSQL($db_link, $query_update_sec1_path);
 
 		}
@@ -69,7 +69,7 @@
 
 			//UPDATE file path for security 2 in SECURITIES
 			$sql_update_sec2_path = "UPDATE securities SET sec_path = '$target_path2' WHERE sec_id = '$security2[sec_id]'";
-			$query_update_sec2_path = mysqli_query($db_link, $sql_update_sec2_path);
+			$query_update_sec2_path = db_query($db_link, $sql_update_sec2_path);
 			checkSQL($db_link, $query_update_sec2_path);
 		}
 

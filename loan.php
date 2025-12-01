@@ -10,9 +10,9 @@
 
 	// Select details of current loan from LOANS, LOANSTATUS, CUSTOMER
 	$sql_loan = "SELECT * FROM loans JOIN loanstatus ON loans.loanstatus_id = loanstatus.loanstatus_id JOIN customer ON loans.cust_id = customer.cust_id WHERE loans.loan_id = $_SESSION[loan_id]";
-	$query_loan = mysqli_query($db_link, $sql_loan);
+	$query_loan = db_query($db_link, $sql_loan);
 	checkSQL($db_link, $query_loan);
-	$result_loan = mysqli_fetch_assoc($query_loan);
+	$result_loan = db_fetch_assoc($query_loan);
 	$_SESSION['cust_id'] = $result_loan['cust_id'];
 
 	// Get current customer's savings account balance
@@ -40,32 +40,32 @@
 			//Insert Loan Fee into INCOMES
 			$loan_fee = $loan_princp_approved / 100 * $_SESSION['fee_loan'];
 			$sql_inc_lf = "INSERT INTO incomes (cust_id, loan_id, inctype_id, inc_amount, inc_date, inc_receipt, inc_created, user_id) VALUES ('$_SESSION[cust_id]', '$_SESSION[loan_id]', '3', '$loan_fee', '$loan_dateout', '$loan_fee_receipt', '$timestamp', '$_SESSION[log_id]')";
-			$query_inc_lf = mysqli_query($db_link, $sql_inc_lf);
+			$query_inc_lf = db_query($db_link, $sql_inc_lf);
 			checkSQL($db_link, $query_inc_lf);
 
 			//Insert Loan Insurance into INCOMES
 			$loan_insurance = $loan_princp_approved / 100 * $_SESSION['fee_loaninsurance'];
 			$sql_inc_ins = "INSERT INTO incomes (cust_id, loan_id, inctype_id, inc_amount, inc_date, inc_receipt, inc_created, user_id) VALUES ('$_SESSION[cust_id]', '$_SESSION[loan_id]', '10', '$loan_insurance', '$loan_dateout', '$loan_fee_receipt', '$timestamp', '$_SESSION[log_id]')";
-			$query_inc_ins = mysqli_query($db_link, $sql_inc_ins);
+			$query_inc_ins = db_query($db_link, $sql_inc_ins);
 			checkSQL($db_link, $query_inc_ins);
 
 			//Insert Additional Loan Fee into INCOMES
 			if($_SESSION['fee_xl1'] != 0){
 				$loan_xtraFee1 = $_SESSION['fee_xl1'];
 				$sql_inc_xtraFee1 = "INSERT INTO incomes (cust_id, loan_id, inctype_id, inc_amount, inc_date, inc_receipt, inc_created, user_id) VALUES ('$_SESSION[cust_id]', '$_SESSION[loan_id]', '11', '$loan_xtraFee1', '$loan_dateout', '$loan_fee_receipt', '$timestamp', '$_SESSION[log_id]')";
-				$query_inc_xtraFee1 = mysqli_query($db_link, $sql_inc_xtraFee1);
+				$query_inc_xtraFee1 = db_query($db_link, $sql_inc_xtraFee1);
 				checkSQL($db_link, $query_inc_xtraFee1);
 			}
 
 			//Update loan information. Set loan to "Approved" and "Issued".
 			$sql_issue = "UPDATE loans SET loanstatus_id = '$loan_status', loan_issued = '1', loan_dateout = '$loan_dateout', loan_principalapproved = '$loan_princp_approved', loan_fee = '$loan_fee', loan_fee_receipt = '$loan_fee_receipt', loan_insurance = '$loan_insurance', loan_insurance_receipt = '$loan_fee_receipt' WHERE loan_id = '$_SESSION[loan_id]'";
-			$query_issue = mysqli_query($db_link, $sql_issue);
+			$query_issue = db_query($db_link, $sql_issue);
 			checkSQL($db_link, $query_issue);
 		}
 
 		else {
 			$sql_update = "UPDATE loans SET loanstatus_id = '$_POST[loan_status]' WHERE loan_id = $_SESSION[loan_id]";
-			$query_update = mysqli_query($db_link, $sql_update);
+			$query_update = db_query($db_link, $sql_update);
 			checkSQL($db_link, $query_update);
 		}
 		header('Location: loan.php?lid='.$_SESSION['loan_id']);
@@ -133,33 +133,33 @@
 
 		// Check for smallest LTRANS_ID to determine whether an UPDATE or INSERT is needed
 		$sql_ltransid = "SELECT MIN(ltrans_id) FROM ltrans WHERE loan_id = $_SESSION[loan_id] AND ltrans_date IS NULL AND ltrans_due IS NOT NULL";
-		$query_ltransid = mysqli_query($db_link, $sql_ltransid);
+		$query_ltransid = db_query($db_link, $sql_ltransid);
 		checkSQL($db_link, $query_ltransid);
-		$ltransid_result = mysqli_fetch_assoc($query_ltransid);
+		$ltransid_result = db_fetch_assoc($query_ltransid);
 		$ltransid = $ltransid_result['MIN(ltrans_id)'];
 
 		if(!isset($ltransid)){
 			$sql_insertrepay = "INSERT INTO ltrans (loan_id, ltrans_date, ltrans_principal, ltrans_interest, ltrans_receipt, ltrans_created, user_id) VALUES ($_SESSION[loan_id], $loan_repay_date, '$loan_repay_principal', '$loan_repay_interest', '$loan_repay_receipt', $timestamp, '$_SESSION[log_id]')";
-			$query_insertrepay = mysqli_query($db_link, $sql_insertrepay);
+			$query_insertrepay = db_query($db_link, $sql_insertrepay);
 			checkSQL($db_link, $query_insertrepay);
 
 			// Get LTRANS_ID of latest entry
 			$sql_ltransid = "SELECT MAX(ltrans_id) FROM ltrans WHERE loan_id = '$_SESSION[loan_id]' AND ltrans_receipt = '$loan_repay_receipt' AND ltrans_created = '$timestamp'";
-			$query_ltransid = mysqli_query($db_link, $sql_ltransid);
+			$query_ltransid = db_query($db_link, $sql_ltransid);
 			checkSQL($db_link, $query_ltransid);
 			$ltransid_result = mysqli_fetch_row($query_ltransid);
 			$ltransid = $ltransid_result[0];
 		}
 		else {
 			$sql_updaterepay = "UPDATE ltrans SET ltrans_date = $loan_repay_date, ltrans_principal = '$loan_repay_principal', ltrans_interest = '$loan_repay_interest', ltrans_receipt = '$loan_repay_receipt', ltrans_created = '$timestamp', user_id = '$_SESSION[log_id]' WHERE ltrans_id = $ltransid";
-			$query_updaterepay = mysqli_query($db_link, $sql_updaterepay);
+			$query_updaterepay = db_query($db_link, $sql_updaterepay);
 			checkSQL($db_link, $query_updaterepay);
 		}
 
 		// If interest is paid, insert the amount into INCOMES
 		if($loan_repay_interest > 0){
 			$sql_incint = "INSERT INTO incomes (cust_id, inctype_id, ltrans_id, inc_amount, inc_date, inc_receipt, inc_created, user_id) VALUES ('$_SESSION[cust_id]', '4', '$ltransid', '$loan_repay_interest', '$loan_repay_date', '$loan_repay_receipt', $timestamp, '$_SESSION[log_id]')";
-			$query_incint = mysqli_query($db_link, $sql_incint);
+			$query_incint = db_query($db_link, $sql_incint);
 			checkSQL($db_link, $query_incint);
 		}
 
@@ -168,7 +168,7 @@
 			$loan_repay_amount_sav = $loan_repay_amount * (-1);
 
 			$sql_insert = "INSERT INTO savings (cust_id, ltrans_id, sav_date, sav_amount, savtype_id, sav_receipt, sav_created, user_id) VALUES ($_SESSION[cust_id], $ltransid, $loan_repay_date, $loan_repay_amount_sav, 8, $loan_repay_receipt, $timestamp, $_SESSION[log_id])";
-			$query_insert = mysqli_query($db_link, $sql_insert);
+			$query_insert = db_query($db_link, $sql_insert);
 
 			// Update savings account balance
 			updateSavingsBalance($db_link, $_SESSION['cust_id']);
@@ -177,7 +177,7 @@
 		//If amount paid exceeds the remaining balance for that loan, put the rest in SAVINGS.
 		if(isset($loan_repay_savings)){
 			$sql_restsav = "INSERT INTO savings (cust_id, ltrans_id, sav_date, sav_amount, savtype_id, sav_receipt, sav_created, user_id) VALUES ($_SESSION[cust_id], $ltransid, $loan_repay_date, $loan_repay_savings, '1', $loan_repay_receipt, $timestamp, '$_SESSION[log_id]')";
-			$query_restsav = mysqli_query($db_link, $sql_restsav);
+			$query_restsav = db_query($db_link, $sql_restsav);
 			checkSQL($db_link, $query_restsav);
 
 			// Update savings account balance
@@ -207,13 +207,13 @@
 
 		// Get LTRANS_ID for chargable transaction
 		$sql_ltrans = "SELECT MIN(ltrans_id) FROM ltrans WHERE ltrans.loan_id = '$_SESSION[loan_id]' AND ltrans_due < '$timestamp' AND ltrans_fined = '0' AND ltrans_date IS NULL";
-		$query_ltrans = mysqli_query($db_link, $sql_ltrans);
+		$query_ltrans = db_query($db_link, $sql_ltrans);
 		checkSQL($db_link, $query_ltrans);
 		$ltrans = mysqli_fetch_row($query_ltrans);
 
 		// Flag loan transaction as 'fined'
 		$sql_ltrans_fined = "UPDATE ltrans SET ltrans_fined = '1', ltrans_created = '$timestamp', user_id = '$_SESSION[log_id]' WHERE ltrans_id = '$ltrans[0]'";
-		$query_ltrans_fined = mysqli_query($db_link, $sql_ltrans_fined);
+		$query_ltrans_fined = db_query($db_link, $sql_ltrans_fined);
 		checkSQL($db_link, $query_ltrans_fined);
 
 		// Deduct fine from savings account if applicable
@@ -221,7 +221,7 @@
 			$fine_amount_sav = $fine_amount * (-1);
 
 			$sql_fine_sav = "INSERT INTO savings (cust_id, ltrans_id, sav_date, sav_amount, savtype_id, sav_receipt, sav_created, user_id) VALUES ('$_SESSION[cust_id]', '$ltrans[0]', '$fine_date', '$fine_amount_sav', 6, '$fine_receipt', $timestamp, '$_SESSION[log_id]')";
-			$query_fine_sav = mysqli_query($db_link, $sql_fine_sav);
+			$query_fine_sav = db_query($db_link, $sql_fine_sav);
 			checkSQL($db_link, $query_fine_sav);
 
 			// Update savings account balance
@@ -229,7 +229,7 @@
 
 			// Get SAV_ID for the latest entry
 			$sql_savid = "SELECT MAX(sav_id) FROM savings WHERE ltrans_id = '$ltrans[0]' AND sav_receipt = '$fine_receipt' AND sav_created = '$timestamp'";
-			$query_savid = mysqli_query($db_link, $sql_savid);
+			$query_savid = db_query($db_link, $sql_savid);
 			checkSQL($db_link, $query_savid);
 			$sav_id = mysqli_fetch_row($query_savid);
 		}
@@ -237,7 +237,7 @@
 
 		// Insert fine as income in INCOMES
 		$sql_fine_inc = "INSERT INTO incomes (cust_id, ltrans_id, sav_id, inctype_id, inc_amount, inc_date, inc_receipt, inc_created, user_id) VALUES ('$_SESSION[cust_id]', '$ltrans[0]', '$sav_id[0]', '5', '$fine_amount', '$fine_date', '$fine_receipt', $timestamp, '$$_SESSION[log_id]')";
-		$query_fine_inc = mysqli_query($db_link, $sql_fine_inc);
+		$query_fine_inc = db_query($db_link, $sql_fine_inc);
 		checkSQL($db_link, $query_fine_inc);
 
 		header('Location: loan.php?lid='.$_SESSION[loan_id]);
@@ -245,15 +245,15 @@
 
 	// Select Instalments from LTRANS
 	$sql_duedates = "SELECT * FROM ltrans LEFT JOIN user ON ltrans.user_id = user.user_id WHERE loan_id = $_SESSION[loan_id] ORDER BY ltrans_id";
-	$query_duedates = mysqli_query($db_link, $sql_duedates);
+	$query_duedates = db_query($db_link, $sql_duedates);
 	checkSQL($db_link, $query_duedates);
 
 	// Select Guarantors from CUSTOMER
 	$sql_guarant = "SELECT cust_id, cust_no, cust_name FROM customer";
-	$query_guarant = mysqli_query($db_link, $sql_guarant);
+	$query_guarant = db_query($db_link, $sql_guarant);
 	checkSQL($db_link, $query_guarant);
 	$guarantors = array();
-	while ($row_guarant = mysqli_fetch_assoc($query_guarant)) $guarantors[] = $row_guarant;
+	while ($row_guarant = db_fetch_assoc($query_guarant)) $guarantors[] = $row_guarant;
 
 	// Select Securities from SECURITIES
 	$securities = getLoanSecurities($db_link, $_SESSION['loan_id']);
@@ -481,8 +481,8 @@
 								<?PHP
 								//Select Loanstatus from LOANSTATUS
 								$sql_loanstatus = "SELECT * FROM loanstatus";
-								$query_loanstatus = mysqli_query($db_link, $sql_loanstatus);
-								while ($row_status = mysqli_fetch_assoc($query_loanstatus)){
+								$query_loanstatus = db_query($db_link, $sql_loanstatus);
+								while ($row_status = db_fetch_assoc($query_loanstatus)){
 									echo '<option value="'.$row_status['loanstatus_id'].'"';
 									if ($row_status['loanstatus_id'] == $result_loan['loanstatus_id']) echo ' selected="selected" ';
 									echo '>'.$row_status['loanstatus_status'].'</option>';
@@ -541,7 +541,7 @@
 				$i_paid = 0;
 				$loan_default = 0;
 				$int_sum_set = 0;
-				while ($row_duedates = mysqli_fetch_assoc($query_duedates)){
+				while ($row_duedates = db_fetch_assoc($query_duedates)){
 					echo '<tr>';
 					if ($row_duedates['ltrans_due'] === NULL) echo '<td></td>';
 						elseif ($row_duedates['ltrans_due'] < $timestamp AND $row_duedates['ltrans_date'] === NULL AND $row_duedates['ltrans_fined'] == 0) echo '<td class="warn">'.date("d.m.Y",$row_duedates['ltrans_due']).'</td>';

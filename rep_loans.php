@@ -61,17 +61,17 @@
 
 			//Select Due Loan Payments from LTRANS
 			$sql_loandue = "SELECT * FROM ltrans, loans, loanstatus WHERE ltrans.loan_id = loans.loan_id AND loans.loanstatus_id = loanstatus.loanstatus_id AND ltrans_due BETWEEN $firstDay AND $lastDay AND loans.loanstatus_id IN (2, 4, 5) ORDER BY ltrans_due, loans.cust_id";
-			$query_loandue = mysqli_query($db_link, $sql_loandue);
+			$query_loandue = db_query($db_link, $sql_loandue);
 			checkSQL($db_link, $query_loandue);
 
 			//Select Loan Recoveries from LTRANS
 			$sql_loanrec = "SELECT * FROM ltrans, loans WHERE ltrans.loan_id = loans.loan_id AND ltrans_date BETWEEN $firstDay AND $lastDay ORDER BY ltrans_date, loans.cust_id";
-			$query_loanrec = mysqli_query($db_link, $sql_loanrec);
+			$query_loanrec = db_query($db_link, $sql_loanrec);
 			checkSQL($db_link, $query_loanrec);
 
 			//Select Loans Out from LOANS
 			$sql_loanout = "SELECT * FROM loans, customer WHERE loans.cust_id = customer.cust_id AND loans.loan_dateout BETWEEN $firstDay AND $lastDay ORDER BY loan_dateout, loans.cust_id";
-			$query_loanout = mysqli_query($db_link, $sql_loanout);
+			$query_loanout = db_query($db_link, $sql_loanout);
 			checkSQL($db_link, $query_loanout);
 			?>
 
@@ -99,7 +99,7 @@
 				</tr>
 				<?PHP
 				$total_loandue = 0;
-				while($row_loandue = mysqli_fetch_assoc($query_loandue)){
+				while($row_loandue = db_fetch_assoc($query_loandue)){
 					echo '<tr>
 									<td><a href="loan.php?lid='.$row_loandue['loan_id'].'">'.$row_loandue['loan_no'].'</a></td>
 									<td>'.$row_loandue['loanstatus_status'].'</td>
@@ -137,7 +137,7 @@
 				</tr>
 				<?PHP
 				$total_loanrec = 0;
-				while($row_loanrec = mysqli_fetch_assoc($query_loanrec)){
+				while($row_loanrec = db_fetch_assoc($query_loanrec)){
 					echo '<tr>
 									<td><a href="loan.php?lid='.$row_loanrec['loan_id'].'">'.$row_loanrec['loan_no'].'</a></td>
 									<td>'.number_format($row_loanrec['ltrans_principaldue'] + $row_loanrec['ltrans_interestdue']).' '.$_SESSION['set_cur'].'</td>
@@ -183,7 +183,7 @@
 				</tr>
 				<?PHP
 				$total_loanout = 0;
-				while($row_loanout = mysqli_fetch_assoc($query_loanout)){
+				while($row_loanout = db_fetch_assoc($query_loanout)){
 					echo '<tr>
 									<td><a href="loan.php?lid='.$row_loanout['loan_id'].'">'.$row_loanout['loan_no'].'</a></td>
 									<td>'.$row_loanout['cust_name'].' ('.$row_loanout['cust_no'].')</td>

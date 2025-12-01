@@ -20,7 +20,7 @@ $query_overd = getLtransOverdue ($db_link);
 		<th>Amount Due</th>
 	</tr>
 	<?PHP
-	while ($row_overd = mysqli_fetch_assoc($query_overd)){
+	while ($row_overd = db_fetch_assoc($query_overd)){
 		echo '<tr>
 						<td><a href="loan.php?lid='.$row_overd['loan_id'].'">'.$row_overd['loan_no'].'</a></td>
 						<td>'.$row_overd['cust_name'].'</td>

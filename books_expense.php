@@ -19,19 +19,19 @@
 		
 		//Insert into expenses
 		$sql_expnew = "INSERT INTO expenses (exptype_id, exp_amount, exp_date, exp_text, exp_recipient, exp_receipt, exp_voucher, exp_created, user_id) VALUES ('$exptype_id', '$exp_amount', '$exp_date','$exp_text', '$exp_recipient', '$exp_receipt', '$exp_voucher', '$timestamp', '$_SESSION[log_id]')";
-		$query_expnew = mysqli_query($db_link, $sql_expnew);
+		$query_expnew = db_query($db_link, $sql_expnew);
 		checkSQL($db_link, $query_expnew);
 	}
 			
 	//Select recent expenses from EXPENSES
 	$sixtydays = time() - convertDays(60);
 	$sql_expcur = "SELECT * FROM expenses LEFT JOIN exptype ON expenses.exptype_id = exptype.exptype_id WHERE exp_date > $sixtydays ORDER BY exp_date DESC, exp_voucher DESC";
-	$query_expcur = mysqli_query($db_link, $sql_expcur);
+	$query_expcur = db_query($db_link, $sql_expcur);
 	checkSQL($db_link, $query_expcur);
 	
 	//Select types of expenses from EXPTYPE
 	$sql_exptype = "SELECT * FROM exptype ORDER BY exptype_type";
-	$query_exptype = mysqli_query($db_link, $sql_exptype);
+	$query_exptype = db_query($db_link, $sql_exptype);
 	checkSQL($db_link, $query_exptype);
 ?>
 
@@ -77,7 +77,7 @@
 						<td>
 							<select name="exptype_id">
 								<?PHP
-								while ($row_exptype = mysqli_fetch_assoc($query_exptype)){
+								while ($row_exptype = db_fetch_assoc($query_exptype)){
 									echo '<option value="'.$row_exptype['exptype_id'].'">'.$row_exptype['exptype_type'].'</option>';
 								}
 								?>
@@ -121,7 +121,7 @@
 					<th>Delete</th>
 				</tr>
 			<?PHP
-			while ($row_expcur = mysqli_fetch_assoc($query_expcur)){
+			while ($row_expcur = db_fetch_assoc($query_expcur)){
 				if ($row_expcur['cust_id'] != 0 AND $row_expcur['cust_id'] != NULL){
 					$result_cust = getCustomer($row_expcur['cust_id']);
 					$exp_recipient = $result_cust['cust_name'].' (<a href="customer.php?cust='.$row_expcur['cust_id'].'">'.$result_cust['cust_no'].'</a>)';

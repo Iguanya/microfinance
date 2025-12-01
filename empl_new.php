@@ -25,14 +25,14 @@
 
 		//Insert new employee into EMPLOYEE
 		$sql_insert = "INSERT INTO employee (empl_no, empl_name, empl_dob, emplsex_id, emplmarried_id, empl_position, empl_salary, empl_address, empl_phone, empl_email, empl_in, empl_lastupd, user_id) VALUES ('$empl_no', '$empl_name', '$empl_dob', '$emplsex_id', '$emplmarried_id', '$empl_position', '$empl_salary', '$empl_address', '$empl_phone', '$empl_email', $empl_in, $empl_in, '$_SESSION[log_id]')";
-		$query_insert = mysqli_query($db_link, $sql_insert);
+		$query_insert = db_query($db_link, $sql_insert);
 		checkSQL($db_link, $query_insert);
 
 		//Get new Employees's ID from EMPLOYEE
 		$sql_maxid = "SELECT MAX(empl_id) FROM employee";
-		$query_maxid = mysqli_query($db_link, $sql_maxid);
+		$query_maxid = db_query($db_link, $sql_maxid);
 		checkSQL($db_link, $query_maxid);
-		$maxid = mysqli_fetch_assoc($query_maxid);
+		$maxid = db_fetch_assoc($query_maxid);
 		$_SESSION['empl_id'] = $maxid['MAX(empl_id)'];
 
 		// Refer to empl_new_pic.php
@@ -41,12 +41,12 @@
 
 	// Select sexes from EMPLSEX for dropdown-menu
 	$sql_sex = "SELECT * FROM emplsex";
-	$query_sex = mysqli_query($db_link, $sql_sex);
+	$query_sex = db_query($db_link, $sql_sex);
 	checkSQL($db_link, $query_sex);
 
 	//Select Marital Status for Drop-down-Menu
 	$sql_mstat = "SELECT * FROM emplmarried";
-	$query_mstat = mysqli_query($db_link, $sql_mstat);
+	$query_mstat = db_query($db_link, $sql_mstat);
 	checkSQL($db_link, $query_mstat);
 
 	//Build new EMPL_NO
@@ -103,7 +103,7 @@
 						<td>
 							<select name="emplsex_id" size="1" tabindex=3>';
 								<?PHP
-									while ($row_sex = mysqli_fetch_assoc($query_sex)){
+									while ($row_sex = db_fetch_assoc($query_sex)){
 										echo '<option value="'.$row_sex['emplsex_id'].'">'.$row_sex['emplsex_name'].'</option>';
 									}
 								?>
@@ -123,7 +123,7 @@
 						<td>
 							<select name="emplmarried_id" size="1" tabindex=5>';
 								<?PHP
-								while ($row_mstat = mysqli_fetch_assoc($query_mstat)){
+								while ($row_mstat = db_fetch_assoc($query_mstat)){
 									echo '<option value="'.$row_mstat['emplmarried_id'].'">'.$row_mstat['emplmarried_status'].'</option>';
 								}
 								?>

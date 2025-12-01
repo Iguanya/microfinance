@@ -37,7 +37,7 @@
 					$files[] = resizeImage($width, $height, $path);
 				}
 				$sql_picpath = "UPDATE customer SET cust_pic = '$files[1]' WHERE cust_id = '$_SESSION[cust_id]'";
-				$query_picpath = mysqli_query($db_link, $sql_picpath);
+				$query_picpath = db_query($db_link, $sql_picpath);
 				checkSQL($db_link, $query_picpath);
 
 				if ($from == "new")	header('Location: acc_share_buy.php?cust='.$_SESSION['cust_id'].'&rec='.$_SESSION['receipt_no']);

@@ -10,7 +10,7 @@
 		$sha_id = sanitize($db_link, $_GET['sha_id']);
 		
 		$sql_delsav = "DELETE FROM shares WHERE share_id = $sha_id";
-		$query_delsav = mysqli_query($db_link, $sql_delsav);
+		$query_delsav = db_query($db_link, $sql_delsav);
 		checkSQL($db_link, $query_delsav);
 	}
 	

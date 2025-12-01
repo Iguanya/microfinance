@@ -69,11 +69,11 @@
 
 				//Selection from INCOMES and INCTYPE
 				$sql_incomes = "SELECT * FROM incomes WHERE inc_date BETWEEN $firstDay AND $lastDay";
-				$query_incomes = mysqli_query($db_link, $sql_incomes);
+				$query_incomes = db_query($db_link, $sql_incomes);
 				checkSQL($db_link, $query_incomes);
 
 				$sql_inctype = "SELECT * FROM inctype";
-				$query_inctype = mysqli_query($db_link, $sql_inctype);
+				$query_inctype = db_query($db_link, $sql_inctype);
 				checkSQL($db_link, $query_inctype);
 				?>
 
@@ -98,13 +98,13 @@
 					<?PHP
 					//Make array for income types
 					$inctype = array();
-					while($row_inctype = mysqli_fetch_assoc($query_inctype)){
+					while($row_inctype = db_fetch_assoc($query_inctype)){
 						$inctype[] = $row_inctype;
 					}
 
 					//Make array for all incomes for selected month
 					$incomes = array();
-					while($row_incomes = mysqli_fetch_assoc($query_incomes)){
+					while($row_incomes = db_fetch_assoc($query_incomes)){
 						$incomes[] = $row_incomes;
 					}
 
@@ -131,7 +131,7 @@
 			/* CASE 2: Detailed Report */
 			else{
 				$sql_incomes = "SELECT * FROM incomes, inctype, customer WHERE incomes.cust_id = customer.cust_id AND incomes.inctype_id = inctype.inctype_id AND inc_date BETWEEN $firstDay AND $lastDay ORDER BY inc_date, inc_receipt";
-				$query_incomes = mysqli_query($db_link, $sql_incomes);
+				$query_incomes = db_query($db_link, $sql_incomes);
 				checkSQL($db_link, $query_incomes);
 				?>
 
@@ -161,7 +161,7 @@
 					</tr>
 					<?PHP
 					$total_inc = 0;
-					while($row_incomes = mysqli_fetch_assoc($query_incomes)){
+					while($row_incomes = db_fetch_assoc($query_incomes)){
 						echo '<tr>
 										<td>'.date("d.m.Y",$row_incomes['inc_date']).'</td>
 										<td>'.number_format($row_incomes['inc_amount']).' '.$_SESSION['set_cur'].'</td>

@@ -39,7 +39,7 @@
 		}
 
 		$sql_custsearch = "SELECT * FROM customer LEFT JOIN custsex ON customer.custsex_id = custsex.custsex_id WHERE $where ORDER BY customer.cust_id";
-		$query_custsearch = mysqli_query($db_link, $sql_custsearch);
+		$query_custsearch = db_query($db_link, $sql_custsearch);
 		checkSQL($db_link, $query_custsearch);
 
 		//Make array for exporting data
@@ -93,7 +93,7 @@
 					<th>Phone No.</th>
 				</tr>
 				<?PHP
-				while ($row_custsearch = mysqli_fetch_assoc($query_custsearch)){
+				while ($row_custsearch = db_fetch_assoc($query_custsearch)){
 					echo '<tr>
 									<td><a href="customer.php?cust='.$row_custsearch['cust_id'].'">'.$row_custsearch['cust_no'].'</a></td>
 									<td>'.$row_custsearch['cust_name'].'</td>

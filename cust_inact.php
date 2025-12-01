@@ -60,7 +60,7 @@
 			</tr>
 			<?PHP
 			$count = 0;
-			while ($row_custinact = mysqli_fetch_assoc($query_custinact)){
+			while ($row_custinact = db_fetch_assoc($query_custinact)){
 				echo '<tr>
 								<td>
 									<a href="customer.php?cust='.$row_custinact['cust_id'].'">'.$row_custinact['cust_no'].'</a>

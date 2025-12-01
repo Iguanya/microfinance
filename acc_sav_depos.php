@@ -26,7 +26,7 @@
 
 		// Insert savings transaction into SAVINGS
 		$sql_insert = "INSERT INTO savings (savtype_id, cust_id, sav_date, sav_amount, sav_receipt, sav_payer, sav_fixed, sav_created, user_id) VALUES ('$savtype_id', '$_SESSION[cust_id]', '$sav_date', '$sav_amount', '$sav_receipt', '$sav_payer', '$sav_fixed', '$timestamp', '$_SESSION[log_id]')";
-		$query_insert = mysqli_query($db_link, $sql_insert);
+		$query_insert = db_query($db_link, $sql_insert);
 		checkSQL($db_link, $query_insert);
 
 		// Update savings account balance
@@ -35,7 +35,7 @@
 		// Include Expense, if transaction was Savings Interest
 		if ($savtype_id == 3){
 			$sql_expense = "INSERT INTO expenses (cust_id, exptype_id, exp_amount, exp_date, exp_voucher, exp_created, user_id) VALUES ('$_SESSION[cust_id]', '19', '$sav_amount', '$sav_date', '$sav_receipt', '$timestamp', '$_SESSION[log_id]')";
-			$query_expense = mysqli_query($db_link, $sql_expense);
+			$query_expense = db_query($db_link, $sql_expense);
 			checkSQL($db_link, $query_expense);
 		}
 

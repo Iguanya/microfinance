@@ -18,7 +18,7 @@ $query_subscrdef = getCustOverdue ($db_link);
 		<th>Last Paid</th>
 	</tr>
 	<?PHP
-	while($row_subscrdef = mysqli_fetch_assoc($query_subscrdef)){
+	while($row_subscrdef = db_fetch_assoc($query_subscrdef)){
 		echo '<tr>
 						<td><a href="customer.php?cust='.$row_subscrdef['cust_id'].'">'.$row_subscrdef['cust_no'].'</a></td>
 						<td>'.$row_subscrdef['cust_name'].'</td>
