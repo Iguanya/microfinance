@@ -4,13 +4,28 @@
 mangoO is a lightweight, yet powerful software solution for small microfinance institutions. This is a PHP web application originally designed for MySQL, now converted to run on Replit using SQLite.
 
 **Original Project:** GitHub import  
-**Technology Stack:** PHP 8.2, SQLite, JavaScript (jQuery), CSS  
-**Current State:** Fully functional and running on Replit
+**Technology Stack:** PHP 8.2, SQLite, JavaScript (jQuery), Bootstrap 5, CSS  
+**Current State:** Fully functional with modern Bootstrap UI and running on Replit
 
 ## Recent Changes (December 2025)
 
+### Bootstrap Styling Phase 1 - Navigation Pages Updated
+- **Created Reusable Bootstrap Template:**
+  - `includes/bootstrap_header.php` - Common header with navigation
+  - `includes/bootstrap_footer.php` - Footer with scripts
+- **Updated Navigation Pages:**
+  - `cust_search.php` - Customer search with Bootstrap forms
+  - `loans_search.php` - Loan search with Bootstrap interface
+  - Responsive navbar with all main navigation links
+  - Sidebar with quick action buttons
+- **Database Query Fixes:**
+  - Fixed `start.php` to use correct SQLite table names
+  - Changed `sharebal` table reference to `shares` table
+  - Changed `loam_amount` to `loan_principal`
+  - Added error handling for all database queries
+
 ### Dashboard UI Overhaul & Modern Design
-- **Bootstrap 5 Integration:** Complete responsive design overhaul
+- **Bootstrap 5 Integration:** Complete responsive design overhaul on main dashboard
 - **Interactive Charts:** Chart.js integration with:
   - Loan status distribution (doughnut chart)
   - Top customers by borrowing amount (bar chart)
@@ -19,12 +34,10 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 - **Improved Navigation:**
   - Modern navbar with dropdown menus
   - Responsive sidebar with quick actions
-  - Professional color scheme and styling
+  - Professional color scheme (orange theme matching mangoO branding)
 - **Data Tables:** Enhanced with Bootstrap styling
   - Hover effects, better readability
   - Professional appearance
-
-## Recent Changes (Earlier - December 2025)
 
 ### Database Migration (MySQL → SQLite)
 - **Original:** MySQL/MariaDB database
@@ -32,17 +45,13 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 - **Reason:** Replit environment doesn't support MySQL due to permission restrictions
 - **Impact:** Fully compatible, all 26 tables migrated successfully with test data
 
-### Code Refactoring
+### Code Refactoring & PHP 8 Compatibility
 - Created PDO wrapper functions (db_query, db_fetch_assoc, db_fetch_array, db_error, db_escape)
 - Replaced all mysqli_* function calls throughout the codebase
 - Updated functions.php to use PDO with SQLite
-- Modified login.php to eliminate session warnings
-
-### PHP 8 Compatibility Fixes (December 2025)
 - Removed deprecated `get_magic_quotes_gpc()` function call (removed in PHP 8.0)
 - Fixed 18 instances of `checkSQL()` function calls with incorrect arguments
 - Improved error handling in db_query with error logging
-- Added proper PHPDoc annotations to database wrapper functions
 
 ### Configuration
 - Created config/config.php with SQLite DSN
@@ -62,7 +71,12 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 - `config/config.php` - Database configuration (SQLite DSN)
 - `config/pepper.php` - Password pepper for security
 - `login.php` - User authentication
-- `start.php` - Main application dashboard
+- `start.php` - Main application dashboard (Bootstrap)
+- `cust_search.php` - Customer search (Bootstrap)
+- `loans_search.php` - Loan search (Bootstrap)
+- `includes/bootstrap_header.php` - Reusable Bootstrap header template
+- `includes/bootstrap_footer.php` - Reusable Bootstrap footer template
+- `css/bootstrap-dashboard.css` - Custom Bootstrap styles
 - `mangoo.db` - SQLite database file
 
 ### Features
@@ -99,7 +113,9 @@ $users = $pdo->query("SELECT * FROM user")->fetchAll();
 ```
 
 ## User Preferences
-None documented yet.
+- Modern Bootstrap design for all pages
+- Using SQLite instead of MySQL for Replit compatibility
+- Orange (#FF8C00) as primary brand color
 
 ## Development Notes
 
@@ -114,12 +130,27 @@ None documented yet.
 2. config/pepper.php should be changed for production use
 3. Session security uses fingerprinting based on IP and user agent
 4. All user input is sanitized using db_escape()
+5. All new pages should use the Bootstrap header/footer templates for consistency
 
-### Future Improvements
-- Migrate to prepared statements for better SQL injection protection
-- Add CSRF token protection
-- Implement proper error handling with user-friendly messages
-- Update to modern PHP framework (optional)
+### Future Improvements - Bootstrap Rollout
+- Apply Bootstrap to remaining pages (employee.php, books_expense.php, reports, settings, etc.)
+- Convert old includeHead() and includeMenu() function calls to use new Bootstrap template
+- Update all data tables to use Bootstrap table styling
+- Add form validation using Bootstrap and JavaScript
+- Implement Bootstrap alerts for success/error messages
+
+### Database Table Reference
+Common table names (for query corrections):
+- `customer` - Customer records
+- `loans` - Loan records
+- `shares` - Share account records (NOT `sharebal`)
+- `savings` - Savings records (NOT `savbalance`)
+- `savbalance` - Savings balance records
+- `employee` - Employee records
+- `user` - User accounts
+- Correct column names:
+  - `loans.loan_principal` (NOT `loam_amount`)
+  - `shares.share_amount` (NOT `sharebal_balance`)
 
 ## Deployment
 

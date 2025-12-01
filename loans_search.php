@@ -1,49 +1,62 @@
-<!DOCTYPE HTML>
 <?PHP
-	require 'functions.php';
-	checkLogin();
-	$db_link = connect();
+require 'functions.php';
+checkLogin();
+$db_link = connect();
+$page_title = 'Loan Search';
 ?>
+<?php include 'includes/bootstrap_header.php'; ?>
 
-<html>
-	<!-- HTML HEAD -->
-	<?PHP includeHead('Loan Search',1); ?>
+                <h2 class="mb-4"><i class="fa fa-credit-card"></i> Loan Search</h2>
 
-	<body>
-		<!-- MENU -->
-		<?PHP
-				includeMenu(3);
-		?>
-		<!-- MENU MAIN -->
-		<div id="menu_main">
-			<a href="loans_search.php" id="item_selected">Search</a>
-			<a href="loans_act.php">Active Loans</a>
-			<a href="loans_pend.php">Pending Loans</a>
-			<a href="loans_securities.php">Loan Securities</a>
-		</div>
+                <!-- Tab Navigation -->
+                <ul class="nav nav-tabs mb-4" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="loans_search.php">Search</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="loans_act.php">Active Loans</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="loans_pend.php">Pending Loans</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="loans_securities.php">Loan Securities</a>
+                    </li>
+                </ul>
 
-		<!-- CONTENT: Loan Search -->
-		<div class="content_center">
+                <div class="row">
+                    <!-- Search by Loan Number -->
+                    <div class="col-md-6">
+                        <div class="form-section">
+                            <h5>Search by Loan Number</h5>
+                            <form action="loans_result.php" method="post">
+                                <div class="mb-3">
+                                    <input type="text" name="loan_no" class="form-control" placeholder="Enter Loan Number" required />
+                                </div>
+                                <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
+                            </form>
+                        </div>
+                    </div>
 
-			<form action="loans_result.php" method="post">
-				<p class="heading_narrow">Search Loan by Number</p>
-				<input type="text" name="loan_no" placeholder="Loan Number" />
-				<input type="submit" value="Search" />
-			</form>
+                    <!-- Search by Status -->
+                    <div class="col-md-6">
+                        <div class="form-section">
+                            <h5>Search by Loan Status</h5>
+                            <form action="loans_result.php" method="post">
+                                <div class="mb-3">
+                                    <select name="loan_status" class="form-select" required>
+                                        <option value="">-- Select Status --</option>
+                                        <option value="1">Pending</option>
+                                        <option value="2">Approved</option>
+                                        <option value="3">Refused</option>
+                                        <option value="4">Abandoned</option>
+                                        <option value="5">Cleared</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
 
-			<form action="loans_result.php" method="post" style="margin-top:4.5em;">
-				<p class="heading_narrow">Search Loan by Status</p>
-				<select name="loan_status">
-					<option value="1">Pending</option>
-					<option value="2">Approved</option>
-					<option value="3">Refused</option>
-					<option value="4">Abandoned</option>
-					<option value="5">Cleared</option>
-				</select>
-				<input type="submit" value="Search" />
-			</form>
-
-		</div>
-
-	</body>
-</html>
+<?php include 'includes/bootstrap_footer.php'; ?>
