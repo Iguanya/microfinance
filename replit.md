@@ -97,6 +97,13 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 - `acc_sav_list.php` - Responsive savings transaction table with Bootstrap styling
 - `acc_share_list.php` - Responsive share transaction table with Bootstrap styling
 
+### Loan Management Pages (Bootstrap 5 Modernized)
+- `loan.php` - Loan details dashboard with Bootstrap cards and responsive 2-column layout (loan info + payment schedule)
+- `loan_new.php` - New loan application with Bootstrap 5 form, **inline guarantor creation feature** with collapsible section
+- `cust_new.php` - New customer registration with responsive Bootstrap form grid layout
+- `loans_result.php` - Loan search results with Bootstrap table and badges for status
+- `security.php` - Loan security management with Bootstrap cards and image display
+
 ### All Report Pages
 - `rep_incomes.php` - Income by type analysis
 - `rep_expenses.php` - Detailed and summarized expense reports
