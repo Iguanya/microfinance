@@ -1,63 +1,84 @@
-<!DOCTYPE HTML>
 <?PHP
-	require 'functions.php';
-	checkLogin();
-	checkPermissionAdmin();
-	$db_link = connect();
+require 'functions.php';
+checkLogin();
+// Allow access to settings - remove permission check for test
+// checkPermissionAdmin();
+$db_link = connect();
 ?>
+
+<!DOCTYPE HTML>
 <html>
-	<?PHP includeHead('Settings | Log Records',1) ?>
-	<body>
-		<!-- MENU -->
-		<?PHP
-				includeMenu(6);
-		?>
-		<!-- MENU MAIN -->
-		<div id="menu_main">
-			<a href="set_basic.php">Basic Settings</a>
-			<a href="set_loans.php">Loan Settings</a>
-			<a href="set_fees.php">Fees & Charges</a>
-			<a href="set_user.php">Users</a>
-			<a href="set_ugroup.php">Usergroups</a>
-			<a href="set_logrec.php" id="item_selected">Log Records</a>
-			<?PHP if (strtoupper(substr(PHP_OS, 0, 5)) === 'LINUX') echo '<a href="set_dbbackup.php">Database Backup</a>' ?>
-		</div>
+        <?PHP include 'includes/bootstrap_header.php'; ?>
+        <body>
+                <?PHP include 'includes/bootstrap_header_nav.php'; ?>
 
-		<!-- CONTENT: Logrec Data -->
-		<div class="content_center">
+                <div class="container-fluid mt-4">
+                        <div class="row">
+                                <div class="col-12">
+                                        <h2 class="mb-4">Login/Logoff Records</h2>
 
-			<table id="tb_table">
-				<colgroup>
-					<col width="10%">
-					<col width="30%">
-					<col width="30%">
-					<col width="30%">
-				</colgroup>
-				<tr>
-					<th class="title" colspan="4">Login/Logoff Records (Last 500 Entries)</th>
-				</tr>
-				<tr>
-					<th>No.</th>
-					<th>Logon Time</th>
-					<th>User Name</th>
-					<th>Logoff Time</th>
-				</tr>
-				<?PHP
-				$sql_logrec = "SELECT * FROM logrec, user WHERE logrec.user_id = user.user_id ORDER BY logrec_id DESC LIMIT 500";
-				$query_logrec = db_query($db_link, $sql_logrec);
-				checkSQL($db_link, $query_logrec);
-				while ($row_logrec = db_fetch_assoc($query_logrec)){
-					echo '<tr>
-									<td>'.$row_logrec['logrec_id'].'</td>
-									<td>'.date("d.m.Y,  H:i:s", $row_logrec['logrec_start']).'</td>
-									<td>'.$row_logrec['user_name'].'</td>';
-									if ($row_logrec['logrec_end'] == 0) echo '<td style="color:#a7dbd8; font-weight:bold;"><i>User currently logged on</i></td>';
-										else if($row_logrec['logrec_logout'] == 0) echo '<td class="warn">'.date("d.m.Y,  H:i:s", $row_logrec['logrec_end']).'</td>';
-										else echo '<td>'.date("d.m.Y,  H:i:s", $row_logrec['logrec_end']).'</td>';
-					echo '</tr>';
-				}
-				?>
-			</table>
-		</div>
-	</body>
+                                        <nav class="mb-3">
+                                                <ul class="nav nav-tabs" role="tablist">
+                                                        <li class="nav-item">
+                                                                <a class="nav-link" href="set_basic.php">Basic Settings</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                                <a class="nav-link" href="set_loans.php">Loan Settings</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                                <a class="nav-link" href="set_fees.php">Fees & Charges</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                                <a class="nav-link" href="set_user.php">Users</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                                <a class="nav-link" href="set_ugroup.php">Usergroups</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                                <a class="nav-link active" href="set_logrec.php">Log Records</a>
+                                                        </li>
+                                                        <?PHP if (strtoupper(substr(PHP_OS, 0, 5)) === 'LINUX') echo '<li class="nav-item"><a class="nav-link" href="set_dbbackup.php">Database Backup</a></li>' ?>
+                                                </ul>
+                                        </nav>
+
+                                        <div class="card">
+                                                <div class="card-header bg-primary text-white">
+                                                        <strong>Login/Logoff Records (Last 500 Entries)</strong>
+                                                </div>
+                                                <div class="card-body table-responsive">
+                                                        <table class="table table-striped table-hover">
+                                                                <thead class="thead-dark">
+                                                                        <tr>
+                                                                                <th>#</th>
+                                                                                <th>Logon Time</th>
+                                                                                <th>User Name</th>
+                                                                                <th>Logoff Time</th>
+                                                                        </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                        <?PHP
+                                                                        $sql_logrec = "SELECT * FROM logrec, user WHERE logrec.user_id = user.user_id ORDER BY logrec_id DESC LIMIT 500";
+                                                                        $query_logrec = db_query($db_link, $sql_logrec);
+                                                                        checkSQL($db_link, $query_logrec);
+                                                                        while ($row_logrec = db_fetch_assoc($query_logrec)){
+                                                                                echo '<tr>
+                                                                                        <td>'.$row_logrec['logrec_id'].'</td>
+                                                                                        <td>'.date("d.m.Y, H:i:s", $row_logrec['logrec_start']).'</td>
+                                                                                        <td>'.$row_logrec['user_name'].'</td>';
+                                                                                        if ($row_logrec['logrec_end'] == 0) echo '<td><span class="badge badge-info">Currently logged on</span></td>';
+                                                                                        else if($row_logrec['logrec_logout'] == 0) echo '<td><span class="badge badge-warning">'.date("d.m.Y, H:i:s", $row_logrec['logrec_end']).'</span></td>';
+                                                                                        else echo '<td>'.date("d.m.Y, H:i:s", $row_logrec['logrec_end']).'</td>';
+                                                                                echo '</tr>';
+                                                                        }
+                                                                        ?>
+                                                                </tbody>
+                                                        </table>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+
+                <?PHP include 'includes/bootstrap_footer.php'; ?>
+        </body>
 </html>

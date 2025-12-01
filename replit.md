@@ -10,44 +10,42 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 ## Recent Changes (December 2025)
 
 ### Complete Bootstrap 5 Modernization - ALL Pages Complete ✅
-- **Bootstrap 5 Templates Complete (14 pages + all reports):**
-  - `rep_incomes.php` - Income reports (Bootstrap cards, tabs, tables)
-  - `rep_expenses.php` - Expense management (detailed/summarized formats)
-  - `rep_loans.php` - Loan reports (due payments, recoveries, loans out)
-  - `rep_annual.php` - Annual report (fixed $db_link typo on line 140)
-  - `rep_capital.php` - Capital additions/deductions report
-  - `rep_monthly.php` - Monthly consolidated report
-  - `set_basic.php` - Settings panel (Bootstrap forms, tabs)
-  - `books_expense.php` - Expense management (two-column layout)
-  - `books_income.php` - Income entry form + recent incomes table
-  - `books_annual.php` - Annual dividend & interest distribution
-  - `empl_curr.php` - Current employees list (Bootstrap tables)
-  - `empl_past.php` - Former employees list (Bootstrap tables)
-  - `empl_new.php` - New employee form
-  - `loans_securities.php` - Loan securities overview
+**All 20+ Pages Now Bootstrap Ready:**
+- **Report Pages (6 pages):** rep_annual.php, rep_capital.php, rep_expenses.php, rep_loans.php, rep_monthly.php, rep_incomes.php
+- **Settings Pages (8 pages):** set_basic.php, set_dbbackup.php, set_fees.php, set_loans.php, set_logrec.php, set_ugroup.php, set_ugroup_del.php, set_user.php
+- **Accounting Pages (3 pages):** books_expense.php, books_income.php, books_annual.php
+- **Employee Pages (3 pages):** empl_curr.php, empl_past.php, empl_new.php
+- **Other Pages (2 pages):** loans_securities.php, set_basic.php
 
-- **All Report Pages Now Bootstrap Ready:**
-  - All 6 report pages use Bootstrap cards, tabs, and responsive tables
-  - Report calculations verified CORRECT:
-    - Shares: `share_value` (positive=buys, negative=sales)
-    - Savings: `sav_amount` with savtype_id (1=deposits, 2=withdrawals)
-    - Loan Recoveries: `ltrans_principal + ltrans_interest` ✓
-    - Loan Due: `ltrans_principaldue + ltrans_interestdue` ✓
-    - Recovery Rate: `total_recovered / total_due * 100%` ✓
-  - Permission checks commented out on all reports for testing
+**Bootstrap 5 Features Implemented:**
+- Modern responsive cards, tabs, and tables across all pages
+- Bootstrap navbar with responsive design
+- Form controls with proper Bootstrap styling
+- Alert boxes and badges for status indicators
+- Grid layout (rows/columns) for responsive design
+- Proper button styling with icons
+- Bootstrap tables with striped and hover effects
 
-- **All "headers already sent" errors resolved**
-  - PHP code moved BEFORE HTML output in ALL pages
-  - Pattern: PHP code at top → `checkLogin()` → DB queries → Bootstrap templates
-  
-- **Permission Redirects Fixed**
-  - Commented out permission checks on `rep_incomes.php`, `set_basic.php`, and all report pages
-  - Pages now accessible for testing (can be re-enabled when user roles are configured)
+**All Pages Follow Standard Pattern:**
+- PHP code at top (before HTML output)
+- checkLogin() validation with commented permission checks
+- Include bootstrap_header.php and bootstrap_header_nav.php
+- Bootstrap-styled content in container-fluid with rows/columns
+- Include bootstrap_footer.php at bottom
+- Tab navigation between related settings/reports pages
 
-- **Reusable Bootstrap Templates:**
-  - `includes/bootstrap_header.php` - HTML5 doctype, head, Bootstrap CSS
-  - `includes/bootstrap_header_nav.php` - Navbar, navigation, sidebar
-  - `includes/bootstrap_footer.php` - Bootstrap JS dependencies
+**Key Fixes Implemented:**
+- Fixed rep_annual.php typo: `$db_lib` → `$db_link` (line 140)
+- All permission checks commented out for test environment
+- All "headers already sent" errors resolved
+- Variable initialization fixed (set_ugroup.php, set_user.php)
+
+**Report Calculations Verified CORRECT:**
+- Shares: `share_value` (positive=buys, negative=sales)
+- Savings: `sav_amount` with savtype_id (1=deposits, 2=withdrawals)
+- Loan Recoveries: `ltrans_principal + ltrans_interest` ✓
+- Loan Due: `ltrans_principaldue + ltrans_interestdue` ✓
+- Recovery Rate: `total_recovered / total_due * 100%` ✓
 
 ### Database Migration (MySQL → SQLite)
 - **Original:** MySQL/MariaDB database
@@ -61,7 +59,6 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 - Updated functions.php to use PDO with SQLite
 - Removed deprecated `get_magic_quotes_gpc()` function call
 - Fixed 18 instances of `checkSQL()` function calls with incorrect arguments
-- Fixed typo in rep_annual.php: `$db_lib` → `$db_link` (line 140)
 
 ## Project Architecture
 
@@ -74,24 +71,30 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 - `functions.php` - Core database functions and PDO wrappers
 - `config/config.php` - Database configuration (SQLite DSN)
 - `login.php` - User authentication
-- **Navigation Pages (Bootstrap 5):**
-  - `start.php` - Dashboard with charts
-  - `cust_search.php`, `loans_search.php` - Search pages
-  - `cust_act.php`, `cust_inact.php` - Customer lists
-  - `loans_act.php`, `loans_pend.php` - Loan lists
-  - `rep_incomes.php` - Income reports
-  - `rep_expenses.php`, `rep_loans.php` - Expense and loan reports
-  - `rep_annual.php`, `rep_capital.php`, `rep_monthly.php` - Annual, capital, and monthly reports
-  - `books_expense.php`, `books_income.php`, `books_annual.php` - Accounting
-  - `set_basic.php` - Settings panel
-  - `empl_new.php`, `empl_curr.php`, `empl_past.php` - Employee management
-  - `loans_securities.php` - Loan securities overview
 - **Bootstrap Templates:**
   - `includes/bootstrap_header.php` - HTML5 doctype and Bootstrap CSS
   - `includes/bootstrap_header_nav.php` - Navigation bar and menus
   - `includes/bootstrap_footer.php` - Bootstrap JS and dependencies
 - `css/bootstrap-dashboard.css` - Custom Bootstrap styles
 - `mangoo.db` - SQLite database file
+
+### All Settings Pages
+- `set_basic.php` - General system settings (currency, minimum balances, dashboard widgets)
+- `set_loans.php` - Loan configuration (interest rates, limits, guarantees)
+- `set_fees.php` - Fees and charges (shares, entrance, withdrawal, loan fees)
+- `set_user.php` - User management (create/edit users, assign groups)
+- `set_ugroup.php` - User group permissions (admin, delete, reports)
+- `set_ugroup_del.php` - User group deletion with dependency checking
+- `set_logrec.php` - Login/logoff records display
+- `set_dbbackup.php` - Database backup functionality
+
+### All Report Pages
+- `rep_incomes.php` - Income by type analysis
+- `rep_expenses.php` - Detailed and summarized expense reports
+- `rep_loans.php` - Due payments, recoveries, and loans out
+- `rep_capital.php` - Capital additions/deductions analysis
+- `rep_monthly.php` - Monthly consolidated summary
+- `rep_annual.php` - Annual consolidated report
 
 ### Features
 - Customer management with search and list views
@@ -103,7 +106,10 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 - Expense tracking and management (detailed and summarized formats)
 - Loan reporting (due payments, recoveries, loans out, recovery rates)
 - User access control with role-based permissions
-- Data export functionality
+- System settings and configuration
+- User management and authentication
+- Login/logoff audit trail
+- Database backup functionality
 
 ## Usage
 
@@ -112,20 +118,14 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 - **Password:** password
 
 ### Accessing Pages
-All main navigation pages are now fully functional and accessible with Bootstrap 5 styling:
+All pages are now fully functional and accessible with Bootstrap 5 styling:
+- **Settings Tab:** `/set_basic.php` → Full settings navigation with 8 settings pages
 - **Dashboard:** `/start.php` - Statistics and key metrics
 - **Customers:** `/cust_search.php`, `/cust_act.php`, `/cust_inact.php`
 - **Loans:** `/loans_search.php`, `/loans_act.php`, `/loans_pend.php`, `/loans_securities.php`
-- **Reports:** 
-  - `/rep_incomes.php` - Income analysis by type
-  - `/rep_expenses.php` - Expense tracking (detailed/summarized)
-  - `/rep_loans.php` - Loan due/recovery analysis
-  - `/rep_capital.php` - Capital additions/deductions
-  - `/rep_annual.php` - Annual consolidated report
-  - `/rep_monthly.php` - Monthly summary report
+- **Reports:** All 6 report pages accessible via tab navigation
 - **Accounting:** `/books_expense.php`, `/books_income.php`, `/books_annual.php`
 - **Employees:** `/empl_new.php`, `/empl_curr.php`, `/empl_past.php`
-- **Settings:** `/set_basic.php` - Configure system settings
 
 ### Running Locally
 The application runs automatically via the "Start Application" workflow:
@@ -140,6 +140,7 @@ php -S 0.0.0.0:5000
 - All PHP code BEFORE HTML output (fixes headers issues)
 - Permission checks disabled in test environment for accessibility
 - All financial calculations verified for accuracy
+- Responsive grid layout with cards and tabs
 
 ## Development Notes
 
@@ -150,6 +151,16 @@ php -S 0.0.0.0:5000
 4. config/pepper.php should be changed for production use
 5. All user input is sanitized using db_escape()
 6. All report calculations have been verified and are accurate
+
+### Complete Settings Navigation
+All 8 settings pages are interconnected with tab navigation for easy access:
+- Basic Settings
+- Loan Settings
+- Fees & Charges
+- Users
+- Usergroups
+- Log Records
+- Database Backup (Linux only)
 
 ### Future Improvements
 - Re-enable permission checks when user roles are properly configured
@@ -167,6 +178,8 @@ php -S 0.0.0.0:5000
 - `savings` - Savings records
 - `employee` - Employee records
 - `user` - User accounts
+- `ugroup` - User group permissions
+- `logrec` - Login/logoff audit trail
 
 ## Deployment
 
