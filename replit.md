@@ -21,6 +21,12 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 - Updated functions.php to use PDO with SQLite
 - Modified login.php to eliminate session warnings
 
+### PHP 8 Compatibility Fixes (December 2025)
+- Removed deprecated `get_magic_quotes_gpc()` function call (removed in PHP 8.0)
+- Fixed 18 instances of `checkSQL()` function calls with incorrect arguments
+- Improved error handling in db_query with error logging
+- Added proper PHPDoc annotations to database wrapper functions
+
 ### Configuration
 - Created config/config.php with SQLite DSN
 - Configured PHP built-in server on port 5000 (0.0.0.0)
