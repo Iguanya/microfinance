@@ -484,7 +484,7 @@
         */
         function updateSavingsBalance($db_link, $cust_id){
                 $timestamp = time();
-                $sql_savbal_upd = "UPDATE savbalance SET savbal_balance = (SELECT SUM(sav_amount) FROM savings WHERE cust_id = $cust_id), savbal_fixed = (SELECT SUM(sav_amount) FROM savings WHERE cust_id = $cust_id and sav_fixed > $timestamp) WHERE cust_id = $cust_id";
+                $sql_savbal_upd = "UPDATE savbalance SET savbal_balance = COALESCE((SELECT SUM(sav_amount) FROM savings WHERE cust_id = $cust_id), 0), savbal_fixed = COALESCE((SELECT SUM(sav_amount) FROM savings WHERE cust_id = $cust_id and sav_fixed > $timestamp), 0) WHERE cust_id = $cust_id";
                 $query_savbal_upd = db_query($db_link, $sql_savbal_upd);
                 checkSQL($db_link, $query_savbal_upd);
         }
@@ -493,7 +493,7 @@
         * Update savings account balance for ALL customers
         */
         function updateSavingsBalanceAll($db_link){
-                $sql_savbal_upd_all = "UPDATE savbalance SET savbalance.savbal_balance = (SELECT SUM(savings.sav_amount) FROM savings WHERE savings.cust_id = savbalance.cust_id)";
+                $sql_savbal_upd_all = "UPDATE savbalance SET savbalance.savbal_balance = COALESCE((SELECT SUM(savings.sav_amount) FROM savings WHERE savings.cust_id = savbalance.cust_id), 0), savbalance.savbal_fixed = COALESCE((SELECT SUM(savings.sav_amount) FROM savings WHERE savings.cust_id = savbalance.cust_id AND savings.sav_fixed > " . time() . "), 0)";
                 $query_savbal_upd_all = db_query($db_link, $sql_savbal_upd_all);
                 checkSQL($db_link, $query_savbal_upd_all);
         }

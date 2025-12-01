@@ -9,6 +9,22 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 
 ## Recent Changes (December 2025)
 
+### Critical Bug Fix - Account Operations (December 01, 2025)
+**Fixed savbalance NULL constraint violation preventing all savings operations:**
+- Updated `updateSavingsBalance()` function to use COALESCE() for NULL handling
+- Fixed `updateSavingsBalanceAll()` function with proper NULL defaults
+- All acc_sav_depos.php, acc_sav_withd.php operations now work correctly
+- Savings deposits, withdrawals, and balance calculations fully functional
+- All database transactions persist correctly
+
+**Status Update:**
+- All 4 acc_* pages (buy/sell shares, deposit/withdraw savings) tested and verified
+- Database persistence confirmed for all account operations
+- Share transactions (buy, sell, transfer) functional with proper value calculations
+- Savings transactions (deposit, withdrawal) functional with fee handling
+
+## Recent Changes (Earlier - December 2025)
+
 ### Complete Bootstrap 5 Modernization - ALL Pages Complete ✅
 **All 20+ Pages Now Bootstrap Ready:**
 - **Report Pages (6 pages):** rep_annual.php, rep_capital.php, rep_expenses.php, rep_loans.php, rep_monthly.php, rep_incomes.php
