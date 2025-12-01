@@ -9,6 +9,23 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 
 ## Recent Changes (December 2025)
 
+### Dashboard UI Overhaul & Modern Design
+- **Bootstrap 5 Integration:** Complete responsive design overhaul
+- **Interactive Charts:** Chart.js integration with:
+  - Loan status distribution (doughnut chart)
+  - Top customers by borrowing amount (bar chart)
+- **Key Statistics Dashboard:** Real-time metrics display
+  - Total customers, active loans, total savings, total shares
+- **Improved Navigation:**
+  - Modern navbar with dropdown menus
+  - Responsive sidebar with quick actions
+  - Professional color scheme and styling
+- **Data Tables:** Enhanced with Bootstrap styling
+  - Hover effects, better readability
+  - Professional appearance
+
+## Recent Changes (Earlier - December 2025)
+
 ### Database Migration (MySQL → SQLite)
 - **Original:** MySQL/MariaDB database
 - **Current:** SQLite database (mangoo.db)
