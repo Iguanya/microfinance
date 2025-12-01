@@ -5,19 +5,31 @@ $db_link = connect();
 getSettings($db_link);
 getFees($db_link);
 
-// Get Dashboard Statistics
-$cust_count = $db_link->query("SELECT COUNT(*) as cnt FROM customer")->fetch(PDO::FETCH_ASSOC)['cnt'];
-$loan_count = $db_link->query("SELECT COUNT(*) as cnt FROM loans")->fetch(PDO::FETCH_ASSOC)['cnt'];
-$emp_count = $db_link->query("SELECT COUNT(*) as cnt FROM employee")->fetch(PDO::FETCH_ASSOC)['cnt'];
-$active_loans = $db_link->query("SELECT COUNT(*) as cnt FROM loans WHERE loanstatus_id = 2")->fetch(PDO::FETCH_ASSOC)['cnt'];
-$sav_total = $db_link->query("SELECT COALESCE(SUM(savbal_balance), 0) as total FROM savbalance")->fetch(PDO::FETCH_ASSOC)['total'];
-$share_total = $db_link->query("SELECT COALESCE(SUM(sharebal_balance), 0) as total FROM sharebal")->fetch(PDO::FETCH_ASSOC)['total'];
+// Get Dashboard Statistics with error handling
+try {
+    $cust_count = $db_link->query("SELECT COUNT(*) as cnt FROM customer")->fetch(PDO::FETCH_ASSOC)['cnt'] ?: 0;
+    $loan_count = $db_link->query("SELECT COUNT(*) as cnt FROM loans")->fetch(PDO::FETCH_ASSOC)['cnt'] ?: 0;
+    $emp_count = $db_link->query("SELECT COUNT(*) as cnt FROM employee")->fetch(PDO::FETCH_ASSOC)['cnt'] ?: 0;
+    $active_loans = $db_link->query("SELECT COUNT(*) as cnt FROM loans WHERE loanstatus_id = 2")->fetch(PDO::FETCH_ASSOC)['cnt'] ?: 0;
+    $sav_total = $db_link->query("SELECT COALESCE(SUM(savbal_balance), 0) as total FROM savbalance")->fetch(PDO::FETCH_ASSOC)['total'] ?: 0;
+    $share_total = $db_link->query("SELECT COALESCE(SUM(share_amount), 0) as total FROM shares")->fetch(PDO::FETCH_ASSOC)['total'] ?: 0;
+} catch (Exception $e) {
+    $cust_count = $loan_count = $emp_count = $active_loans = $sav_total = $share_total = 0;
+}
 
 // Loan Status Data
-$loan_status = $db_link->query("SELECT loanstatus_name, COUNT(*) as cnt FROM loans LEFT JOIN loanstatus ON loans.loanstatus_id = loanstatus.loanstatus_id GROUP BY loans.loanstatus_id")->fetchAll(PDO::FETCH_ASSOC);
+try {
+    $loan_status = $db_link->query("SELECT COALESCE(loanstatus_name, 'Unknown') as loanstatus_name, COUNT(*) as cnt FROM loans LEFT JOIN loanstatus ON loans.loanstatus_id = loanstatus.loanstatus_id GROUP BY loans.loanstatus_id")->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    $loan_status = array();
+}
 
 // Top Customers by Loan Amount
-$top_customers = $db_link->query("SELECT customer.cust_name, COUNT(loans.loan_id) as loan_count, COALESCE(SUM(loans.loam_amount), 0) as total_borrowed FROM loans LEFT JOIN customer ON loans.cust_id = customer.cust_id GROUP BY loans.cust_id ORDER BY total_borrowed DESC LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
+try {
+    $top_customers = $db_link->query("SELECT customer.cust_name, COUNT(loans.loan_id) as loan_count, COALESCE(SUM(loans.loan_principal), 0) as total_borrowed FROM loans LEFT JOIN customer ON loans.cust_id = customer.cust_id GROUP BY loans.cust_id ORDER BY total_borrowed DESC LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    $top_customers = array();
+}
 
 ?>
 <!DOCTYPE HTML>
