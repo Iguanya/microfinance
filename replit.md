@@ -88,6 +88,15 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 - `set_logrec.php` - Login/logoff records display
 - `set_dbbackup.php` - Database backup functionality
 
+### Customer Account Page (Bootstrap 5 Modernized)
+- `customer.php` - Modernized customer account dashboard with:
+  - **Financial Summary Dashboard** - Quick view cards showing savings balance, loan balance, shares value, and membership duration
+  - **Tabbed Interface** - Easy navigation between Personal Details, Savings, Loans, and Shares accounts
+  - **Personal Details Tab** - Customer photo (editable), form with all contact/personal information, quick action buttons
+  - **Savings Account Tab** - Recent 5 transactions with type, amount, and receipt info displayed in responsive Bootstrap table
+  - **Loans Account Tab** - All active/inactive loans with status, amounts, balances, and next payment dates with overdue indicators
+  - **Share Account Tab** - Total shares owned and total share value with purchase recommendations
+
 ### All Report Pages
 - `rep_incomes.php` - Income by type analysis
 - `rep_expenses.php` - Detailed and summarized expense reports
