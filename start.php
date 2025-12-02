@@ -108,7 +108,7 @@ try {
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="loan_new.php">
+                            <a class="nav-link" href="cust_search.php">
                                 <i class="fa fa-plus-circle"></i> New Loan
                             </a>
                         </li>

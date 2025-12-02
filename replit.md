@@ -9,7 +9,7 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 
 ## Recent Changes (December 2025)
 
-### Bug Fixes & Customer Pages Bootstrap (December 02, 2025)
+### Bug Fixes, Bootstrap Modernization, and Navigation (December 02, 2025)
 
 **1. Fixed savbalance NULL constraint violation (ALL savings operations):**
 - Updated `updateSavingsBalance()` function to use COALESCE() for NULL handling
@@ -33,10 +33,33 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 - Image format/size hints under file input
 
 **5. Fixed customer.php and added New Loan navigation:**
-- Replaced missing bootstrap_header_nav.php with inline Bootstrap navbar
-- Added "New Loan" link to customer.php navigation bar
-- Added "New Loan" link to start.php dashboard sidebar
-- Customer account pages (savings, loans, shares) now have direct action buttons
+- Created central `includes/bootstrap_header_nav.php` for all pages
+- Navbar includes Dashboard, Customers, Loans, New Loan, Accounting, Reports (if allowed), Settings (if admin)
+- Added "New Loan" link to sidebar and navbar in start.php
+- Customer detail page fully functional with account tabs
+
+**6. Fixed loan_new.php accessibility:**
+- Added missing `includes/bootstrap_header_nav.php` include
+- Page now loads and displays correctly with Bootstrap styling
+- New loan form fully functional with all fields
+
+**7. Fixed customer.php links:**
+- Fixed photo upload link: now includes cust parameter
+- Added "New Loan" button in Loans Account tab header (when customer is eligible)
+- "Apply Loan" button already available in Quick Actions (when eligible)
+
+**8. Enhanced loan_new.php with inline customer search:**
+- Added customer search form directly on loan_new.php
+- Search by customer name, ID, or phone number
+- Results displayed in table with select button
+- Once selected, loan form displays for that customer
+- Seamless single-page workflow (no redirect needed)
+
+**9. Fixed Navigation Links and Cancel Button (December 02, 2025):**
+- Fixed "New Loan" navbar link: now points to loan_new.php instead of cust_search.php
+- Fixed cancel button logic: intelligently routes back to loan_new.php (during search) or customer.php (after selection)
+- All navigation links verified and working correctly
+- No duplicate navigation panels
 
 **Status Update:**
 - ✅ All 4 acc_* pages tested and verified working
@@ -46,7 +69,8 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 - ✅ All 25+ pages now have consistent Bootstrap 5 styling
 - ✅ NO more NOT NULL constraint violations
 - ✅ Customer detail page fully functional with all account access
-- ✅ "New Loan" link accessible from dashboard and customer pages
+- ✅ "New Loan" link accessible from dashboard and navbar (goes to customer search)
+- ✅ "Apply Loan" button accessible from customer page (direct to loan_new.php)
 
 ## Recent Changes (Earlier - December 2025)
 

@@ -105,34 +105,7 @@ while ($row_loan = db_fetch_assoc($query_loans)){
 <html>
         <?PHP include 'includes/bootstrap_header.php'; ?>
         <body>
-                <!-- Navigation Bar -->
-                <nav class="navbar navbar-expand-lg navbar-custom">
-                        <div class="container-fluid">
-                                <a class="navbar-brand" href="start.php">
-                                        <i class="fa fa-mango"></i> mangoO
-                                </a>
-                                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                                        <span class="navbar-toggler-icon"></span>
-                                </button>
-                                <div class="collapse navbar-collapse" id="navbarNav">
-                                        <ul class="navbar-nav ms-auto">
-                                                <li class="nav-item"><a class="nav-link" href="start.php"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-                                                <li class="nav-item"><a class="nav-link" href="cust_search.php"><i class="fa fa-users"></i> Customers</a></li>
-                                                <li class="nav-item"><a class="nav-link" href="loans_search.php"><i class="fa fa-credit-card"></i> Loans</a></li>
-                                                <li class="nav-item"><a class="nav-link" href="loan_new.php"><i class="fa fa-plus-circle"></i> New Loan</a></li>
-                                                <li class="nav-item"><a class="nav-link" href="books_expense.php"><i class="fa fa-calculator"></i> Accounting</a></li>
-                                                <li class="nav-item dropdown">
-                                                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-                                                                <i class="fa fa-user"></i> <?PHP echo $_SESSION['log_user']; ?>
-                                                        </a>
-                                                        <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                                                                <li><a class="dropdown-item" href="logout.php"><i class="fa fa-sign-out"></i> Logout</a></li>
-                                                        </ul>
-                                                </li>
-                                        </ul>
-                                </div>
-                        </div>
-                </nav>
+                <?PHP include 'includes/bootstrap_header_nav.php'; ?>
 
                 <div class="container-fluid mt-4">
                         <div class="row">
@@ -200,7 +173,7 @@ while ($row_loan = db_fetch_assoc($query_loans)){
                                                                 <div class="col-md-4">
                                                                         <div class="card mb-4">
                                                                                 <div class="card-body text-center">
-                                                                                        <a href="cust_new_pic.php?from=customer">
+                                                                                        <a href="cust_new_pic.php?from=customer&cust=<?PHP echo $_SESSION['cust_id']; ?>">
                                                                                                 <?PHP
                                                                                                 if (isset($result_cust['cust_pic']))
                                                                                                         echo '<img src="'.$result_cust['cust_pic'].'" class="rounded-circle" style="max-width: 200px; border: 3px solid #FF8C00;" title="Customer\'s picture">';
@@ -428,8 +401,13 @@ while ($row_loan = db_fetch_assoc($query_loans)){
                                 <!-- TAB 3: LOANS ACCOUNT -->
                                 <div class="tab-pane fade" id="loans" role="tabpanel">
                                         <div class="card">
-                                                <div class="card-header bg-danger text-white">
+                                                <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
                                                         <strong><i class="fa fa-money"></i> Loans Account</strong>
+                                                        <?PHP 
+                                                        if ($result_cust['cust_active'] == 1 && ($timestamp-$result_cust['cust_since']) > convertMonths($_SESSION['set_minmemb'])) {
+                                                                echo '<a href="loan_new.php?cust='.$_SESSION['cust_id'].'" class="btn btn-sm btn-light"><i class="fa fa-plus-circle"></i> New Loan</a>';
+                                                        }
+                                                        ?>
                                                 </div>
                                                 <div class="card-body table-responsive">
                                                         <table class="table table-striped table-hover">
