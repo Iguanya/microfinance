@@ -108,6 +108,11 @@ try {
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="loan_new.php">
+                                <i class="fa fa-plus-circle"></i> New Loan
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="acc_sav_list.php">
                                 <i class="fa fa-piggy-bank"></i> Savings
                             </a>

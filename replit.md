@@ -32,6 +32,12 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 - Error alerts with proper styling and dismissal
 - Image format/size hints under file input
 
+**5. Fixed customer.php and added New Loan navigation:**
+- Replaced missing bootstrap_header_nav.php with inline Bootstrap navbar
+- Added "New Loan" link to customer.php navigation bar
+- Added "New Loan" link to start.php dashboard sidebar
+- Customer account pages (savings, loans, shares) now have direct action buttons
+
 **Status Update:**
 - ✅ All 4 acc_* pages tested and verified working
 - ✅ Database persistence confirmed for all account operations
@@ -39,6 +45,8 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 - ✅ Customer registration workflow fully functional with photo upload
 - ✅ All 25+ pages now have consistent Bootstrap 5 styling
 - ✅ NO more NOT NULL constraint violations
+- ✅ Customer detail page fully functional with all account access
+- ✅ "New Loan" link accessible from dashboard and customer pages
 
 ## Recent Changes (Earlier - December 2025)
 
