@@ -20,7 +20,12 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 - Added `inc_text` column to income INSERT with 'Entrance Fee' and 'Stationary' descriptions
 - Added `savbal_fixed='0'` to savbalance INSERT initialization
 
-**3. Modernized cust_new_pic.php to Bootstrap 5:**
+**3. Fixed savings.sav_slip NOT NULL constraint (acc_sav_depos.php & acc_sav_withd.php):**
+- Added missing `sav_slip` column to deposit form and INSERT statement
+- Added `inc_text='Withdrawal Fee'` to withdrawal fee income INSERT
+- Both deposit and withdrawal transactions now include slip numbers
+
+**4. Modernized cust_new_pic.php to Bootstrap 5:**
 - Replaced legacy includeHead/includeMenu with Bootstrap header/nav
 - Added Bootstrap card container with responsive layout
 - Custom file input with label for better UX
@@ -30,8 +35,10 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 **Status Update:**
 - ✅ All 4 acc_* pages tested and verified working
 - ✅ Database persistence confirmed for all account operations
+- ✅ Savings deposits/withdrawals with slip tracking fully functional
 - ✅ Customer registration workflow fully functional with photo upload
 - ✅ All 25+ pages now have consistent Bootstrap 5 styling
+- ✅ NO more NOT NULL constraint violations
 
 ## Recent Changes (Earlier - December 2025)
 

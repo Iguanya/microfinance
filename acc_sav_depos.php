@@ -19,12 +19,13 @@ if (isset($_POST['deposit'])){
         $sav_amount = sanitize($db_link, $_POST['sav_amount']);
         $sav_receipt = sanitize($db_link, $_POST['sav_receipt']);
         $sav_payer = sanitize($db_link, $_POST['sav_payer']);
+        $sav_slip = sanitize($db_link, $_POST['sav_slip']);
         if($_POST['sav_fixed'] != "") $sav_fixed = strtotime(sanitize($db_link, $_POST['sav_fixed']));
         else $sav_fixed = NULL;
         $savtype_id = sanitize($db_link, $_POST['savtype_id']);
 
         // Insert savings transaction into SAVINGS
-        $sql_insert = "INSERT INTO savings (savtype_id, cust_id, sav_date, sav_amount, sav_receipt, sav_payer, sav_fixed, sav_created, user_id) VALUES ('$savtype_id', '$_SESSION[cust_id]', '$sav_date', '$sav_amount', '$sav_receipt', '$sav_payer', '$sav_fixed', '$timestamp', '$_SESSION[log_id]')";
+        $sql_insert = "INSERT INTO savings (savtype_id, cust_id, sav_date, sav_amount, sav_receipt, sav_payer, sav_slip, sav_fixed, sav_created, user_id) VALUES ('$savtype_id', '$_SESSION[cust_id]', '$sav_date', '$sav_amount', '$sav_receipt', '$sav_payer', '$sav_slip', '$sav_fixed', '$timestamp', '$_SESSION[log_id]')";
         $query_insert = db_query($db_link, $sql_insert);
         checkSQL($db_link, $query_insert);
 
@@ -93,6 +94,11 @@ $result_cust = getCustomer($db_link, $_SESSION['cust_id']);
                                                                                 <div class="form-group">
                                                                                         <label for="sav_amount" class="font-weight-bold">Amount *</label>
                                                                                         <input type="number" class="form-control" id="sav_amount" name="sav_amount" placeholder="<?PHP echo $_SESSION['set_cur']; ?>" min="1" step="0.01" required />
+                                                                                </div>
+
+                                                                                <div class="form-group">
+                                                                                        <label for="sav_slip" class="font-weight-bold">Deposit Slip No *</label>
+                                                                                        <input type="number" class="form-control" id="sav_slip" name="sav_slip" placeholder="Slip No." required />
                                                                                 </div>
 
                                                                                 <div class="form-group">

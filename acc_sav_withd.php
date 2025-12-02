@@ -37,7 +37,7 @@ if (isset($_POST['withdraw'])){
         $sav_id = db_fetch_array($query_savid);
 
         // Insert Fee into INCOMES
-        $sql_insert_income = "INSERT INTO incomes (cust_id, inctype_id, sav_id, inc_amount, inc_date, inc_receipt, inc_created, user_id) VALUES ('$_SESSION[cust_id]', '2', '$sav_id[0]', '$_SESSION[fee_withdraw]', '$sav_date', '$sav_receipt', '$timestamp', '$_SESSION[log_id]')";
+        $sql_insert_income = "INSERT INTO incomes (cust_id, inctype_id, sav_id, inc_amount, inc_date, inc_receipt, inc_text, inc_created, user_id) VALUES ('$_SESSION[cust_id]', '2', '$sav_id[0]', '$_SESSION[fee_withdraw]', '$sav_date', '$sav_receipt', 'Withdrawal Fee', '$timestamp', '$_SESSION[log_id]')";
         $query_insert_income = db_query($db_link, $sql_insert_income);
         checkSQL($db_link, $query_insert_income);
 
