@@ -9,19 +9,26 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 
 ## Recent Changes (December 2025)
 
-### Critical Bug Fix - Account Operations (December 01, 2025)
-**Fixed savbalance NULL constraint violation preventing all savings operations:**
+### Bug Fixes - Account & Customer Operations (December 02, 2025)
+
+**1. Fixed savbalance NULL constraint violation (ALL savings operations):**
 - Updated `updateSavingsBalance()` function to use COALESCE() for NULL handling
 - Fixed `updateSavingsBalanceAll()` function with proper NULL defaults
 - All acc_sav_depos.php, acc_sav_withd.php operations now work correctly
 - Savings deposits, withdrawals, and balance calculations fully functional
-- All database transactions persist correctly
+
+**2. Fixed cust_new.php incomes.inc_text NOT NULL constraint:**
+- Added `inc_text` column to income INSERT statements with descriptions:
+  - 'Entrance Fee' for entrance fee income (inctype_id=1)
+  - 'Stationary' for stationery income (inctype_id=6)
+- Added `savbal_fixed='0'` to savbalance INSERT initialization
 
 **Status Update:**
-- All 4 acc_* pages (buy/sell shares, deposit/withdraw savings) tested and verified
-- Database persistence confirmed for all account operations
-- Share transactions (buy, sell, transfer) functional with proper value calculations
-- Savings transactions (deposit, withdrawal) functional with fee handling
+- ✅ All 4 acc_* pages (buy/sell shares, deposit/withdraw savings) tested and verified
+- ✅ Database persistence confirmed for all account operations
+- ✅ Share transactions (buy, sell, transfer) functional with proper value calculations
+- ✅ Savings transactions (deposit, withdrawal) functional with fee handling
+- ✅ Customer registration (cust_new.php) now works without constraint errors
 
 ## Recent Changes (Earlier - December 2025)
 
