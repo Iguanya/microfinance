@@ -173,7 +173,7 @@ while ($row_loan = db_fetch_assoc($query_loans)){
                                                                 <div class="col-md-4">
                                                                         <div class="card mb-4">
                                                                                 <div class="card-body text-center">
-                                                                                        <a href="cust_new_pic.php?from=customer">
+                                                                                        <a href="cust_new_pic.php?from=customer&cust=<?PHP echo $_SESSION['cust_id']; ?>">
                                                                                                 <?PHP
                                                                                                 if (isset($result_cust['cust_pic']))
                                                                                                         echo '<img src="'.$result_cust['cust_pic'].'" class="rounded-circle" style="max-width: 200px; border: 3px solid #FF8C00;" title="Customer\'s picture">';
@@ -401,8 +401,13 @@ while ($row_loan = db_fetch_assoc($query_loans)){
                                 <!-- TAB 3: LOANS ACCOUNT -->
                                 <div class="tab-pane fade" id="loans" role="tabpanel">
                                         <div class="card">
-                                                <div class="card-header bg-danger text-white">
+                                                <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
                                                         <strong><i class="fa fa-money"></i> Loans Account</strong>
+                                                        <?PHP 
+                                                        if ($result_cust['cust_active'] == 1 && ($timestamp-$result_cust['cust_since']) > convertMonths($_SESSION['set_minmemb'])) {
+                                                                echo '<a href="loan_new.php?cust='.$_SESSION['cust_id'].'" class="btn btn-sm btn-light"><i class="fa fa-plus-circle"></i> New Loan</a>';
+                                                        }
+                                                        ?>
                                                 </div>
                                                 <div class="card-body table-responsive">
                                                         <table class="table table-striped table-hover">

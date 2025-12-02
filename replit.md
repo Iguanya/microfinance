@@ -43,6 +43,11 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 - Page now loads and displays correctly with Bootstrap styling
 - New loan form fully functional with all fields
 
+**7. Fixed customer.php links:**
+- Fixed photo upload link: now includes cust parameter
+- Added "New Loan" button in Loans Account tab header (when customer is eligible)
+- "Apply Loan" button already available in Quick Actions (when eligible)
+
 **Status Update:**
 - ✅ All 4 acc_* pages tested and verified working
 - ✅ Database persistence confirmed for all account operations
