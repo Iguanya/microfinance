@@ -88,11 +88,12 @@ $newCustNo = buildCustNo($db_link);
                                                 </div>
                                                 <div class="card-body">
                                                         <form action="cust_new.php" method="post">
+                                                                <input type="hidden" name="cust_no" value="<?PHP echo $newCustNo; ?>" />
                                                                 <div class="row">
                                                                         <div class="col-md-6">
                                                                                 <div class="form-group">
                                                                                         <label class="font-weight-bold">Customer Number</label>
-                                                                                        <input type="text" class="form-control" name="cust_no" value="<?PHP echo $newCustNo; ?>" disabled />
+                                                                                        <input type="text" class="form-control" value="<?PHP echo $newCustNo; ?>" disabled />
                                                                                 </div>
                                                                         </div>
                                                                         <div class="col-md-6">

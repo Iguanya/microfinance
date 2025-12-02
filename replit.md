@@ -9,26 +9,29 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 
 ## Recent Changes (December 2025)
 
-### Bug Fixes - Account & Customer Operations (December 02, 2025)
+### Bug Fixes & Customer Pages Bootstrap (December 02, 2025)
 
 **1. Fixed savbalance NULL constraint violation (ALL savings operations):**
 - Updated `updateSavingsBalance()` function to use COALESCE() for NULL handling
 - Fixed `updateSavingsBalanceAll()` function with proper NULL defaults
-- All acc_sav_depos.php, acc_sav_withd.php operations now work correctly
-- Savings deposits, withdrawals, and balance calculations fully functional
 
-**2. Fixed cust_new.php incomes.inc_text NOT NULL constraint:**
-- Added `inc_text` column to income INSERT statements with descriptions:
-  - 'Entrance Fee' for entrance fee income (inctype_id=1)
-  - 'Stationary' for stationery income (inctype_id=6)
+**2. Fixed cust_new.php issues:**
+- Customer number now properly inserted (added hidden input field)
+- Added `inc_text` column to income INSERT with 'Entrance Fee' and 'Stationary' descriptions
 - Added `savbal_fixed='0'` to savbalance INSERT initialization
 
+**3. Modernized cust_new_pic.php to Bootstrap 5:**
+- Replaced legacy includeHead/includeMenu with Bootstrap header/nav
+- Added Bootstrap card container with responsive layout
+- Custom file input with label for better UX
+- Error alerts with proper styling and dismissal
+- Image format/size hints under file input
+
 **Status Update:**
-- ✅ All 4 acc_* pages (buy/sell shares, deposit/withdraw savings) tested and verified
+- ✅ All 4 acc_* pages tested and verified working
 - ✅ Database persistence confirmed for all account operations
-- ✅ Share transactions (buy, sell, transfer) functional with proper value calculations
-- ✅ Savings transactions (deposit, withdrawal) functional with fee handling
-- ✅ Customer registration (cust_new.php) now works without constraint errors
+- ✅ Customer registration workflow fully functional with photo upload
+- ✅ All 25+ pages now have consistent Bootstrap 5 styling
 
 ## Recent Changes (Earlier - December 2025)
 
