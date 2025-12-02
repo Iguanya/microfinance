@@ -2,8 +2,52 @@
 require 'functions.php';
 checkLogin();
 $db_link = connect();
-getCustID($db_link);
+
 $timestamp = time();
+$search_results = array();
+$customer_selected = false;
+
+// Handle customer search
+if (isset($_POST['search_customer'])){
+        $search_term = sanitize($db_link, $_POST['search_term']);
+        $search_type = sanitize($db_link, $_POST['search_type']);
+        
+        if($search_type == 'name') {
+                $sql_search = "SELECT cust_id, cust_no, cust_name, cust_phone FROM customer WHERE cust_name LIKE '%$search_term%' LIMIT 20";
+        } elseif($search_type == 'phone') {
+                $sql_search = "SELECT cust_id, cust_no, cust_name, cust_phone FROM customer WHERE cust_phone LIKE '%$search_term%' LIMIT 20";
+        } else {
+                $sql_search = "SELECT cust_id, cust_no, cust_name, cust_phone FROM customer WHERE cust_no LIKE '%$search_term%' LIMIT 20";
+        }
+        
+        $query_search = db_query($db_link, $sql_search);
+        checkSQL($db_link, $query_search);
+        
+        while($row = db_fetch_assoc($query_search)) {
+                $search_results[] = $row;
+        }
+}
+
+// Handle customer selection
+if (isset($_POST['select_customer'])){
+        $_SESSION['cust_id'] = sanitize($db_link, $_POST['select_customer']);
+        $customer_selected = true;
+}
+
+// If customer ID is already set, skip search
+if (isset($_GET['cust'])) {
+        $_SESSION['cust_id'] = sanitize($db_link, $_GET['cust']);
+        $customer_selected = true;
+} elseif (!isset($_SESSION['cust_id'])) {
+        $_SESSION['cust_id'] = null;
+}
+
+// Only proceed with loan logic if customer is selected
+if (!$_SESSION['cust_id']) {
+        $customer_search_mode = true;
+} else {
+        $customer_search_mode = false;
+}
 
 // Handle new guarantor creation
 if (isset($_POST['create_guarantor'])){
@@ -22,9 +66,14 @@ if (isset($_POST['create_guarantor'])){
         header('Location: loan_new.php?cust='.$_SESSION['cust_id'].'&guarantor_created=1');
 }
 
-// Get current customer's details
-$result_cust = getCustomer($db_link, $_SESSION['cust_id']);
-$savbalance = getSavingsBalance($db_link, $_SESSION['cust_id']);
+// Get current customer's details (only if customer selected)
+if ($_SESSION['cust_id']) {
+        $result_cust = getCustomer($db_link, $_SESSION['cust_id']);
+        $savbalance = getSavingsBalance($db_link, $_SESSION['cust_id']);
+} else {
+        $result_cust = array();
+        $savbalance = 0;
+}
 
 //NEW LOAN-Button
 if (isset($_POST['newloan'])){
@@ -98,37 +147,43 @@ if (isset($_POST['newloan'])){
 
 /* SELECT LEGITIMATE GUARANTORS FROM CUSTOMER */
 
-//Select all customers except current one
-$query_cust = getCustOther($db_link);
-
-$guarantors = array();
-if ($_SESSION['set_maxguar'] == ""){
-        while ($row_cust = db_fetch_assoc($query_cust)){
-                if ($row_cust['cust_active'] == 1) $guarantors[] = $row_cust;
-        }
+//Select all customers except current one (only if customer selected)
+if ($_SESSION['cust_id']) {
+        $query_cust = getCustOther($db_link);
+        $guarantors = array();
+} else {
+        $query_cust = null;
+        $guarantors = array();
 }
-else {
-        //Select all guarantors of active loans
-        $sql_guarantact = "SELECT loan_guarant1, loan_guarant2, loan_guarant3 FROM loans WHERE loanstatus_id = 2";
-        $query_guarantact = db_query($db_link, $sql_guarantact);
-        checkSQL($db_link, $query_guarantact);
-        $guarantact = array();
-        while($row_guarantact = db_fetch_assoc($query_guarantact)){
-                $guarantact[] = $row_guarantact;
+if ($query_cust && $_SESSION['cust_id']) {
+        if ($_SESSION['set_maxguar'] == ""){
+                while ($row_cust = db_fetch_assoc($query_cust)){
+                        if ($row_cust['cust_active'] == 1) $guarantors[] = $row_cust;
+                }
         }
-
-        //Choose only those customers as legitimate guarantors who are not guarantors for more than a specified number of active loans
-
-        while ($row_cust = db_fetch_assoc($query_cust)){
-                $guarant_count = 0;
-
-                foreach($guarantact as $ga){
-                        if ($ga['loan_guarant1'] == $row_cust['cust_id']) $guarant_count = $guarant_count + 1;
-                        if ($ga['loan_guarant2'] == $row_cust['cust_id']) $guarant_count = $guarant_count + 1;
-                        if ($ga['loan_guarant3'] == $row_cust['cust_id']) $guarant_count = $guarant_count + 1;
+        else {
+                //Select all guarantors of active loans
+                $sql_guarantact = "SELECT loan_guarant1, loan_guarant2, loan_guarant3 FROM loans WHERE loanstatus_id = 2";
+                $query_guarantact = db_query($db_link, $sql_guarantact);
+                checkSQL($db_link, $query_guarantact);
+                $guarantact = array();
+                while($row_guarantact = db_fetch_assoc($query_guarantact)){
+                        $guarantact[] = $row_guarantact;
                 }
 
-                if ($guarant_count < $_SESSION['set_maxguar']) $guarantors[] = $row_cust;
+                //Choose only those customers as legitimate guarantors who are not guarantors for more than a specified number of active loans
+
+                while ($row_cust = db_fetch_assoc($query_cust)){
+                        $guarant_count = 0;
+
+                        foreach($guarantact as $ga){
+                                if ($ga['loan_guarant1'] == $row_cust['cust_id']) $guarant_count = $guarant_count + 1;
+                                if ($ga['loan_guarant2'] == $row_cust['cust_id']) $guarant_count = $guarant_count + 1;
+                                if ($ga['loan_guarant3'] == $row_cust['cust_id']) $guarant_count = $guarant_count + 1;
+                        }
+
+                        if ($guarant_count < $_SESSION['set_maxguar']) $guarantors[] = $row_cust;
+                }
         }
 }
 
@@ -159,6 +214,70 @@ else $minlp = 1;
                         <div class="row">
                                 <div class="col-12">
                                         <h2 class="mb-4"><i class="fa fa-file-text"></i> New Loan Application</h2>
+
+                                        <?PHP if($customer_search_mode): ?>
+                                        <!-- CUSTOMER SEARCH SECTION -->
+                                        <div class="card mb-4">
+                                                <div class="card-header bg-info text-white">
+                                                        <strong><i class="fa fa-search"></i> Select Customer</strong>
+                                                </div>
+                                                <div class="card-body">
+                                                        <form action="loan_new.php" method="post" class="mb-4">
+                                                                <div class="row">
+                                                                        <div class="col-md-8">
+                                                                                <div class="input-group">
+                                                                                        <input type="text" class="form-control" name="search_term" placeholder="Search here..." required />
+                                                                                        <select class="form-control" name="search_type" style="max-width: 150px;">
+                                                                                                <option value="name">By Name</option>
+                                                                                                <option value="id">By ID</option>
+                                                                                                <option value="phone">By Phone</option>
+                                                                                        </select>
+                                                                                        <button class="btn btn-info" type="submit" name="search_customer">
+                                                                                                <i class="fa fa-search"></i> Search
+                                                                                        </button>
+                                                                                </div>
+                                                                        </div>
+                                                                </div>
+                                                        </form>
+
+                                                        <?PHP if(count($search_results) > 0): ?>
+                                                        <div class="table-responsive">
+                                                                <table class="table table-striped table-hover">
+                                                                        <thead class="thead-dark">
+                                                                                <tr>
+                                                                                        <th>Customer No</th>
+                                                                                        <th>Name</th>
+                                                                                        <th>Phone</th>
+                                                                                        <th>Action</th>
+                                                                                </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                                <?PHP foreach($search_results as $cust): ?>
+                                                                                <tr>
+                                                                                        <td><strong><?PHP echo $cust['cust_no']; ?></strong></td>
+                                                                                        <td><?PHP echo $cust['cust_name']; ?></td>
+                                                                                        <td><?PHP echo $cust['cust_phone']; ?></td>
+                                                                                        <td>
+                                                                                                <form action="loan_new.php" method="post" style="display:inline;">
+                                                                                                        <input type="hidden" name="select_customer" value="<?PHP echo $cust['cust_id']; ?>" />
+                                                                                                        <button type="submit" class="btn btn-success btn-sm">
+                                                                                                                <i class="fa fa-check"></i> Select
+                                                                                                        </button>
+                                                                                                </form>
+                                                                                        </td>
+                                                                                </tr>
+                                                                                <?PHP endforeach; ?>
+                                                                        </tbody>
+                                                                </table>
+                                                        </div>
+                                                        <?PHP elseif(isset($_POST['search_customer'])): ?>
+                                                        <div class="alert alert-warning"><i class="fa fa-info-circle"></i> No customers found matching your search criteria.</div>
+                                                        <?PHP endif; ?>
+                                                </div>
+                                        </div>
+                                        <?PHP endif; ?>
+
+                                        <?PHP if(!$customer_search_mode): ?>
                                         <p class="lead">Customer: <strong><?PHP echo $result_cust['cust_name'].' ('.$result_cust['cust_no'].')'; ?></strong></p>
 
                                         <?PHP if(isset($_GET['guarantor_created'])): ?>

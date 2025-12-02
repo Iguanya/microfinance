@@ -48,6 +48,13 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 - Added "New Loan" button in Loans Account tab header (when customer is eligible)
 - "Apply Loan" button already available in Quick Actions (when eligible)
 
+**8. Enhanced loan_new.php with inline customer search:**
+- Added customer search form directly on loan_new.php
+- Search by customer name, ID, or phone number
+- Results displayed in table with select button
+- Once selected, loan form displays for that customer
+- Seamless single-page workflow (no redirect needed)
+
 **Status Update:**
 - ✅ All 4 acc_* pages tested and verified working
 - ✅ Database persistence confirmed for all account operations
