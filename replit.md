@@ -9,7 +9,7 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 
 ## Recent Changes (December 2025)
 
-### Bug Fixes & Customer Pages Bootstrap (December 02, 2025)
+### Bug Fixes, Bootstrap Modernization, and Navigation (December 02, 2025)
 
 **1. Fixed savbalance NULL constraint violation (ALL savings operations):**
 - Updated `updateSavingsBalance()` function to use COALESCE() for NULL handling
@@ -33,10 +33,15 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 - Image format/size hints under file input
 
 **5. Fixed customer.php and added New Loan navigation:**
-- Replaced missing bootstrap_header_nav.php with inline Bootstrap navbar
-- Added "New Loan" link to customer.php navigation bar
-- Added "New Loan" link to start.php dashboard sidebar
-- Customer account pages (savings, loans, shares) now have direct action buttons
+- Created central `includes/bootstrap_header_nav.php` for all pages
+- Navbar includes Dashboard, Customers, Loans, New Loan, Accounting, Reports (if allowed), Settings (if admin)
+- Added "New Loan" link to sidebar and navbar in start.php
+- Customer detail page fully functional with account tabs
+
+**6. Fixed loan_new.php accessibility:**
+- Added missing `includes/bootstrap_header_nav.php` include
+- Page now loads and displays correctly with Bootstrap styling
+- New loan form fully functional with all fields
 
 **Status Update:**
 - ✅ All 4 acc_* pages tested and verified working
