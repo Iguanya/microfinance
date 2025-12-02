@@ -12,7 +12,7 @@
                                 <li class="nav-item"><a class="nav-link" href="start.php"><i class="fa fa-dashboard"></i> Dashboard</a></li>
                                 <li class="nav-item"><a class="nav-link" href="cust_search.php"><i class="fa fa-users"></i> Customers</a></li>
                                 <li class="nav-item"><a class="nav-link" href="loans_search.php"><i class="fa fa-credit-card"></i> Loans</a></li>
-                                <li class="nav-item"><a class="nav-link" href="cust_search.php"><i class="fa fa-plus-circle"></i> New Loan</a></li>
+                                <li class="nav-item"><a class="nav-link" href="loan_new.php"><i class="fa fa-plus-circle"></i> New Loan</a></li>
                                 <li class="nav-item"><a class="nav-link" href="books_expense.php"><i class="fa fa-calculator"></i> Accounting</a></li>
                                 <?PHP if ($_SESSION['log_report'] == 1): ?>
                                 <li class="nav-item"><a class="nav-link" href="rep_incomes.php"><i class="fa fa-line-chart"></i> Reports</a></li>

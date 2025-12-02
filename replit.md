@@ -55,6 +55,12 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 - Once selected, loan form displays for that customer
 - Seamless single-page workflow (no redirect needed)
 
+**9. Fixed Navigation Links and Cancel Button (December 02, 2025):**
+- Fixed "New Loan" navbar link: now points to loan_new.php instead of cust_search.php
+- Fixed cancel button logic: intelligently routes back to loan_new.php (during search) or customer.php (after selection)
+- All navigation links verified and working correctly
+- No duplicate navigation panels
+
 **Status Update:**
 - ✅ All 4 acc_* pages tested and verified working
 - ✅ Database persistence confirmed for all account operations

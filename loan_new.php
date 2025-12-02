@@ -441,7 +441,7 @@ else $minlp = 1;
                                                                 <button type="submit" name="newloan" class="btn btn-success btn-lg btn-block mt-3">
                                                                         <i class="fa fa-check"></i> Submit Loan Application
                                                                 </button>
-                                                                <a href="customer.php?cust=<?PHP echo $_SESSION['cust_id']; ?>" class="btn btn-secondary btn-block mt-2">
+                                                                <a href="<?PHP echo ($customer_search_mode) ? 'loan_new.php' : 'customer.php?cust='.$_SESSION['cust_id']; ?>" class="btn btn-secondary btn-block mt-2">
                                                                         <i class="fa fa-arrow-left"></i> Cancel
                                                                 </a>
                                                         </form>
