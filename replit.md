@@ -51,7 +51,8 @@ mangoO is a lightweight, yet powerful software solution for small microfinance i
 - ✅ All 25+ pages now have consistent Bootstrap 5 styling
 - ✅ NO more NOT NULL constraint violations
 - ✅ Customer detail page fully functional with all account access
-- ✅ "New Loan" link accessible from dashboard and customer pages
+- ✅ "New Loan" link accessible from dashboard and navbar (goes to customer search)
+- ✅ "Apply Loan" button accessible from customer page (direct to loan_new.php)
 
 ## Recent Changes (Earlier - December 2025)
 
