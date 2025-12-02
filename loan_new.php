@@ -449,6 +449,7 @@ else $minlp = 1;
                                         </div>
                                 </div>
                         </div>
+                        <?PHP endif; ?>
                 </div>
 
                 <?PHP include 'includes/bootstrap_footer.php'; ?>
