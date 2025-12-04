@@ -35,12 +35,12 @@ CREATE TABLE IF NOT EXISTS `custmarried` (
 -- Daten für Tabelle `custmarried`
 --
 
-INSERT INTO `custmarried` (`custmarried_status`) VALUES
-('N/A'),
-('Single'),
-('Married'),
-('Widowed'),
-('Divorced');
+INSERT INTO `custmarried` (`custmarried_id`, `custmarried_status`) VALUES
+(0, 'N/A'),
+(1, 'Single'),
+(2, 'Married'),
+(3, 'Widowed'),
+(4, 'Divorced');
 
 -- --------------------------------------------------------
 
@@ -75,8 +75,8 @@ CREATE TABLE IF NOT EXISTS `customer` (
 -- Daten für Tabelle `customer`
 --
 
-INSERT INTO `customer` (`cust_no`, `cust_name`, `cust_dob`, `custsex_id`, `cust_address`, `cust_phone`, `cust_email`, `cust_occup`, `custmarried_id`, `cust_heir`, `cust_heirrel`, `cust_lengthres`, `cust_since`, `custsick_id`, `cust_lastsub`, `cust_active`, `cust_lastupd`, `cust_pic`, `user_id`) VALUES
-(NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL);
+INSERT INTO `customer` (`cust_id`, `cust_no`, `cust_name`, `cust_dob`, `custsex_id`, `cust_address`, `cust_phone`, `cust_email`, `cust_occup`, `custmarried_id`, `cust_heir`, `cust_heirrel`, `cust_lengthres`, `cust_since`, `custsick_id`, `cust_lastsub`, `cust_active`, `cust_lastupd`, `cust_pic`, `user_id`) VALUES
+(0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -93,14 +93,14 @@ CREATE TABLE IF NOT EXISTS `custsex` (
 -- Daten für Tabelle `custsex`
 --
 
-INSERT INTO `custsex` (`custsex_name`) VALUES
-('Male'),
-('Female'),
-('Couple'),
-('Family'),
-('Group'),
-('Institution'),
-('Business');
+INSERT INTO `custsex` (`custsex_id`, `custsex_name`) VALUES
+(1, 'Male'),
+(2, 'Female'),
+(3, 'Couple'),
+(4, 'Family'),
+(5, 'Group'),
+(6, 'Institution'),
+(7, 'Business');
 
 -- --------------------------------------------------------
 
@@ -118,13 +118,13 @@ CREATE TABLE IF NOT EXISTS `custsick` (
 -- Daten für Tabelle `custsick`
 --
 
-INSERT INTO `custsick` (`custsick_name`, `custsick_risk`) VALUES
-('None', 0),
-('Heart Attack', 1),
-('Stroke', 1),
-('Cancer', 3),
-('HIV/AIDS', 3),
-('Ulcer', 1);
+INSERT INTO `custsick` (`custsick_id`, `custsick_name`, `custsick_risk`) VALUES
+(0, 'None', 0),
+(1, 'Heart Attack', 1),
+(2, 'Stroke', 1),
+(3, 'Cancer', 3),
+(4, 'HIV/AIDS', 3),
+(5, 'Ulcer', 1);
 
 -- --------------------------------------------------------
 
@@ -141,11 +141,11 @@ CREATE TABLE IF NOT EXISTS `emplmarried` (
 -- Daten für Tabelle `emplmarried`
 --
 
-INSERT INTO `emplmarried` (`emplmarried_status`) VALUES
-('Single'),
-('Married'),
-('Widowed'),
-('Divorced');
+INSERT INTO `emplmarried` (`emplmarried_id`, `emplmarried_status`) VALUES
+(1, 'Single'),
+(2, 'Married'),
+(3, 'Widowed'),
+(4, 'Divorced');
 
 -- --------------------------------------------------------
 
@@ -177,8 +177,8 @@ CREATE TABLE IF NOT EXISTS `employee` (
 -- Daten für Tabelle `employee`
 --
 
-INSERT INTO `employee` (`empl_no`, `empl_name`, `empl_dob`, `emplsex_id`, `emplmarried_id`, `empl_position`, `empl_salary`, `empl_address`, `empl_phone`, `empl_email`, `empl_in`, `empl_out`, `empl_lastupd`, `empl_active`, `empl_pic`, `user_id`) VALUES
-('0', NULL, 0, 0, 0, '', 0, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, 1);
+INSERT INTO `employee` (`empl_id`, `empl_no`, `empl_name`, `empl_dob`, `emplsex_id`, `emplmarried_id`, `empl_position`, `empl_salary`, `empl_address`, `empl_phone`, `empl_email`, `empl_in`, `empl_out`, `empl_lastupd`, `empl_active`, `empl_pic`, `user_id`) VALUES
+(0, '0', NULL, 0, 0, 0, '', 0, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -195,9 +195,9 @@ CREATE TABLE IF NOT EXISTS `emplsex` (
 -- Daten für Tabelle `emplsex`
 --
 
-INSERT INTO `emplsex` (`emplsex_name`) VALUES
-('Male'),
-('Female');
+INSERT INTO `emplsex` (`emplsex_id`, `emplsex_name`) VALUES
+(1, 'Male'),
+(2, 'Female');
 
 -- --------------------------------------------------------
 
