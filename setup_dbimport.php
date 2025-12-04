@@ -47,6 +47,17 @@ if (!$db) {
 mysqli_set_charset($db, 'utf8mb4');
 
 // -------------------------------
+// TRUNCATE ALL TABLES BEFORE IMPORT
+// -------------------------------
+$result = mysqli_query($db, "SHOW TABLES");
+while ($row = mysqli_fetch_row($result)) {
+    $table = $row[0];
+    mysqli_query($db, "SET FOREIGN_KEY_CHECKS = 0");
+    mysqli_query($db, "TRUNCATE TABLE `$table`");
+    mysqli_query($db, "SET FOREIGN_KEY_CHECKS = 1");
+}
+
+// -------------------------------
 // OPEN SQL FILE
 // -------------------------------
 $fp = @fopen($fileSQL, 'r');
