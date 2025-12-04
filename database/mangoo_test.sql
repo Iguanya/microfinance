@@ -26,7 +26,7 @@ SET time_zone = "+00:00";
 -- Tabellenstruktur für Tabelle `custmarried`
 --
 
-CREATE TABLE `custmarried` (
+CREATE TABLE IF NOT EXISTS `custmarried` (
   `custmarried_id` int(11) NOT NULL,
   `custmarried_status` varchar(15) COLLATE utf8_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
