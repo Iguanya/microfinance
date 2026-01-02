@@ -74,8 +74,6 @@ if(isset($_POST['save_changes'])){
 <html>
         <?PHP include 'includes/bootstrap_header.php'; ?>
         <body>
-                <?PHP include 'includes/bootstrap_header_nav.php'; ?>
-
                 <div class="container-fluid mt-4">
                         <div class="row">
                                 <div class="col-12">
