@@ -24,31 +24,20 @@ $dbPass = $_SESSION['db_pass'] ?? ''; // allow empty password
 $dbName = $_SESSION['db_name'];
 
 // Force TCP to avoid socket confusion (VERY IMPORTANT)
-$mysqli = @mysqli_connect($dbHost, $dbUser, $dbPass, "", 3306);
-if (!$mysqli) {
+try {
+    $dsn = "mysql:host=" . $dbHost . ";port=3306;charset=utf8mb4";
+    $db = new PDO($dsn, $dbUser, $dbPass);
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    // Create database
+    $db->exec("CREATE DATABASE IF NOT EXISTS `" . $dbName . "` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+    
+    // Success - closing connection for now as script continues or redirects
+    $db = null;
+} catch (PDOException $e) {
     http_response_code(500);
-    die('Could not connect to MySQL at ' . htmlspecialchars($dbHost) . ': ' . mysqli_connect_error());
+    die('Could not connect to MySQL at ' . htmlspecialchars($dbHost) . ': ' . $e->getMessage());
 }
-
-mysqli_set_charset($mysqli, 'utf8mb4');
-
-// Validate DB name
-if (!preg_match('/^[A-Za-z0-9_\-]+$/', $dbName)) {
-    mysqli_close($mysqli);
-    http_response_code(400);
-    die('Invalid database name. Use only letters, numbers, underscore or dash.');
-}
-
-// Create database
-$sql = "CREATE DATABASE IF NOT EXISTS `" . $dbName . "` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
-if (!db_query($mysqli, $sql)) {
-    $err = db_error($mysqli);
-    mysqli_close($mysqli);
-    http_response_code(500);
-    die('Could not create database "' . htmlspecialchars($dbName) . '": ' . $err);
-}
-
-mysqli_close($mysqli);
 
 // Redirect
 if (basename($_SERVER['PHP_SELF']) === 'setup_dbcreate.php') {
