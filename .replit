@@ -38,3 +38,12 @@ externalPort = 80
 [deployment]
 deploymentTarget = "autoscale"
 run = ["php", "-S", "0.0.0.0:5000"]
+
+[userenv]
+
+[userenv.shared]
+MYSQL_HOST = "144.172.89.77"
+MYSQL_USER = "root"
+MYSQL_PASSWORD = "root_root"
+MYSQL_DATABASE = "microfinance"
+MYSQL_PORT = "3306"

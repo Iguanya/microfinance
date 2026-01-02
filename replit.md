@@ -11,11 +11,11 @@ mangoO is a lightweight, yet powerful PHP web application designed for small mic
 - System settings and configuration
 - Database backup functionality
 
-**Technology Stack:** PHP 8.2, SQLite, JavaScript (jQuery), Bootstrap 5, CSS
+**Technology Stack:** PHP 8.2, MySQL/MariaDB, JavaScript (jQuery), Bootstrap 5, CSS
 
 ## User Preferences
 - Modern Bootstrap 5 design for all pages
-- Using SQLite instead of MySQL for Replit compatibility
+- Using MySQL/MariaDB for database persistence
 - Orange (#FF8C00) as primary brand color
 - All PHP code BEFORE HTML output (fixes headers issues)
 - Permission checks disabled in test environment for accessibility
@@ -30,11 +30,11 @@ mangoO is a lightweight, yet powerful PHP web application designed for small mic
 - Custom `bootstrap-dashboard.css` is used for brand-specific styling.
 
 **Technical Implementations:**
-- **Database:** SQLite (`mangoo.db`) with 26 tables, migrated from MySQL for Replit compatibility.
+- **Database:** MySQL/MariaDB with 26 tables, using PDO for database interactions.
 - **PHP 8.2 Compatibility:** Refactored to use PDO for database interactions, replacing `mysqli_*` functions.
 - **Core Files:**
     - `functions.php`: Contains core database functions and PDO wrappers.
-    - `config/config.php`: Stores SQLite DSN configuration.
+    - `config/config.php`: Stores MySQL/MariaDB configuration.
     - `login.php`: Handles user authentication.
     - `includes/bootstrap_header.php`, `includes/bootstrap_header_nav.php`, `includes/bootstrap_footer.php`: Provide consistent Bootstrap templating.
 

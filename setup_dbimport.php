@@ -42,7 +42,7 @@ try {
     if (!defined('DB_DSN')) {
         throw new Error("DB_DSN is not defined. Check config/config.php");
     }
-    $db = new PDO(DB_DSN);
+    $db = new PDO(DB_DSN, DB_USER, DB_PASS);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     die('Could not connect to database: ' . htmlspecialchars($e->getMessage()));
@@ -51,12 +51,13 @@ try {
 // -------------------------------
 // TRUNCATE ALL TABLES BEFORE IMPORT
 // -------------------------------
-// In PostgreSQL, we can use a different approach or skip this if we use IF NOT EXISTS
-$stmt = $db->query("SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname = 'public'");
+$db->exec("SET FOREIGN_KEY_CHECKS = 0");
+$stmt = $db->query("SHOW TABLES");
 while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
     $table = $row[0];
-    $db->exec("TRUNCATE TABLE \"$table\" CASCADE");
+    $db->exec("TRUNCATE TABLE `$table` ");
 }
+$db->exec("SET FOREIGN_KEY_CHECKS = 1");
 
 // -------------------------------
 // OPEN SQL FILE
@@ -100,15 +101,9 @@ while (microtime(true) < $deadline && ($line = fgets($fp, 102400))) {
     // Completed SQL statement?
     if (substr(trim($query), -1) === ';') {
         
-        // Skip table creation if it exists (PostgreSQL specific check)
+        // Skip table creation if it exists (MySQL/MariaDB specific check)
         if (stripos($query, 'CREATE TABLE') !== false) {
             $query = str_ireplace('CREATE TABLE', 'CREATE TABLE IF NOT EXISTS', $query);
-            // Handle MySQL specific backticks by replacing with double quotes for PostgreSQL
-            $query = str_replace('`', '"', $query);
-            // Handle AUTO_INCREMENT -> SERIAL conversion if needed (basic)
-            $query = str_ireplace('AUTO_INCREMENT', '', $query);
-            // Note: PostgreSQL uses SERIAL for auto-incrementing integers.
-            // If the SQL file is pure MySQL, more complex regex might be needed.
         }
 
         if (!db_query($db, $query)) {

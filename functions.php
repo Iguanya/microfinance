@@ -6,10 +6,9 @@
         function connect() {
                 require_once 'config/config.php';
                 try {
-                        $connect = new PDO(DB_DSN);
+                        $connect = new PDO(DB_DSN, DB_USER, DB_PASS);
                         $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                         $connect->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-                        // PRAGMA foreign_keys = ON is SQLite specific. PostgreSQL has them on by default.
                         return $connect;
                 } catch (PDOException $e) {
                         header('Location:setup.php');
