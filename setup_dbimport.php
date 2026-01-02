@@ -40,7 +40,20 @@ require_once 'config/config.php';
 // -------------------------------
 try {
     if (!defined('DB_DSN')) {
-        throw new Error("DB_DSN is not defined. Check config/config.php");
+        // Fallback for environment variables if config didn't load properly
+        $db_host = getenv('MYSQL_HOST');
+        $db_user = getenv('MYSQL_USER');
+        $db_pass = getenv('MYSQL_PASSWORD');
+        $db_name = getenv('MYSQL_DATABASE');
+        $db_port = getenv('MYSQL_PORT') ?: '3306';
+        
+        if (!$db_host || !$db_user || !$db_name) {
+            throw new Error("DB_DSN is not defined and environment variables are missing. Check config/config.php");
+        }
+        
+        define('DB_USER', $db_user);
+        define('DB_PASS', $db_pass);
+        define('DB_DSN', "mysql:host=$db_host;port=$db_port;dbname=$db_name;charset=utf8mb4");
     }
     $db = new PDO(DB_DSN, DB_USER, DB_PASS);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
