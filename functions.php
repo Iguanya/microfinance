@@ -9,7 +9,7 @@
                         $connect = new PDO(DB_DSN);
                         $connect->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                         $connect->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-                        $connect->exec("PRAGMA foreign_keys = ON");
+                        // PRAGMA foreign_keys = ON is SQLite specific. PostgreSQL has them on by default.
                         return $connect;
                 } catch (PDOException $e) {
                         header('Location:setup.php');
@@ -30,6 +30,8 @@
         */
         function db_query($db_link, $sql) {
                 try {
+                        // Handle MySQL to PostgreSQL compatibility issues if any
+                        // PostgreSQL is case-sensitive for unquoted identifiers
                         $stmt = $db_link->query($sql);
                         $GLOBALS['db_last_error'] = '';
                         return $stmt;

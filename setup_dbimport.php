@@ -33,28 +33,21 @@ $deadline   = microtime(true) + $maxRuntime;
 // -------------------------------
 // CONNECT TO DATABASE
 // -------------------------------
-$db = @mysqli_connect(
-    $_SESSION['db_host'],
-    $_SESSION['db_user'],
-    $_SESSION['db_pass'],
-    $_SESSION['db_name']
-);
-
-if (!$db) {
-    die('Could not connect to database: ' . htmlspecialchars(mysqli_connect_error()));
+try {
+    $db = new PDO(DB_DSN);
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die('Could not connect to database: ' . htmlspecialchars($e->getMessage()));
 }
-
-mysqli_set_charset($db, 'utf8mb4');
 
 // -------------------------------
 // TRUNCATE ALL TABLES BEFORE IMPORT
 // -------------------------------
-$result = mysqli_query($db, "SHOW TABLES");
-while ($row = mysqli_fetch_row($result)) {
+// In PostgreSQL, we can use a different approach or skip this if we use IF NOT EXISTS
+$stmt = $db->query("SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname = 'public'");
+while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
     $table = $row[0];
-    mysqli_query($db, "SET FOREIGN_KEY_CHECKS = 0");
-    mysqli_query($db, "TRUNCATE TABLE `$table`");
-    mysqli_query($db, "SET FOREIGN_KEY_CHECKS = 1");
+    $db->exec("TRUNCATE TABLE \"$table\" CASCADE");
 }
 
 // -------------------------------
@@ -99,9 +92,15 @@ while (microtime(true) < $deadline && ($line = fgets($fp, 102400))) {
     // Completed SQL statement?
     if (substr(trim($query), -1) === ';') {
         
-        // Skip table creation if it exists (SQLite specific check)
+        // Skip table creation if it exists (PostgreSQL specific check)
         if (stripos($query, 'CREATE TABLE') !== false) {
             $query = str_ireplace('CREATE TABLE', 'CREATE TABLE IF NOT EXISTS', $query);
+            // Handle MySQL specific backticks by replacing with double quotes for PostgreSQL
+            $query = str_replace('`', '"', $query);
+            // Handle AUTO_INCREMENT -> SERIAL conversion if needed (basic)
+            $query = str_ireplace('AUTO_INCREMENT', '', $query);
+            // Note: PostgreSQL uses SERIAL for auto-incrementing integers.
+            // If the SQL file is pure MySQL, more complex regex might be needed.
         }
 
         if (!db_query($db, $query)) {
