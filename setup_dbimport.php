@@ -31,9 +31,17 @@ $maxRuntime = 2;  // seconds allowed per execution
 $deadline   = microtime(true) + $maxRuntime;
 
 // -------------------------------
+// LOAD CONFIGURATION
+// -------------------------------
+require_once 'config/config.php';
+
+// -------------------------------
 // CONNECT TO DATABASE
 // -------------------------------
 try {
+    if (!defined('DB_DSN')) {
+        throw new Error("DB_DSN is not defined. Check config/config.php");
+    }
     $db = new PDO(DB_DSN);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
