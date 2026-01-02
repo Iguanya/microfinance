@@ -30,6 +30,7 @@ mangoO is a lightweight, yet powerful PHP web application designed for small mic
 - Custom `bootstrap-dashboard.css` is used for brand-specific styling.
 
 **Technical Implementations:**
+- **Environment Variables:** Supports `.env` files for local development via `config/load_env.php`.
 - **Database:** MySQL/MariaDB with 26 tables, using PDO for database interactions.
 - **PHP 8.2 Compatibility:** Refactored to use PDO for database interactions, replacing `mysqli_*` functions.
 - **Core Files:**
