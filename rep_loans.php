@@ -6,20 +6,19 @@ checkLogin();
 $db_link = connect();
 
 //Variables $year and $month provide the pre-set values for input fields
-$year = date("Y",time());
-$month = date("m",time());
+$year = date("Y", time());
+$month = date("m", time());
 ?>
 
 <!DOCTYPE HTML>
 <html>
-        <?PHP include 'includes/bootstrap_header.php'; ?>
-        <body>
-                <?PHP include 'includes/bootstrap_header_nav.php'; ?>
+<?PHP include 'includes/bootstrap_header.php'; ?>
 
-                <div class="container-fluid mt-4">
-                        <div class="row">
-                                <div class="col-12">
-                                        <h2 class="mb-4">Loans Report</h2>
+<body>
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="mb-4">Loans Report</h2>
                                         
                                         <nav class="mb-3">
                                                 <ul class="nav nav-tabs" role="tablist">

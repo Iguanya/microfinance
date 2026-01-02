@@ -6,7 +6,7 @@ checkLogin();
 $db_link = connect();
 
 //Variable $year provides the pre-set values for input fields
-$year = (date("Y",time()))-1;
+$year = (date("Y", time())) - 1;
 $capital_total = 0;
 $capital_additions = 0;
 $capital_deductions = 0;
@@ -14,14 +14,13 @@ $capital_deductions = 0;
 
 <!DOCTYPE HTML>
 <html>
-        <?PHP include 'includes/bootstrap_header.php'; ?>
-        <body>
-                <?PHP include 'includes/bootstrap_header_nav.php'; ?>
+<?PHP include 'includes/bootstrap_header.php'; ?>
 
-                <div class="container-fluid mt-4">
-                        <div class="row">
-                                <div class="col-12">
-                                        <h2 class="mb-4">Annual Report</h2>
+<body>
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="mb-4">Annual Report</h2>
                                         
                                         <nav class="mb-3">
                                                 <ul class="nav nav-tabs" role="tablist">
