@@ -2,6 +2,8 @@
 /**
  * Define Database parameters for MySQL/MariaDB
  */
+require_once __DIR__ . '/load_env.php';
+
 define('DB_HOST', getenv('MYSQL_HOST'));
 define('DB_USER', getenv('MYSQL_USER'));
 define('DB_PASS', getenv('MYSQL_PASSWORD'));
