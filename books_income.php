@@ -56,143 +56,150 @@ while ($row_loans = db_fetch_assoc($query_loans)){
 
 <!DOCTYPE HTML>
 <html>
-        <?PHP include 'includes/bootstrap_header.php'; ?>
+<?PHP include 'includes/bootstrap_header.php'; ?>
 
-        <body>
-                <?PHP include 'includes/bootstrap_header_nav.php'; ?>
+<body>
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="mb-4">Income Management</h2>
 
-                <div class="container-fluid mt-4">
-                        <div class="row">
-                                <div class="col-12">
-                                        <h2 class="mb-4">Income Management</h2>
-                                        
-                                        <nav class="mb-3">
-                                                <ul class="nav nav-tabs" role="tablist">
-                                                        <li class="nav-item">
-                                                                <a class="nav-link" href="start.php">Dashboard</a>
-                                                        </li>
-                                                        <li class="nav-item">
-                                                                <a class="nav-link" href="books_expense.php">Expenses</a>
-                                                        </li>
-                                                        <li class="nav-item">
-                                                                <a class="nav-link active" href="books_income.php">Incomes</a>
-                                                        </li>
-                                                        <li class="nav-item">
-                                                                <a class="nav-link" href="books_annual.php">Annual Accounts</a>
-                                                        </li>
-                                                </ul>
-                                        </nav>
+                <nav class="mb-3">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link" href="start.php">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="books_expense.php">Expenses</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="books_income.php">Incomes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="books_annual.php">Annual Accounts</a>
+                        </li>
+                    </ul>
+                </nav>
 
-                                        <div class="row">
-                                                <div class="col-md-5">
-                                                        <div class="card mb-4">
-                                                                <div class="card-header bg-primary text-white">
-                                                                        <strong>New Income Entry</strong>
-                                                                </div>
-                                                                <div class="card-body">
-                                                                        <form action="books_income.php" method="post">
-                                                                                <div class="form-group">
-                                                                                        <label>Date</label>
-                                                                                        <input type="text" id="datepicker" name="inc_date" class="form-control" value="<?PHP echo date("d.m.Y",$timestamp); ?>"/>
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                        <label>Type</label>
-                                                                                        <select name="inctype_id" class="form-control">
-                                                                                                <?PHP
-                                                                                                $no_show = array(2,4,5);
-                                                                                                while ($row_inctype = db_fetch_assoc($query_inctype)){
-                                                                                                        if(!in_array($row_inctype['inctype_id'], $no_show)){
-                                                                                                                echo '<option value="'.$row_inctype['inctype_id'].'">'.$row_inctype['inctype_type'].'</option>';
-                                                                                                        }
-                                                                                                }
-                                                                                                ?>
-                                                                                        </select>
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                        <label>Amount</label>
-                                                                                        <input type="number" name="inc_amount" class="form-control" placeholder="<?PHP echo $_SESSION['set_cur']; ?>" />
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                        <label>Receipt No</label>
-                                                                                        <input type="text" name="inc_receipt" class="form-control" />
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                        <label>Received From</label>
-                                                                                        <select name="cust_id" class="form-control">
-                                                                                                <option value="0" selected>N/A</option>
-                                                                                                <?PHP
-                                                                                                foreach ($custfrom as $cf){
-                                                                                                        echo '<option value="'.$cf['cust_id'].'">'.$cf['cust_no'].' '.$cf['cust_name'].'</option>';
-                                                                                                }
-                                                                                                ?>
-                                                                                        </select>
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                        <label>Loan (Optional)</label>
-                                                                                        <select name="loan_id" class="form-control">
-                                                                                                <option value="0" selected>N/A</option>
-                                                                                                <?PHP
-                                                                                                foreach ($loans as $ln){
-                                                                                                        echo '<option value="'.$ln['loan_id'].'">'.$ln['loan_no'].' ('.$ln['cust_name'].')</option>';
-                                                                                                }
-                                                                                                ?>
-                                                                                        </select>
-                                                                                </div>
-                                                                                <div class="form-group">
-                                                                                        <label>Details</label>
-                                                                                        <input type="text" name="inc_text" class="form-control"/>
-                                                                                </div>
-                                                                                <button type="submit" name="incnew" class="btn btn-success btn-lg btn-block">Add Income</button>
-                                                                        </form>
-                                                                </div>
-                                                        </div>
-                                                </div>
-                                                
-                                                <div class="col-md-7">
-                                                        <div class="card">
-                                                                <div class="card-header bg-success text-white">
-                                                                        <strong>Recent Incomes (Last 60 Days)</strong>
-                                                                </div>
-                                                                <div class="card-body table-responsive">
-                                                                        <table class="table table-striped table-hover table-sm">
-                                                                                <thead class="thead-dark">
-                                                                                        <tr>
-                                                                                                <th>Date</th>
-                                                                                                <th>Type</th>
-                                                                                                <th>Amount</th>
-                                                                                                <th>From</th>
-                                                                                                <th>Receipt</th>
-                                                                                                <th>Details</th>
-                                                                                                <th width="50px"></th>
-                                                                                        </tr>
-                                                                                </thead>
-                                                                                <tbody>
-                                                                                        <?PHP
-                                                                                        $no_delete = array(2,4,5);
-                                                                                        while ($row_inccur = db_fetch_assoc($query_inccur)){
-                                                                                                echo '<tr>      
-                                                                                                        <td>'.date("d.m.Y",$row_inccur['inc_date']).'</td>
-                                                                                                        <td>'.$row_inccur['inctype_type'].'</td>
-                                                                                                        <td class="text-right">'.number_format($row_inccur['inc_amount']).' '.$_SESSION['set_cur'].'</td>
-                                                                                                        <td>'.$row_inccur['cust_name'].' ('.$row_inccur['cust_no'].')</td>
-                                                                                                        <td>'.$row_inccur['inc_receipt'].'</td>
-                                                                                                        <td>'.$row_inccur['inc_text'].'</td>
-                                                                                                        <td>';
-                                                                                                        if ($_SESSION['log_delete'] == 1 and (!in_array($row_inccur['inctype_id'], $no_delete) or $row_inccur['cust_id'] == 0)) echo '<a href="books_income_del.php?inc_id='.$row_inccur['inc_id'].'" class="btn btn-sm btn-danger">Delete</a>';
-                                                                                                echo '</td>   
-                                                                                                </tr>';
-                                                                                        }
-                                                                                        ?>
-                                                                                </tbody>
-                                                                        </table>
-                                                                </div>
-                                                        </div>
-                                                </div>
-                                        </div>
-                                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="card mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <strong>New Income Entry</strong>
+                            </div>
+                            <div class="card-body">
+                                <form action="books_income.php" method="post">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Date</label>
+                                        <input type="text" id="datepicker" name="inc_date" class="form-control" value="<?PHP echo date("d.m.Y", $timestamp); ?>" />
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Type</label>
+                                        <select name="inctype_id" class="form-select">
+                                            <?PHP
+                                            $no_show = array(2, 4, 5);
+                                            while ($row_inctype = db_fetch_assoc($query_inctype)) {
+                                                if (!in_array($row_inctype['inctype_id'], $no_show)) {
+                                                    echo '<option value="' . $row_inctype['inctype_id'] . '">' . $row_inctype['inctype_type'] . '</option>';
+                                                }
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Amount</label>
+                                        <input type="number" name="inc_amount" class="form-control" placeholder="<?PHP echo $_SESSION['set_cur']; ?>" />
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Receipt No</label>
+                                        <input type="text" name="inc_receipt" class="form-control" />
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Received From</label>
+                                        <select name="cust_id" class="form-select">
+                                            <option value="0" selected>N/A</option>
+                                            <?PHP
+                                            foreach ($custfrom as $cf) {
+                                                echo '<option value="' . $cf['cust_id'] . '">' . $cf['cust_no'] . ' ' . $cf['cust_name'] . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Loan (Optional)</label>
+                                        <select name="loan_id" class="form-select">
+                                            <option value="0" selected>N/A</option>
+                                            <?PHP
+                                            foreach ($loans as $ln) {
+                                                echo '<option value="' . $ln['loan_id'] . '">' . $ln['loan_no'] . ' (' . $ln['cust_name'] . ')</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Details</label>
+                                        <input type="text" name="inc_text" class="form-control" />
+                                    </div>
+                                    <div class="d-grid">
+                                        <button type="submit" name="incnew" class="btn btn-success btn-lg">Add Income</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                </div>
+                    </div>
 
-                <?PHP include 'includes/bootstrap_footer.php'; ?>
-        </body>
+                    <div class="col-md-7">
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                <strong>Recent Incomes (Last 60 Days)</strong>
+                            </div>
+                            <div class="card-body table-responsive">
+                                <table class="table table-striped table-hover table-sm">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Type</th>
+                                            <th class="text-end">Amount</th>
+                                            <th>From</th>
+                                            <th>Receipt</th>
+                                            <th>Details</th>
+                                            <th width="50px"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?PHP
+                                        $no_delete = array(2, 4, 5);
+                                        while ($row_inccur = db_fetch_assoc($query_inccur)) {
+                                            echo '<tr>      
+                                                <td>' . date("d.m.Y", $row_inccur['inc_date']) . '</td>
+                                                <td>' . $row_inccur['inctype_type'] . '</td>
+                                                <td class="text-end">' . number_format($row_inccur['inc_amount']) . ' ' . $_SESSION['set_cur'] . '</td>
+                                                <td>' . $row_inccur['cust_name'] . ' (' . $row_inccur['cust_no'] . ')</td>
+                                                <td>' . $row_inccur['inc_receipt'] . '</td>
+                                                <td>' . $row_inccur['inc_text'] . '</td>
+                                                <td>';
+                                            if ($_SESSION['log_delete'] == 1 and (!in_array($row_inccur['inctype_id'], $no_delete) or $row_inccur['cust_id'] == 0)) echo '<a href="books_income_del.php?inc_id=' . $row_inccur['inc_id'] . '" class="btn btn-sm btn-danger">Delete</a>';
+                                            echo '</td>   
+                                                </tr>';
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <?PHP include 'includes/bootstrap_footer.php'; ?>
+    <script>
+        $(function() {
+            $("#datepicker").datepicker({
+                dateFormat: 'dd.mm.yy'
+            });
+        });
+    </script>
+</body>
 </html>

@@ -164,100 +164,101 @@ if(isset($_POST['div_distribute'])){
 
 <!DOCTYPE HTML>
 <html>
-        <?PHP include 'includes/bootstrap_header.php'; ?>
-        <body>
-                <?PHP include 'includes/bootstrap_header_nav.php'; ?>
+<?PHP include 'includes/bootstrap_header.php'; ?>
 
-                <div class="container-fluid mt-4">
-                        <div class="row">
-                                <div class="col-12">
-                                        <h2 class="mb-4">Annual Accounts</h2>
-                                        
-                                        <nav class="mb-3">
-                                                <ul class="nav nav-tabs" role="tablist">
-                                                        <li class="nav-item">
-                                                                <a class="nav-link" href="start.php">Dashboard</a>
-                                                        </li>
-                                                        <li class="nav-item">
-                                                                <a class="nav-link" href="books_expense.php">Expenses</a>
-                                                        </li>
-                                                        <li class="nav-item">
-                                                                <a class="nav-link" href="books_income.php">Incomes</a>
-                                                        </li>
-                                                        <li class="nav-item">
-                                                                <a class="nav-link active" href="books_annual.php">Annual Accounts</a>
-                                                        </li>
-                                                </ul>
-                                        </nav>
+<body>
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="mb-4">Annual Accounts</h2>
 
-                                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                                <strong>Important!</strong> Both operations may take some time to complete. Do not click anything until you see a confirmation message!
-                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                </button>
-                                        </div>
+                <nav class="mb-3">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link" href="start.php">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="books_expense.php">Expenses</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="books_income.php">Incomes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="books_annual.php">Annual Accounts</a>
+                        </li>
+                    </ul>
+                </nav>
 
-                                        <div class="row">
-                                                <div class="col-md-6">
-                                                        <div class="card mb-4">
-                                                                <div class="card-header bg-primary text-white">
-                                                                        <strong>Annual Share Dividend</strong>
-                                                                </div>
-                                                                <div class="card-body">
-                                                                        <form action="books_annual.php" method="post">
-                                                                                <div class="form-group">
-                                                                                        <label>Year</label>
-                                                                                        <input type="number" name="div_year" class="form-control" min="2000" max="<?PHP echo $lastyear; ?>" placeholder="Enter Year" value="<?PHP echo $lastyear; ?>" required />
-                                                                                </div>
-                                                                                
-                                                                                <div class="form-group">
-                                                                                        <label>Dividend Type</label>
-                                                                                        <select name="div_type" class="form-control">
-                                                                                                <option value="1">Dividend per share</option>
-                                                                                                <option value="2">Grand Total Dividend</option>
-                                                                                        </select>
-                                                                                </div>
-                                                                                
-                                                                                <div class="form-group">
-                                                                                        <label>Dividend Value</label>
-                                                                                        <input type="number" name="div_value" class="form-control" min=".1" step="any" placeholder="<?PHP echo $_SESSION['set_cur']; ?>" required />
-                                                                                </div>
-                                                                                
-                                                                                <button type="submit" name="div_distribute" class="btn btn-success btn-lg btn-block">Distribute Dividend</button>
-                                                                        </form>
-                                                                </div>
-                                                        </div>
-                                                </div>
-
-                                                <div class="col-md-6">
-                                                        <div class="card mb-4">
-                                                                <div class="card-header bg-primary text-white">
-                                                                        <strong>Annual Savings Interest</strong>
-                                                                </div>
-                                                                <div class="card-body">
-                                                                        <form action="books_annual.php" method="post">
-                                                                                <div class="form-group">
-                                                                                        <label>Year</label>
-                                                                                        <input type="number" name="int_year" class="form-control" min="2000" max="<?PHP echo $lastyear; ?>" placeholder="Enter Year" value="<?PHP echo $lastyear; ?>" required />
-                                                                                </div>
-                                                                                
-                                                                                <div class="form-group">
-                                                                                        <label>Interest Rate (%)</label>
-                                                                                        <input type="number" name="int_rate" class="form-control" min=".1" step=".1" placeholder="Interest Rate (%)" required />
-                                                                                </div>
-                                                                                
-                                                                                <button type="submit" name="int_distribute" class="btn btn-success btn-lg btn-block">Distribute Interest</button>
-                                                                        </form>
-                                                                </div>
-                                                        </div>
-                                                </div>
-                                        </div>
-                                </div>
-                        </div>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>Important!</strong> Both operations may take some time to complete. Do not click anything until you see a confirmation message!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
 
-                <?PHP include 'includes/bootstrap_footer.php'; ?>
-        </body>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <strong>Annual Share Dividend</strong>
+                            </div>
+                            <div class="card-body">
+                                <form action="books_annual.php" method="post">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Year</label>
+                                        <input type="number" name="div_year" class="form-control" min="2000" max="<?PHP echo $lastyear; ?>" placeholder="Enter Year" value="<?PHP echo $lastyear; ?>" required />
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Dividend Type</label>
+                                        <select name="div_type" class="form-select">
+                                            <option value="1">Dividend per share</option>
+                                            <option value="2">Grand Total Dividend</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Dividend Value</label>
+                                        <input type="number" name="div_value" class="form-control" min=".1" step="any" placeholder="<?PHP echo $_SESSION['set_cur']; ?>" required />
+                                    </div>
+
+                                    <div class="d-grid">
+                                        <button type="submit" name="div_distribute" class="btn btn-success btn-lg">Distribute Dividend</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <strong>Annual Savings Interest</strong>
+                            </div>
+                            <div class="card-body">
+                                <form action="books_annual.php" method="post">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Year</label>
+                                        <input type="number" name="int_year" class="form-control" min="2000" max="<?PHP echo $lastyear; ?>" placeholder="Enter Year" value="<?PHP echo $lastyear; ?>" required />
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Interest Rate (%)</label>
+                                        <input type="number" name="int_rate" class="form-control" min=".1" step=".1" placeholder="Interest Rate (%)" required />
+                                    </div>
+
+                                    <div class="d-grid">
+                                        <button type="submit" name="int_distribute" class="btn btn-success btn-lg">Distribute Interest</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <?PHP include 'includes/bootstrap_footer.php'; ?>
+</body>
 </html>
 
 <?PHP
