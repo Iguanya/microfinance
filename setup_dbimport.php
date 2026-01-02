@@ -98,15 +98,23 @@ while (microtime(true) < $deadline && ($line = fgets($fp, 102400))) {
 
     // Completed SQL statement?
     if (substr(trim($query), -1) === ';') {
+        
+        // Skip table creation if it exists (SQLite specific check)
+        if (stripos($query, 'CREATE TABLE') !== false) {
+            $query = str_ireplace('CREATE TABLE', 'CREATE TABLE IF NOT EXISTS', $query);
+        }
 
         if (!db_query($db, $query)) {
+            // If it's a "table already exists" error, we can ignore it if we didn't use IF NOT EXISTS
+            $error_msg = db_error($db);
+            if (stripos($error_msg, 'already exists') === false) {
+                $error = "Error running query:\n"
+                    . $query . "\n"
+                    . "Database error: " . $error_msg;
 
-            $error = "Error running query:\n"
-                . $query . "\n"
-                . "MySQL error: " . db_error($db);
-
-            file_put_contents($errorFilename, $error);
-            exit;
+                file_put_contents($errorFilename, $error);
+                exit;
+            }
         }
 
         // Reset & store progress
