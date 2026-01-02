@@ -151,22 +151,22 @@ while ($row_loan = db_fetch_assoc($query_loans)){
                                                 </div>
                                         </div>
 
-                                        <ul class="nav nav-tabs mb-4" role="tablist">
-                                                <li class="nav-item">
-                                                        <a class="nav-link active" id="details-tab" data-toggle="tab" href="#details" role="tab">Personal Details</a>
+                                        <ul class="nav nav-tabs mb-4" id="customerTabs" role="tablist">
+                                                <li class="nav-item" role="presentation">
+                                                        <button class="nav-link active" id="details-tab" data-bs-toggle="tab" data-bs-target="#details" type="button" role="tab" aria-controls="details" aria-selected="true">Personal Details</button>
                                                 </li>
-                                                <li class="nav-item">
-                                                        <a class="nav-link" id="savings-tab" data-toggle="tab" href="#savings" role="tab">Savings Account</a>
+                                                <li class="nav-item" role="presentation">
+                                                        <button class="nav-link" id="savings-tab" data-bs-toggle="tab" data-bs-target="#savings" type="button" role="tab" aria-controls="savings" aria-selected="false">Savings Account</button>
                                                 </li>
-                                                <li class="nav-item">
-                                                        <a class="nav-link" id="loans-tab" data-toggle="tab" href="#loans" role="tab">Loans Account</a>
+                                                <li class="nav-item" role="presentation">
+                                                        <button class="nav-link" id="loans-tab" data-bs-toggle="tab" data-bs-target="#loans" type="button" role="tab" aria-controls="loans" aria-selected="false">Loans Account</button>
                                                 </li>
-                                                <li class="nav-item">
-                                                        <a class="nav-link" id="shares-tab" data-toggle="tab" href="#shares" role="tab">Share Account</a>
+                                                <li class="nav-item" role="presentation">
+                                                        <button class="nav-link" id="shares-tab" data-bs-toggle="tab" data-bs-target="#shares" type="button" role="tab" aria-controls="shares" aria-selected="false">Share Account</button>
                                                 </li>
                                         </ul>
 
-                                        <div class="tab-content">
+                                        <div class="tab-content" id="customerTabsContent">
                                                 <!-- TAB 1: PERSONAL DETAILS -->
                                                 <div class="tab-pane fade show active" id="details" role="tabpanel">
                                                         <div class="row">
