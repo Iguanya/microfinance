@@ -53,9 +53,19 @@ try {
         
         define('DB_USER', $db_user);
         define('DB_PASS', $db_pass);
-        define('DB_DSN', "mysql:host=$db_host;port=$db_port;dbname=$db_name;charset=utf8mb4");
+        define('DB_DSN', "mysql:host=$db_host;port=$db_port;charset=utf8mb4"); // Connect without database name first
     }
-    $db = new PDO(DB_DSN, DB_USER, DB_PASS);
+    
+    // Check if database exists and create it if not
+    $tmp_db = new PDO(DB_DSN, DB_USER, DB_PASS);
+    $tmp_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $db_name = getenv('MYSQL_DATABASE') ?: DB_NAME;
+    $tmp_db->exec("CREATE DATABASE IF NOT EXISTS `$db_name` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+    $tmp_db = null; // Close connection
+
+    // Reconnect with database name
+    $dsn_with_db = "mysql:host=" . (getenv('MYSQL_HOST') ?: DB_HOST) . ";port=" . (getenv('MYSQL_PORT') ?: DB_PORT) . ";dbname=$db_name;charset=utf8mb4";
+    $db = new PDO($dsn_with_db, DB_USER, DB_PASS);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     die('Could not connect to database: ' . htmlspecialchars($e->getMessage()));
