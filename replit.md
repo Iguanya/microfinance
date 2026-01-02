@@ -51,6 +51,26 @@ mangoO is a lightweight, yet powerful PHP web application designed for small mic
 - **Reporting & Accounting:**
     - `rep_incomes.php`, `rep_expenses.php`, `rep_loans.php`, `rep_capital.php`, `rep_monthly.php`, `rep_annual.php`: Comprehensive financial reports.
     - `books_expense.php`, `books_income.php`, `books_annual.php`: General accounting for institutional finances.
+
+### **Accounting Workflow & Interaction**
+The accounting system in mangoO follows a modular flow where operational transactions feed into centralized reporting:
+
+1.  **Transaction Entry (The Source):**
+    *   **Savings/Shares:** `acc_sav_depos.php` and `acc_share_buy.php` record cash inflows.
+    *   **Loans:** `loan_pay.php` (repayments) generates income, while `loan_new.php` (disbursements) records outflows.
+    *   **Institutional:** `books_income.php` and `books_expense.php` allow manual entry of non-client transactions (e.g., rent, utilities, interest earned).
+
+2.  **Data Processing:**
+    *   All transactions are logged in the `log_accounts` and `log_recs` tables via `functions.php`.
+    *   The `db_query` function handles the persistence to the remote MySQL host, ensuring real-time balance updates.
+
+3.  **Reporting & Reconciliation:**
+    *   **Daily/Monthly:** `rep_monthly.php` aggregates all `log_accounts` entries for a specific period.
+    *   **Categorized Reports:** `rep_incomes.php` and `rep_expenses.php` filter logs by transaction type to show specific trends.
+    *   **Final Accounts:** `rep_annual.php` interacts with `books_annual.php` to generate the Profit & Loss statement and Balance Sheet.
+
+4.  **Verification:**
+    *   `rep_capital.php` provides a birds-eye view of the institution's health by comparing client deposits (liabilities) against loan portfolios (assets).
 - **Settings:**
     - `set_basic.php`, `set_loans.php`, `set_fees.php`, `set_user.php`, `set_ugroup.php`, `set_ugroup_del.php`, `set_logrec.php`, `set_dbbackup.php`: System configuration, user management, and audit trails.
 
