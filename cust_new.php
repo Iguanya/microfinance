@@ -74,8 +74,6 @@ $newCustNo = buildCustNo($db_link);
 <html>
         <?PHP include 'includes/bootstrap_header.php'; ?>
         <body>
-                <?PHP include 'includes/bootstrap_header_nav.php'; ?>
-
                 <div class="container-fluid mt-4">
                         <div class="row">
                                 <div class="col-12">
@@ -217,7 +215,7 @@ $newCustNo = buildCustNo($db_link);
                                                                         </div>
                                                                 </div>
 
-                                                                <input type="hidden" name="receipt_no" id="receipt_no" value="" />
+                                                                <input type="hidden" name="receipt_no" id="receipt_no" value="0" />
 
                                                                 <button type="submit" name="create" class="btn btn-success btn-lg btn-block mt-3">
                                                                         <i class="fa fa-check"></i> Continue

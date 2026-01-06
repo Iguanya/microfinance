@@ -61,3 +61,4 @@ database/mangoo_sqlite.sql
 convert_mysql_to_sqlite.php
 
 .env
+.replit
