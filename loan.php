@@ -6,6 +6,8 @@ $db_link = connect();
 getLoanID($db_link);
 
 $timestamp = time();
+$approval_blocked = false;
+$approval_blocked_reason = '';
 
 // Select details of current loan from LOANS, LOANSTATUS, CUSTOMER
 $sql_loan = "SELECT * FROM loans JOIN loanstatus ON loans.loanstatus_id = loanstatus.loanstatus_id JOIN customer ON loans.cust_id = customer.cust_id WHERE loans.loan_id = $_SESSION[loan_id]";
@@ -13,6 +15,66 @@ $query_loan = db_query($db_link, $sql_loan);
 checkSQL($db_link, $query_loan);
 $result_loan = db_fetch_assoc($query_loan);
 $_SESSION['cust_id'] = $result_loan['cust_id'];
+
+// Ensure loan_guarantor_verification table exists
+$sql_create_lgv = "CREATE TABLE IF NOT EXISTS loan_guarantor_verification (
+    lgv_id INT AUTO_INCREMENT PRIMARY KEY,
+    loan_id INT NOT NULL,
+    guarantor_id INT NOT NULL,
+    lgv_status ENUM('pending', 'verified', 'rejected') DEFAULT 'pending',
+    lgv_notes TEXT,
+    verified_by INT,
+    verified_date INT,
+    lgv_created INT NOT NULL,
+    user_id INT NOT NULL,
+    UNIQUE KEY unique_loan_guarantor (loan_id, guarantor_id),
+    INDEX idx_loan_id (loan_id),
+    INDEX idx_guarantor_id (guarantor_id)
+)";
+db_query($db_link, $sql_create_lgv);
+
+// Check guarantor verification status
+$guarantor_verification = array();
+$all_guarantors_verified = true;
+$has_guarantors = false;
+
+for ($i = 1; $i <= 3; $i++) {
+    $g_field = 'loan_guarant' . $i;
+    if (!empty($result_loan[$g_field]) && $result_loan[$g_field] != '0') {
+        $has_guarantors = true;
+        $g_id = $result_loan[$g_field];
+        
+        $sql_g = "SELECT cust_id, cust_no, cust_name FROM customer WHERE cust_id = '$g_id'";
+        $query_g = db_query($db_link, $sql_g);
+        $guarantor = db_fetch_assoc($query_g);
+        
+        $sql_v = "SELECT lgv_status, lgv_notes, verified_date FROM loan_guarantor_verification WHERE loan_id = '$_SESSION[loan_id]' AND guarantor_id = '$g_id'";
+        $query_v = db_query($db_link, $sql_v);
+        $verification = db_fetch_assoc($query_v);
+        
+        if (!$verification) {
+            // Auto-create verification record for audit trail
+            $sql_insert_v = "INSERT INTO loan_guarantor_verification (loan_id, guarantor_id, lgv_status, lgv_created, user_id) 
+                             VALUES ('$_SESSION[loan_id]', '$g_id', 'pending', $timestamp, '$_SESSION[log_id]')";
+            db_query($db_link, $sql_insert_v);
+            $verification = array('lgv_status' => 'pending', 'lgv_notes' => '', 'verified_date' => null);
+        }
+        
+        if ($verification['lgv_status'] != 'verified') {
+            $all_guarantors_verified = false;
+        }
+        
+        $guarantor_verification[$i] = array(
+            'guarantor' => $guarantor,
+            'verification' => $verification
+        );
+    }
+}
+
+if ($has_guarantors && !$all_guarantors_verified && $result_loan['loan_issued'] == 0) {
+    $approval_blocked = true;
+    $approval_blocked_reason = 'All guarantors must be verified before this loan can be approved.';
+}
 
 // Get current customer's savings account balance
 $sav_balance = getSavingsBalance($db_link, $_SESSION['cust_id']);
@@ -30,6 +92,13 @@ if (isset($_POST['updatestatus'])){
         $loan_status = sanitize($db_link, $_POST['loan_status']);
         $loan_dateout = strtotime(sanitize($db_link, $_POST['loan_dateout']));
         $loan_princp_approved = sanitize($db_link, $_POST['loan_principalapproved']);
+
+        // Block approval if guarantors not verified (check for any attempt to set status to 2/Approved)
+        if($loan_status == 2 AND $has_guarantors AND !$all_guarantors_verified){
+                $_SESSION['loan_error'] = 'All guarantors must be verified before this loan can be approved.';
+                header('Location: loan.php?lid='.$_SESSION['loan_id'].'&error=guarantors');
+                exit;
+        }
 
         if($loan_status == 2 AND $loan_issued == 0){
 
@@ -63,7 +132,7 @@ if (isset($_POST['updatestatus'])){
         }
 
         else {
-                $sql_update = "UPDATE loans SET loanstatus_id = '$_POST[loan_status]' WHERE loan_id = $_SESSION[loan_id]";
+                $sql_update = "UPDATE loans SET loanstatus_id = '$loan_status' WHERE loan_id = '$_SESSION[loan_id]'";
                 $query_update = db_query($db_link, $sql_update);
                 checkSQL($db_link, $query_update);
         }
@@ -197,6 +266,58 @@ $_SESSION['ltrans_exp_title'] = $_SESSION['cust_id'].'_loan_'.$ltrans_exp_date;
                                                         </form>
                                                 </div>
                                         </div>
+                                        <?PHP if (isset($_GET['error']) && $_GET['error'] == 'guarantors'): ?>
+                                        <div class="alert alert-danger mt-3">
+                                                <i class="fa fa-exclamation-triangle"></i> <?PHP echo $approval_blocked_reason; ?>
+                                                <a href="loan_verify_guarantors.php?lid=<?PHP echo $_SESSION['loan_id']; ?>" class="alert-link">Verify Guarantors Now</a>
+                                        </div>
+                                        <?PHP endif; ?>
+
+                                        <?PHP if (count($guarantor_verification) > 0): ?>
+                                        <div class="card mt-3">
+                                                <div class="card-header <?PHP echo $all_guarantors_verified ? 'bg-success' : 'bg-warning'; ?> <?PHP echo $all_guarantors_verified ? 'text-white' : 'text-dark'; ?>">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                                <h5 class="mb-0"><i class="fa fa-user-check"></i> Guarantor Verification</h5>
+                                                                <a href="loan_verify_guarantors.php?lid=<?PHP echo $_SESSION['loan_id']; ?>" class="btn btn-sm btn-light">
+                                                                        <i class="fa fa-edit"></i> Manage Verification
+                                                                </a>
+                                                        </div>
+                                                </div>
+                                                <div class="card-body">
+                                                        <?PHP if (!$all_guarantors_verified && $result_loan['loan_issued'] == 0): ?>
+                                                        <div class="alert alert-warning py-2 mb-3">
+                                                                <i class="fa fa-exclamation-circle"></i> All guarantors must be verified before loan approval.
+                                                        </div>
+                                                        <?PHP endif; ?>
+                                                        <div class="table-responsive">
+                                                                <table class="table table-sm mb-0">
+                                                                        <thead>
+                                                                                <tr>
+                                                                                        <th>#</th>
+                                                                                        <th>Guarantor</th>
+                                                                                        <th>Status</th>
+                                                                                </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                                <?PHP foreach ($guarantor_verification as $pos => $gv): ?>
+                                                                                <tr>
+                                                                                        <td><?PHP echo $pos; ?></td>
+                                                                                        <td><?PHP echo htmlspecialchars($gv['guarantor']['cust_name']); ?> (<?PHP echo $gv['guarantor']['cust_no']; ?>)</td>
+                                                                                        <td>
+                                                                                                <?PHP 
+                                                                                                $status = $gv['verification']['lgv_status'];
+                                                                                                $badge_class = $status == 'verified' ? 'bg-success' : ($status == 'rejected' ? 'bg-danger' : 'bg-warning text-dark');
+                                                                                                ?>
+                                                                                                <span class="badge <?PHP echo $badge_class; ?>"><?PHP echo ucfirst($status); ?></span>
+                                                                                        </td>
+                                                                                </tr>
+                                                                                <?PHP endforeach; ?>
+                                                                        </tbody>
+                                                                </table>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                        <?PHP endif; ?>
                                 </div>
                                 <div class="col-lg-4">
                                         <div class="card">

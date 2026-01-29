@@ -56,9 +56,12 @@ mangoO is a lightweight, yet powerful PHP web application designed for small mic
     - **Database Tables:** `stakeholder`, `stakeholder_shares`, `dividends`
     - **Key Design Decision:** Stakeholders are separate from customers. A stakeholder may optionally be linked to a customer record.
 - **Loan Management:**
-    - `loan.php`: Loan details and payment schedule.
-    - `loan_new.php`: New loan application with inline guarantor creation.
+    - `loan.php`: Loan details, payment schedule, and guarantor verification status.
+    - `loan_new.php`: New loan application with customer search/selection and inline guarantor creation.
+    - `loan_verify_guarantors.php`: Guarantor verification workflow - verify/reject guarantors before loan approval.
     - `loans_search.php`, `loans_result.php`: Loan search functionality.
+    - **Database Tables:** `loan_guarantor_verification` (tracks verification status for each guarantor)
+    - **Key Design Decision:** All guarantors must be verified before a loan can be approved. Verification includes status (pending/verified/rejected), notes, and audit trail.
 - **Reporting & Accounting:**
     - `rep_incomes.php`, `rep_expenses.php`, `rep_loans.php`, `rep_capital.php`, `rep_monthly.php`, `rep_annual.php`: Comprehensive financial reports.
     - `books_expense.php`, `books_income.php`, `books_annual.php`: General accounting for institutional finances.
