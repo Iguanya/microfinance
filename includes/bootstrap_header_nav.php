@@ -13,7 +13,19 @@
                                 <li class="nav-item"><a class="nav-link" href="cust_search.php"><i class="fa fa-users"></i> Customers</a></li>
                                 <li class="nav-item"><a class="nav-link" href="loans_search.php"><i class="fa fa-credit-card"></i> Loans</a></li>
                                 <li class="nav-item"><a class="nav-link" href="loan_new.php"><i class="fa fa-plus-circle"></i> New Loan</a></li>
-                                <li class="nav-item"><a class="nav-link" href="books_expense.php"><i class="fa fa-calculator"></i> Accounting</a></li>
+                                <li class="nav-item"><a class="nav-link" href="stakeholder_search.php"><i class="fa fa-briefcase"></i> Stakeholders</a></li>
+                                <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="accountingDropdown" role="button" data-bs-toggle="dropdown">
+                                                <i class="fa fa-calculator"></i> Accounting
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="accountingDropdown">
+                                                <li><a class="dropdown-item" href="books_expense.php"><i class="fa fa-minus-circle"></i> Expenses</a></li>
+                                                <li><a class="dropdown-item" href="books_income.php"><i class="fa fa-plus-circle"></i> Income</a></li>
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li><a class="dropdown-item" href="books_shares.php"><i class="fa fa-certificate"></i> Share Capital</a></li>
+                                                <li><a class="dropdown-item" href="books_annual.php"><i class="fa fa-book"></i> Annual Accounts</a></li>
+                                        </ul>
+                                </li>
                                 <?PHP if ($_SESSION['log_report'] == 1): ?>
                                 <li class="nav-item"><a class="nav-link" href="rep_incomes.php"><i class="fa fa-line-chart"></i> Reports</a></li>
                                 <?PHP endif; ?>

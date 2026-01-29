@@ -65,15 +65,18 @@ $query_sick = db_query($db_link, $sql_sick);
 $sql_sex = "SELECT * FROM custsex";
 $query_sex = db_query($db_link, $sql_sex);
 
-//Select Shares from SHARES
-$sql_sha = "SELECT * FROM shares WHERE cust_id = '$_SESSION[cust_id]'";
-$query_sha = db_query($db_link, $sql_sha);
-$share_amount = 0;
-$share_value = 0;
-while($row_shares = db_fetch_assoc($query_sha)){
-        $share_amount = $share_amount + $row_shares['share_amount'];
-        $share_value = $share_value + $row_shares['share_value'];
-}
+//Check if customer is linked to a stakeholder (for share capital)
+$sql_stakeholder = "SELECT s.*, 
+                    COALESCE(SUM(ss.ss_amount), 0) as total_shares,
+                    COALESCE(SUM(ss.ss_value), 0) as total_value
+                    FROM stakeholder s
+                    LEFT JOIN stakeholder_shares ss ON s.stakeholder_id = ss.stakeholder_id
+                    WHERE s.cust_id = '$_SESSION[cust_id]'
+                    GROUP BY s.stakeholder_id";
+$query_stakeholder = db_query($db_link, $sql_stakeholder);
+$linked_stakeholder = db_fetch_assoc($query_stakeholder);
+$share_amount = $linked_stakeholder ? $linked_stakeholder['total_shares'] : 0;
+$share_value = $linked_stakeholder ? $linked_stakeholder['total_value'] : 0;
 
 //Select the five most recent savings transactions for display
 $sql_sav = "SELECT * FROM savings, savtype WHERE savings.savtype_id = savtype.savtype_id AND cust_id = '$_SESSION[cust_id]' ORDER BY sav_date DESC, sav_id DESC LIMIT 5" ;
@@ -131,7 +134,13 @@ while ($row_loan = db_fetch_assoc($query_loans)){
                                                         <div class="card border-start border-success border-4 shadow-sm">
                                                                 <div class="card-body">
                                                                         <div class="text-success fw-bold text-uppercase mb-1 small">Shares Value</div>
-                                                                        <div class="h5 mb-0 fw-bold"><?PHP echo number_format($share_value, 2); ?> <?PHP echo $_SESSION['set_cur']; ?></div>
+                                                                        <div class="h5 mb-0 fw-bold">
+                                                                                <?PHP if ($linked_stakeholder): ?>
+                                                                                <a href="stakeholder.php?id=<?PHP echo $linked_stakeholder['stakeholder_id']; ?>" class="text-decoration-none text-success"><?PHP echo number_format($share_value, 2); ?> <?PHP echo $_SESSION['set_cur']; ?></a>
+                                                                                <?PHP else: ?>
+                                                                                <?PHP echo number_format($share_value, 2); ?> <?PHP echo $_SESSION['set_cur']; ?>
+                                                                                <?PHP endif; ?>
+                                                                        </div>
                                                                 </div>
                                                         </div>
                                                 </div>
@@ -154,9 +163,6 @@ while ($row_loan = db_fetch_assoc($query_loans)){
                                                 </li>
                                                 <li class="nav-item" role="presentation">
                                                         <button class="nav-link" id="loans-tab" data-bs-toggle="tab" data-bs-target="#loans" type="button" role="tab" aria-controls="loans" aria-selected="false">Loans Account</button>
-                                                </li>
-                                                <li class="nav-item" role="presentation">
-                                                        <button class="nav-link" id="shares-tab" data-bs-toggle="tab" data-bs-target="#shares" type="button" role="tab" aria-controls="shares" aria-selected="false">Share Account</button>
                                                 </li>
                                         </ul>
 
@@ -193,11 +199,13 @@ while ($row_loan = db_fetch_assoc($query_loans)){
                                                                                                 if ($result_cust['cust_active'] == 1) {
                                                                                                         echo '<a href="acc_sav_depos.php?cust='.$_SESSION['cust_id'].'" class="btn btn-success btn-sm"><i class="fa fa-plus-circle"></i> Deposit</a>';
                                                                                                         echo '<a href="acc_sav_withd.php?cust='.$_SESSION['cust_id'].'" class="btn btn-warning btn-sm"><i class="fa fa-minus-circle"></i> Withdrawal</a>';
-                                                                                                        echo '<a href="acc_share_buy.php?cust='.$_SESSION['cust_id'].'" class="btn btn-info btn-sm text-white"><i class="fa fa-shopping-cart"></i> Buy Shares</a>';
-                                                                                                        echo '<a href="acc_share_sale.php?cust='.$_SESSION['cust_id'].'" class="btn btn-secondary btn-sm"><i class="fa fa-money"></i> Sell Shares</a>';
                                                                                                         if (($timestamp-$result_cust['cust_since']) > convertMonths($_SESSION['set_minmemb'])) {
                                                                                                                 echo '<a href="loan_new.php?cust='.$_SESSION['cust_id'].'" class="btn btn-danger btn-sm"><i class="fa fa-file-o"></i> Apply Loan</a>';
                                                                                                         }
+                                                                                                }
+                                                                                                if ($linked_stakeholder) {
+                                                                                                        echo '<hr class="my-2">';
+                                                                                                        echo '<a href="stakeholder.php?id='.$linked_stakeholder['stakeholder_id'].'" class="btn btn-info btn-sm text-white"><i class="fa fa-briefcase"></i> View Shares</a>';
                                                                                                 }
                                                                                                 ?>
                                                                                         </div>
@@ -427,32 +435,6 @@ while ($row_loan = db_fetch_assoc($query_loans)){
                                                         </div>
                                                 </div>
 
-                                                <!-- TAB 4: SHARE ACCOUNT -->
-                                                <div class="tab-pane fade" id="shares" role="tabpanel" aria-labelledby="shares-tab">
-                                                        <div class="card shadow-sm">
-                                                                <div class="card-header bg-info text-white py-2">
-                                                                        <h6 class="mb-0"><i class="fa fa-certificate"></i> Share Account</h6>
-                                                                </div>
-                                                                <div class="card-body">
-                                                                        <div class="row text-center">
-                                                                                <div class="col-md-6 mb-3">
-                                                                                        <h6 class="text-muted text-uppercase small fw-bold">Total Shares Owned</h6>
-                                                                                        <div class="display-6 text-success fw-bold"><?PHP echo $share_amount; ?></div>
-                                                                                </div>
-                                                                                <div class="col-md-6 mb-3">
-                                                                                        <h6 class="text-muted text-uppercase small fw-bold">Total Share Value</h6>
-                                                                                        <div class="display-6 text-primary fw-bold"><?PHP echo number_format($share_value, 2); ?> <?PHP echo $_SESSION['set_cur']; ?></div>
-                                                                                </div>
-                                                                        </div>
-                                                                        <?PHP if ($share_amount == 0 && $result_cust['cust_active'] == 1): ?>
-                                                                                <div class="alert alert-warning py-2 mb-0 mt-3 shadow-sm" role="alert">
-                                                                                        <i class="fa fa-exclamation-triangle"></i> This customer has not purchased any shares yet.
-                                                                                        <a href="acc_share_buy.php?cust=<?PHP echo $_SESSION['cust_id']; ?>" class="alert-link">Buy shares now</a>
-                                                                                </div>
-                                                                        <?PHP endif; ?>
-                                                                </div>
-                                                        </div>
-                                                </div>
                                         </div>
                                 </div>
                         </div>
