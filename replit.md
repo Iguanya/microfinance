@@ -96,12 +96,18 @@ The accounting system in mangoO follows a modular flow where operational transac
 - All PHP logic is executed before HTML output to prevent header errors.
 - Modular design with shared Bootstrap templates for consistency.
 - Responsive grid layouts, cards, and tabs are used extensively for improved user experience.
+- Guarantors are managed separately from customers with their own IDs (G-0001, G-0002, etc.).
 - Stakeholders are managed separately from customers to properly track share capital ownership.
-- Customers can be optionally linked to stakeholder records for cross-referencing.
+- Customers can be optionally linked to guarantor and stakeholder records for cross-referencing.
 
 ## Database Schema (Key Tables)
 
-### Stakeholder Module (New)
+### Guarantor Module (New)
+- `guarantor`: Stores guarantor information (guarantor_id, guarantor_no, name, phone, ID number, address, employer, occupation, optional customer link)
+- `loan_guarantor_verification`: Tracks verification status for each guarantor on a loan (loan_id, guarantor_id, status, verified_by, verified_date, notes)
+- **Key Design Decision:** Guarantors are separate from customers. A guarantor may optionally be linked to a customer record.
+
+### Stakeholder Module
 - `stakeholder`: Stores shareholder information (id, name, type, contact, bank details, optional customer link)
 - `stakeholder_shares`: Tracks all share transactions (buy, sell, transfer_in, transfer_out, dividend)
 - `dividends`: Records dividend declarations

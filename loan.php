@@ -44,9 +44,17 @@ for ($i = 1; $i <= 3; $i++) {
         $has_guarantors = true;
         $g_id = $result_loan[$g_field];
         
-        $sql_g = "SELECT cust_id, cust_no, cust_name FROM customer WHERE cust_id = '$g_id'";
+        // Fetch from guarantor table (not customer table)
+        $sql_g = "SELECT guarantor_id, guarantor_no, guarantor_name, guarantor_phone FROM guarantor WHERE guarantor_id = '$g_id'";
         $query_g = db_query($db_link, $sql_g);
         $guarantor = db_fetch_assoc($query_g);
+        
+        if (!$guarantor) {
+            // Fallback: try customer table for legacy data
+            $sql_g_legacy = "SELECT cust_id as guarantor_id, cust_no as guarantor_no, cust_name as guarantor_name, cust_phone as guarantor_phone FROM customer WHERE cust_id = '$g_id'";
+            $query_g_legacy = db_query($db_link, $sql_g_legacy);
+            $guarantor = db_fetch_assoc($query_g_legacy);
+        }
         
         $sql_v = "SELECT lgv_status, lgv_notes, verified_date FROM loan_guarantor_verification WHERE loan_id = '$_SESSION[loan_id]' AND guarantor_id = '$g_id'";
         $query_v = db_query($db_link, $sql_v);
@@ -302,7 +310,16 @@ $_SESSION['ltrans_exp_title'] = $_SESSION['cust_id'].'_loan_'.$ltrans_exp_date;
                                                                                 <?PHP foreach ($guarantor_verification as $pos => $gv): ?>
                                                                                 <tr>
                                                                                         <td><?PHP echo $pos; ?></td>
-                                                                                        <td><?PHP echo htmlspecialchars($gv['guarantor']['cust_name']); ?> (<?PHP echo $gv['guarantor']['cust_no']; ?>)</td>
+                                                                                        <td>
+                                                                                                <?PHP if ($gv['guarantor']): ?>
+                                                                                                        <a href="guarantor.php?id=<?PHP echo $gv['guarantor']['guarantor_id']; ?>" class="text-decoration-none">
+                                                                                                                <?PHP echo htmlspecialchars($gv['guarantor']['guarantor_name']); ?>
+                                                                                                        </a>
+                                                                                                        <small class="text-muted">(<?PHP echo $gv['guarantor']['guarantor_no']; ?>)</small>
+                                                                                                <?PHP else: ?>
+                                                                                                        <span class="text-muted">Unknown</span>
+                                                                                                <?PHP endif; ?>
+                                                                                        </td>
                                                                                         <td>
                                                                                                 <?PHP 
                                                                                                 $status = $gv['verification']['lgv_status'];

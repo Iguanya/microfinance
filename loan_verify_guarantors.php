@@ -51,9 +51,18 @@ for ($i = 1; $i <= 3; $i++) {
     $g_field = 'loan_guarant' . $i;
     if (!empty($loan[$g_field]) && $loan[$g_field] != '0') {
         $g_id = $loan[$g_field];
-        $sql_g = "SELECT cust_id, cust_no, cust_name, cust_phone, cust_address FROM customer WHERE cust_id = '$g_id'";
+        
+        // Fetch from guarantor table
+        $sql_g = "SELECT guarantor_id, guarantor_no, guarantor_name, guarantor_phone, guarantor_address, guarantor_employer, guarantor_occupation FROM guarantor WHERE guarantor_id = '$g_id'";
         $query_g = db_query($db_link, $sql_g);
         $guarantor = db_fetch_assoc($query_g);
+        
+        if (!$guarantor) {
+            // Fallback: try customer table for legacy data
+            $sql_g_legacy = "SELECT cust_id as guarantor_id, cust_no as guarantor_no, cust_name as guarantor_name, cust_phone as guarantor_phone, cust_address as guarantor_address, '' as guarantor_employer, '' as guarantor_occupation FROM customer WHERE cust_id = '$g_id'";
+            $query_g_legacy = db_query($db_link, $sql_g_legacy);
+            $guarantor = db_fetch_assoc($query_g_legacy);
+        }
         
         if ($guarantor) {
             $sql_v = "SELECT * FROM loan_guarantor_verification WHERE loan_id = '$_SESSION[loan_id]' AND guarantor_id = '$g_id'";
@@ -189,7 +198,7 @@ foreach ($guarantors as $g) {
                             ?>">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h6 class="mb-0">
-                                        <i class="fa fa-user"></i> Guarantor <?PHP echo $g['position']; ?>: <?PHP echo htmlspecialchars($g['cust_name']); ?>
+                                        <i class="fa fa-user"></i> Guarantor <?PHP echo $g['position']; ?>: <?PHP echo htmlspecialchars($g['guarantor_name']); ?>
                                     </h6>
                                     <span class="badge <?PHP 
                                         echo $g['verification']['lgv_status'] == 'verified' ? 'bg-light text-success' : 
@@ -201,14 +210,19 @@ foreach ($guarantors as $g) {
                             </div>
                             <div class="card-body">
                                 <div class="row mb-3">
-                                    <div class="col-md-4">
-                                        <strong>Customer No:</strong> <?PHP echo $g['cust_no']; ?>
+                                    <div class="col-md-3">
+                                        <strong>Guarantor No:</strong> <?PHP echo $g['guarantor_no']; ?>
                                     </div>
-                                    <div class="col-md-4">
-                                        <strong>Phone:</strong> <?PHP echo htmlspecialchars($g['cust_phone'] ?: 'N/A'); ?>
+                                    <div class="col-md-3">
+                                        <strong>Phone:</strong> <?PHP echo htmlspecialchars($g['guarantor_phone'] ?: 'N/A'); ?>
                                     </div>
-                                    <div class="col-md-4">
-                                        <strong>Address:</strong> <?PHP echo htmlspecialchars($g['cust_address'] ?: 'N/A'); ?>
+                                    <div class="col-md-3">
+                                        <strong>Address:</strong> <?PHP echo htmlspecialchars($g['guarantor_address'] ?: 'N/A'); ?>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <a href="guarantor.php?id=<?PHP echo $g['guarantor_id']; ?>" class="btn btn-sm btn-outline-primary">
+                                            <i class="fa fa-eye"></i> View Profile
+                                        </a>
                                     </div>
                                 </div>
 
@@ -226,7 +240,7 @@ foreach ($guarantors as $g) {
                                 <?PHP endif; ?>
 
                                 <form method="post" class="row g-2 align-items-end">
-                                    <input type="hidden" name="guarantor_id" value="<?PHP echo $g['cust_id']; ?>">
+                                    <input type="hidden" name="guarantor_id" value="<?PHP echo $g['guarantor_id']; ?>">
                                     <div class="col-md-3">
                                         <label class="form-label small">Verification Status</label>
                                         <select name="verification_status" class="form-select">

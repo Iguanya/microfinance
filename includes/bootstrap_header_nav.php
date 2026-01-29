@@ -13,6 +13,7 @@
                                 <li class="nav-item"><a class="nav-link" href="cust_search.php"><i class="fa fa-users"></i> Customers</a></li>
                                 <li class="nav-item"><a class="nav-link" href="loans_search.php"><i class="fa fa-credit-card"></i> Loans</a></li>
                                 <li class="nav-item"><a class="nav-link" href="loan_new.php"><i class="fa fa-plus-circle"></i> New Loan</a></li>
+                                <li class="nav-item"><a class="nav-link" href="guarantor_search.php"><i class="fa fa-user-shield"></i> Guarantors</a></li>
                                 <li class="nav-item"><a class="nav-link" href="stakeholder_search.php"><i class="fa fa-briefcase"></i> Stakeholders</a></li>
                                 <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" id="accountingDropdown" role="button" data-bs-toggle="dropdown">

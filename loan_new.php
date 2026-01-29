@@ -49,22 +49,25 @@ if (!$_SESSION['cust_id']) {
         $customer_search_mode = false;
 }
 
-// Handle new guarantor creation
-if (isset($_POST['create_guarantor'])){
-        $guarant_no = buildCustNo($db_link);
-        $guarant_name = sanitize($db_link, $_POST['guarant_name']);
-        $guarant_phone = sanitize($db_link, $_POST['guarant_phone']);
-        $guarant_address = sanitize($db_link, $_POST['guarant_address']);
-        
-        $sql_insert_guarant = "INSERT INTO customer (cust_no, cust_name, cust_phone, cust_address, custsex_id, custmarried_id, custsick_id, cust_active, cust_since, cust_lastupd, user_id) VALUES ('$guarant_no', '$guarant_name', '$guarant_phone', '$guarant_address', '1', '1', '1', '1', $timestamp, $timestamp, '$_SESSION[log_id]')";
-        $query_insert_guarant = db_query($db_link, $sql_insert_guarant);
-        checkSQL($db_link, $query_insert_guarant);
-        
-        $sql_insert_savbal = "INSERT INTO savbalance (cust_id, savbal_balance, savbal_date, savbal_created, user_id) VALUES (LAST_INSERT_ID(), '0', $timestamp, $timestamp, '$_SESSION[log_id]')";
-        $query_insert_savbal = db_query($db_link, $sql_insert_savbal);
-        
-        header('Location: loan_new.php?cust='.$_SESSION['cust_id'].'&guarantor_created=1');
-}
+// Ensure guarantor table exists (shared schema)
+$sql_create_guarantor = "CREATE TABLE IF NOT EXISTS guarantor (
+    guarantor_id INT AUTO_INCREMENT PRIMARY KEY,
+    guarantor_no VARCHAR(20) NOT NULL UNIQUE,
+    guarantor_name VARCHAR(100) NOT NULL,
+    guarantor_phone VARCHAR(50),
+    guarantor_idno VARCHAR(50),
+    guarantor_address TEXT,
+    guarantor_employer VARCHAR(100),
+    guarantor_occupation VARCHAR(100),
+    cust_id INT DEFAULT NULL,
+    guarantor_active TINYINT(1) DEFAULT 1,
+    guarantor_created INT NOT NULL,
+    guarantor_lastupd INT NOT NULL,
+    user_id INT NOT NULL,
+    INDEX idx_cust_id (cust_id),
+    INDEX idx_guarantor_no (guarantor_no)
+)";
+db_query($db_link, $sql_create_guarantor);
 
 // Get current customer's details (only if customer selected)
 if ($_SESSION['cust_id']) {
@@ -145,44 +148,43 @@ if (isset($_POST['newloan'])){
         header('Location: loan_sec.php?lid='.$_SESSION['loan_id']);
 }
 
-/* SELECT LEGITIMATE GUARANTORS FROM CUSTOMER */
+/* SELECT GUARANTORS FROM GUARANTOR TABLE */
 
-//Select all customers except current one (only if customer selected)
+$guarantors = array();
 if ($_SESSION['cust_id']) {
-        $query_cust = getCustOther($db_link);
-        $guarantors = array();
-} else {
-        $query_cust = null;
-        $guarantors = array();
-}
-if ($query_cust && $_SESSION['cust_id']) {
-        if ($_SESSION['set_maxguar'] == ""){
-                while ($row_cust = db_fetch_assoc($query_cust)){
-                        if ($row_cust['cust_active'] == 1) $guarantors[] = $row_cust;
+        // Select all active guarantors from the guarantor table
+        $sql_guarantors = "SELECT guarantor_id, guarantor_no, guarantor_name, guarantor_phone FROM guarantor WHERE guarantor_active = 1 ORDER BY guarantor_name";
+        $query_guarantors = db_query($db_link, $sql_guarantors);
+        
+        if ($_SESSION['set_maxguar'] == "" || !$_SESSION['set_maxguar']) {
+                // No limit on guarantor usage
+                while ($row_g = db_fetch_assoc($query_guarantors)) {
+                        $guarantors[] = $row_g;
                 }
-        }
-        else {
-                //Select all guarantors of active loans
+        } else {
+                // Select all guarantors of active loans to check usage count
                 $sql_guarantact = "SELECT loan_guarant1, loan_guarant2, loan_guarant3 FROM loans WHERE loanstatus_id = 2";
                 $query_guarantact = db_query($db_link, $sql_guarantact);
-                checkSQL($db_link, $query_guarantact);
                 $guarantact = array();
-                while($row_guarantact = db_fetch_assoc($query_guarantact)){
-                        $guarantact[] = $row_guarantact;
+                if ($query_guarantact) {
+                        while($row_guarantact = db_fetch_assoc($query_guarantact)){
+                                $guarantact[] = $row_guarantact;
+                        }
                 }
 
-                //Choose only those customers as legitimate guarantors who are not guarantors for more than a specified number of active loans
-
-                while ($row_cust = db_fetch_assoc($query_cust)){
+                // Choose only those guarantors who are not guarantors for more than specified number of active loans
+                while ($row_g = db_fetch_assoc($query_guarantors)) {
                         $guarant_count = 0;
 
                         foreach($guarantact as $ga){
-                                if ($ga['loan_guarant1'] == $row_cust['cust_id']) $guarant_count = $guarant_count + 1;
-                                if ($ga['loan_guarant2'] == $row_cust['cust_id']) $guarant_count = $guarant_count + 1;
-                                if ($ga['loan_guarant3'] == $row_cust['cust_id']) $guarant_count = $guarant_count + 1;
+                                if ($ga['loan_guarant1'] == $row_g['guarantor_id']) $guarant_count++;
+                                if ($ga['loan_guarant2'] == $row_g['guarantor_id']) $guarant_count++;
+                                if ($ga['loan_guarant3'] == $row_g['guarantor_id']) $guarant_count++;
                         }
 
-                        if ($guarant_count < $_SESSION['set_maxguar']) $guarantors[] = $row_cust;
+                        if ($guarant_count < $_SESSION['set_maxguar']) {
+                                $guarantors[] = $row_g;
+                        }
                 }
         }
 }
@@ -343,7 +345,8 @@ else $minlp = 1;
                                                                 <h5 class="mb-3"><i class="fa fa-users"></i> Guarantors</h5>
 
                                                                 <?PHP
-                                                                for($i=1; $i<=$_SESSION['set_maxguar']; $i++){ ?>
+                                                                $max_guar = isset($_SESSION['set_maxguar']) && $_SESSION['set_maxguar'] > 0 ? $_SESSION['set_maxguar'] : 3;
+                                                                for($i=1; $i<=$max_guar; $i++){ ?>
                                                                 <div class="row mb-3">
                                                                         <div class="col-md-6">
                                                                                 <label class="font-weight-bold">Guarantor <?PHP echo $i ?> *</label>
@@ -351,7 +354,7 @@ else $minlp = 1;
                                                                                         <option value="">-- Select a Guarantor --</option>
                                                                                         <?PHP
                                                                                         foreach ($guarantors as $g){
-                                                                                                echo '<option value="'.$g['cust_id'].'">'.$g['cust_no'].' - '.$g['cust_name'].'</option>';
+                                                                                                echo '<option value="'.$g['guarantor_id'].'">'.$g['guarantor_no'].' - '.htmlspecialchars($g['guarantor_name']).'</option>';
                                                                                         }
                                                                                         ?>
                                                                                 </select>
@@ -359,42 +362,16 @@ else $minlp = 1;
                                                                         <?PHP if($i == 1): ?>
                                                                         <div class="col-md-6">
                                                                                 <label class="font-weight-bold">&nbsp;</label>
-                                                                                <button type="button" class="btn btn-info btn-block" data-toggle="collapse" data-target="#new-guarantor">
+                                                                                <a href="guarantor_new.php" class="btn btn-info btn-block" target="_blank">
                                                                                         <i class="fa fa-user-plus"></i> Create New Guarantor
-                                                                                </button>
+                                                                                </a>
                                                                         </div>
                                                                         <?PHP endif; ?>
                                                                 </div>
                                                                 <?PHP } ?>
 
-                                                                <!-- Create New Guarantor Form -->
-                                                                <div class="collapse" id="new-guarantor">
-                                                                        <div class="card card-body bg-light mt-3 mb-3">
-                                                                                <h6 class="mb-3"><i class="fa fa-user-plus"></i> Register New Guarantor</h6>
-                                                                                <form action="loan_new.php" method="post">
-                                                                                        <div class="form-group">
-                                                                                                <label class="font-weight-bold">Guarantor Name *</label>
-                                                                                                <input type="text" class="form-control" name="guarant_name" placeholder="Full Name" required />
-                                                                                        </div>
-                                                                                        <div class="row">
-                                                                                                <div class="col-md-6">
-                                                                                                        <div class="form-group">
-                                                                                                                <label class="font-weight-bold">Phone Number</label>
-                                                                                                                <input type="text" class="form-control" name="guarant_phone" placeholder="Contact Number" />
-                                                                                                        </div>
-                                                                                                </div>
-                                                                                                <div class="col-md-6">
-                                                                                                        <div class="form-group">
-                                                                                                                <label class="font-weight-bold">Address</label>
-                                                                                                                <input type="text" class="form-control" name="guarant_address" placeholder="Residential Address" />
-                                                                                                        </div>
-                                                                                                </div>
-                                                                                        </div>
-                                                                                        <button type="submit" name="create_guarantor" class="btn btn-success">
-                                                                                                <i class="fa fa-check"></i> Create & Refresh List
-                                                                                        </button>
-                                                                                </form>
-                                                                        </div>
+                                                                <div class="alert alert-info py-2 mt-2">
+                                                                        <small><i class="fa fa-info-circle"></i> Need a new guarantor? <a href="guarantor_new.php" target="_blank">Click here to create one</a>, then refresh this page.</small>
                                                                 </div>
 
                                                                 <hr class="my-4" />
