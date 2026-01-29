@@ -86,34 +86,38 @@ $result_cust = getCustomer($db_link, $_SESSION['cust_id']);
                                                                                         <input type="text" class="form-control datepicker" id="sav_date" name="sav_date" value="<?PHP echo date("d.m.Y",$timestamp); ?>" placeholder="DD.MM.YYYY" required />
                                                                                 </div>
 
-                                                                                <div class="form-group">
-                                                                                        <label for="sav_amount" class="font-weight-bold">Amount *</label>
+                                                                                <div class="mb-3">
+                                                                                        <label for="sav_amount" class="form-label fw-bold">Amount *</label>
                                                                                         <input type="number" class="form-control" id="sav_amount" name="sav_amount" placeholder="<?PHP echo $_SESSION['set_cur']; ?>" min="1" step="0.01" required />
                                                                                 </div>
 
-                                                                                <div class="form-group">
-                                                                                        <label for="sav_slip" class="font-weight-bold">Withdrawal Slip No *</label>
+                                                                                <div class="mb-3">
+                                                                                        <label for="sav_slip" class="form-label fw-bold">Withdrawal Slip No *</label>
                                                                                         <input type="number" class="form-control" id="sav_slip" name="sav_slip" placeholder="Slip No." required />
                                                                                 </div>
 
-                                                                                <div class="form-group">
-                                                                                        <label for="sav_receipt" class="font-weight-bold">Receipt No *</label>
+                                                                                <div class="mb-3">
+                                                                                        <label for="sav_receipt" class="form-label fw-bold">Receipt No *</label>
                                                                                         <input type="number" class="form-control" id="sav_receipt" name="sav_receipt" placeholder="for Withdrawal Fee" required />
                                                                                 </div>
 
-                                                                                <div class="form-check">
+                                                                                <div class="form-check mb-3">
                                                                                         <input class="form-check-input" type="checkbox" id="sav_deduct" name="sav_deduct" value="1" />
-                                                                                        <label class="form-check-label" for="sav_deduct">
-                                                                                                <strong>Deduct withdrawal fee from savings</strong>
+                                                                                        <label class="form-check-label fw-bold" for="sav_deduct">
+                                                                                                Deduct withdrawal fee from savings
                                                                                         </label>
                                                                                 </div>
 
-                                                                                <button type="submit" name="withdraw" class="btn btn-warning btn-lg btn-block mt-3">
-                                                                                        <i class="fa fa-minus-circle"></i> Record Withdrawal
-                                                                                </button>
-                                                                                <a href="customer.php?cust=<?PHP echo $_SESSION['cust_id']; ?>" class="btn btn-secondary btn-block mt-2">
-                                                                                        <i class="fa fa-arrow-left"></i> Back to Customer
-                                                                                </a>
+                                                                                <div class="d-grid">
+                                                                                        <button type="submit" name="withdraw" class="btn btn-warning btn-lg">
+                                                                                                <i class="fa fa-minus-circle"></i> Record Withdrawal
+                                                                                        </button>
+                                                                                </div>
+                                                                                <div class="d-grid mt-2">
+                                                                                        <a href="customer.php?cust=<?PHP echo $_SESSION['cust_id']; ?>" class="btn btn-secondary">
+                                                                                                <i class="fa fa-arrow-left"></i> Back to Customer
+                                                                                        </a>
+                                                                                </div>
                                                                         </form>
                                                                 </div>
                                         </div>

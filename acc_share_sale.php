@@ -65,9 +65,9 @@ if (isset($_POST['sharesell'])){
                                                                                         <input type="number" class="form-control" id="share_receipt" name="share_receipt" <?PHP if(isset($_GET['rec'])) echo 'value="'.$_GET['rec'].'"'; ?> required />
                                                                                 </div>
 
-                                                                                <div class="form-group">
-                                                                                        <label for="share_amount" class="font-weight-bold">Number of Shares to Sell *</label>
-                                                                                        <select class="form-control" id="share_amount" name="share_amount" required>
+                                                                                <div class="mb-3">
+                                                                                        <label for="share_amount" class="form-label fw-bold">Number of Shares to Sell *</label>
+                                                                                        <select class="form-select" id="share_amount" name="share_amount" required>
                                                                                                 <?PHP
                                                                                                 if ($share_balance['amount'] > 0) {
                                                                                                         for ($i = 1; $i <= $share_balance['amount']; $i++) {
@@ -80,12 +80,16 @@ if (isset($_POST['sharesell'])){
                                                                                         </select>
                                                                                 </div>
 
-                                                                                <button type="submit" name="sharesell" class="btn btn-danger btn-lg btn-block" <?PHP if ($share_balance['amount'] <= 0) echo 'disabled'; ?>>
-                                                                                        <i class="fa fa-minus-circle"></i> Sell Shares
-                                                                                </button>
-                                                                                <a href="customer.php?cust=<?PHP echo $_SESSION['cust_id']; ?>" class="btn btn-secondary btn-block mt-2">
-                                                                                        <i class="fa fa-arrow-left"></i> Back to Customer
-                                                                                </a>
+                                                                                <div class="d-grid">
+                                                                                        <button type="submit" name="sharesell" class="btn btn-danger btn-lg" <?PHP if ($share_balance['amount'] <= 0) echo 'disabled'; ?>>
+                                                                                                <i class="fa fa-minus-circle"></i> Sell Shares
+                                                                                        </button>
+                                                                                </div>
+                                                                                <div class="d-grid mt-2">
+                                                                                        <a href="customer.php?cust=<?PHP echo $_SESSION['cust_id']; ?>" class="btn btn-secondary">
+                                                                                                <i class="fa fa-arrow-left"></i> Back to Customer
+                                                                                        </a>
+                                                                                </div>
                                                                         </form>
                                                                 </div>
                                         </div>

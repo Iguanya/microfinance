@@ -91,32 +91,36 @@ $result_cust = getCustomer($db_link, $_SESSION['cust_id']);
                                                                                 }
                                                                                 ?>
 
-                                                                                <div class="form-group">
-                                                                                        <label for="sav_amount" class="font-weight-bold">Amount *</label>
+                                                                                <div class="mb-3">
+                                                                                        <label for="sav_amount" class="form-label fw-bold">Amount *</label>
                                                                                         <input type="number" class="form-control" id="sav_amount" name="sav_amount" placeholder="<?PHP echo $_SESSION['set_cur']; ?>" min="1" step="0.01" required />
                                                                                 </div>
 
-                                                                                <div class="form-group">
-                                                                                        <label for="sav_slip" class="font-weight-bold">Deposit Slip No *</label>
+                                                                                <div class="mb-3">
+                                                                                        <label for="sav_slip" class="form-label fw-bold">Deposit Slip No *</label>
                                                                                         <input type="number" class="form-control" id="sav_slip" name="sav_slip" placeholder="Slip No." required />
                                                                                 </div>
 
-                                                                                <div class="form-group">
-                                                                                        <label for="sav_receipt" class="font-weight-bold">Receipt No *</label>
+                                                                                <div class="mb-3">
+                                                                                        <label for="sav_receipt" class="form-label fw-bold">Receipt No *</label>
                                                                                         <input type="number" class="form-control" id="sav_receipt" name="sav_receipt" placeholder="for Deposit Transaction" required />
                                                                                 </div>
 
-                                                                                <div class="form-group">
-                                                                                        <label for="sav_payer" class="font-weight-bold">Depositor</label>
+                                                                                <div class="mb-3">
+                                                                                        <label for="sav_payer" class="form-label fw-bold">Depositor</label>
                                                                                         <input type="text" class="form-control" id="sav_payer" name="sav_payer" placeholder="if not account holder" />
                                                                                 </div>
 
-                                                                                <button type="submit" name="deposit" class="btn btn-success btn-lg btn-block">
-                                                                                        <i class="fa fa-plus-circle"></i> Record Deposit
-                                                                                </button>
-                                                                                <a href="customer.php?cust=<?PHP echo $_SESSION['cust_id']; ?>" class="btn btn-secondary btn-block mt-2">
-                                                                                        <i class="fa fa-arrow-left"></i> Back to Customer
-                                                                                </a>
+                                                                                <div class="d-grid">
+                                                                                        <button type="submit" name="deposit" class="btn btn-success btn-lg">
+                                                                                                <i class="fa fa-plus-circle"></i> Record Deposit
+                                                                                        </button>
+                                                                                </div>
+                                                                                <div class="d-grid mt-2">
+                                                                                        <a href="customer.php?cust=<?PHP echo $_SESSION['cust_id']; ?>" class="btn btn-secondary">
+                                                                                                <i class="fa fa-arrow-left"></i> Back to Customer
+                                                                                        </a>
+                                                                                </div>
                                                                         </form>
                                                                 </div>
                                                         </div>

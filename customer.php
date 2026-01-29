@@ -10,6 +10,7 @@ unset($_SESSION['interest_sum'], $_SESSION['balance']);
 $timestamp = time();
 
 //Calculate Balance on Savings account
+updateSavingsBalance($db_link, $_SESSION['cust_id']);
 $sav_balance = getSavingsBalance($db_link, $_SESSION['cust_id']);
 $sav_fixed = getSavingsFixed($db_link, $_SESSION['cust_id']);
 

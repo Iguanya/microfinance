@@ -97,9 +97,9 @@ $query_custother = getCustOther($db_link);
                                                                                         <input type="number" class="form-control" id="share_receipt" name="share_receipt" <?PHP if(isset($_GET['rec'])) echo 'value="'.$_GET['rec'].'"'; ?> required />
                                                                                 </div>
 
-                                                                                <div class="form-group">
-                                                                                        <label for="share_amount" class="font-weight-bold">Number of Shares *</label>
-                                                                                        <select class="form-control" id="share_amount" name="share_amount" required>
+                                                                                <div class="mb-3">
+                                                                                        <label for="share_amount" class="form-label fw-bold">Number of Shares *</label>
+                                                                                        <select class="form-select" id="share_amount" name="share_amount" required>
                                                                                                 <?PHP
                                                                                                 for ($i = 1; $i <= 10; $i++) {
                                                                                                         echo '<option value="'.$i.'">'.$i.' @ '.number_format($_SESSION['share_value'] * $i, 2).' '.$_SESSION['set_cur'].'</option>';
@@ -108,15 +108,21 @@ $query_custother = getCustOther($db_link);
                                                                                         </select>
                                                                                 </div>
 
-                                                                                <button type="submit" name="sharebuy" class="btn btn-success btn-lg btn-block">
-                                                                                        <i class="fa fa-plus-circle"></i> Buy Shares
-                                                                                </button>
-                                                                                <button type="button" class="btn btn-info btn-block mt-2" data-toggle="collapse" data-target="#transfer-section">
-                                                                                        <i class="fa fa-exchange"></i> Transfer Shares
-                                                                                </button>
-                                                                                <a href="customer.php?cust=<?PHP echo $_SESSION['cust_id']; ?>" class="btn btn-secondary btn-block mt-2">
-                                                                                        <i class="fa fa-arrow-left"></i> Back to Customer
-                                                                                </a>
+                                                                                <div class="d-grid">
+                                                                                        <button type="submit" name="sharebuy" class="btn btn-success btn-lg">
+                                                                                                <i class="fa fa-plus-circle"></i> Buy Shares
+                                                                                        </button>
+                                                                                </div>
+                                                                                <div class="d-grid mt-2">
+                                                                                        <button type="button" class="btn btn-info" data-bs-toggle="collapse" data-bs-target="#transfer-section">
+                                                                                                <i class="fa fa-exchange"></i> Transfer Shares
+                                                                                        </button>
+                                                                                </div>
+                                                                                <div class="d-grid mt-2">
+                                                                                        <a href="customer.php?cust=<?PHP echo $_SESSION['cust_id']; ?>" class="btn btn-secondary">
+                                                                                                <i class="fa fa-arrow-left"></i> Back to Customer
+                                                                                        </a>
+                                                                                </div>
                                                                         </form>
                                                                 </div>
                                         </div>
