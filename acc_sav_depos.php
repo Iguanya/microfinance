@@ -67,23 +67,23 @@ $result_cust = getCustomer($db_link, $_SESSION['cust_id']);
                                                                 </div>
                                                                 <div class="card-body">
                                                                         <form action="acc_sav_depos.php" method="post">
-                                                                                <div class="form-group">
-                                                                                        <label for="sav_date" class="font-weight-bold">Date</label>
+                                                                                <div class="mb-3">
+                                                                                        <label for="sav_date" class="form-label fw-bold">Date</label>
                                                                                         <input type="text" class="form-control datepicker" id="sav_date" name="sav_date" value="<?PHP echo date("d.m.Y",$timestamp); ?>" placeholder="DD.MM.YYYY" required />
                                                                                 </div>
 
                                                                                 <?PHP
                                                                                 if ($_SESSION['set_sfx'] == 1) {
                                                                                         echo '
-                                                                                        <div class="form-group">
-                                                                                                <label for="savtype_id" class="font-weight-bold">Transaction Type</label>
-                                                                                                <select class="form-control" id="savtype_id" name="savtype_id">
+                                                                                        <div class="mb-3">
+                                                                                                <label for="savtype_id" class="form-label fw-bold">Transaction Type</label>
+                                                                                                <select class="form-select" id="savtype_id" name="savtype_id">
                                                                                                         <option value="1">Deposit</option>
                                                                                                         <option value="3">Savings Interest</option>
                                                                                                 </select>
                                                                                         </div>
-                                                                                        <div class="form-group">
-                                                                                                <label for="sav_fixed" class="font-weight-bold">Fix Deposit Until</label>
+                                                                                        <div class="mb-3">
+                                                                                                <label for="sav_fixed" class="form-label fw-bold">Fix Deposit Until</label>
                                                                                                 <input type="text" class="form-control datepicker" id="sav_fixed" name="sav_fixed" placeholder="DD.MM.YYYY" />
                                                                                         </div>';
                                                                                 } else {

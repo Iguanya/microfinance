@@ -55,13 +55,13 @@ if (isset($_POST['sharesell'])){
                                                                 </div>
                                                                 <div class="card-body">
                                                                         <form action="acc_share_sale.php" method="post">
-                                                                                <div class="form-group">
-                                                                                        <label for="share_date" class="font-weight-bold">Date</label>
+                                                                                <div class="mb-3">
+                                                                                        <label for="share_date" class="form-label fw-bold">Date</label>
                                                                                         <input type="text" class="form-control datepicker" id="share_date" name="share_date" value="<?PHP echo date("d.m.Y", $timestamp); ?>" placeholder="DD.MM.YYYY" required />
                                                                                 </div>
 
-                                                                                <div class="form-group">
-                                                                                        <label for="share_receipt" class="font-weight-bold">Receipt No *</label>
+                                                                                <div class="mb-3">
+                                                                                        <label for="share_receipt" class="form-label fw-bold">Receipt No *</label>
                                                                                         <input type="number" class="form-control" id="share_receipt" name="share_receipt" <?PHP if(isset($_GET['rec'])) echo 'value="'.$_GET['rec'].'"'; ?> required />
                                                                                 </div>
 

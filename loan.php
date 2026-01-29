@@ -111,107 +111,89 @@ $_SESSION['ltrans_exp_title'] = $_SESSION['cust_id'].'_loan_'.$ltrans_exp_date;
                                                 <div class="card-body">
                                                         <form name="loaninfo" action="loan.php" method="post">
                                                                 <div class="row">
-                                                                        <div class="col-md-6">
-                                                                                <div class="form-group">
-                                                                                        <label class="font-weight-bold">Customer</label>
-                                                                                        <input type="text" class="form-control" disabled value="<?PHP echo $result_loan['cust_name']?>" />
-                                                                                </div>
+                                                                        <div class="col-md-6 mb-3">
+                                                                                <label class="form-label fw-bold">Customer</label>
+                                                                                <input type="text" class="form-control" disabled value="<?PHP echo $result_loan['cust_name']?>" />
                                                                         </div>
-                                                                        <div class="col-md-6">
-                                                                                <div class="form-group">
-                                                                                        <label class="font-weight-bold">Purpose</label>
-                                                                                        <input type="text" class="form-control" disabled value="<?PHP echo $result_loan['loan_purpose']?>" />
-                                                                                </div>
+                                                                        <div class="col-md-6 mb-3">
+                                                                                <label class="form-label fw-bold">Purpose</label>
+                                                                                <input type="text" class="form-control" disabled value="<?PHP echo $result_loan['loan_purpose']?>" />
                                                                         </div>
                                                                 </div>
 
                                                                 <div class="row">
-                                                                        <div class="col-md-6">
-                                                                                <div class="form-group">
-                                                                                        <label class="font-weight-bold">Principal</label>
-                                                                                        <input type="text" class="form-control" disabled value="<?PHP echo number_format($result_loan['loan_principal']).' '.$_SESSION['set_cur'] ?>" />
-                                                                                </div>
+                                                                        <div class="col-md-6 mb-3">
+                                                                                <label class="form-label fw-bold">Principal</label>
+                                                                                <input type="text" class="form-control" disabled value="<?PHP echo number_format($result_loan['loan_principal']).' '.$_SESSION['set_cur'] ?>" />
                                                                         </div>
-                                                                        <div class="col-md-6">
-                                                                                <div class="form-group">
-                                                                                        <label class="font-weight-bold">Interest Rate</label>
-                                                                                        <input type="text" class="form-control" disabled value="<?PHP echo $result_loan['loan_interest'].'% per month'?>" />
-                                                                                </div>
+                                                                        <div class="col-md-6 mb-3">
+                                                                                <label class="form-label fw-bold">Interest Rate</label>
+                                                                                <input type="text" class="form-control" disabled value="<?PHP echo $result_loan['loan_interest'].'% per month'?>" />
                                                                         </div>
                                                                 </div>
 
                                                                 <div class="row">
-                                                                        <div class="col-md-6">
-                                                                                <div class="form-group">
-                                                                                        <label class="font-weight-bold">Period (Months)</label>
-                                                                                        <input type="text" class="form-control" disabled value="<?PHP echo $result_loan['loan_period']?>" />
-                                                                                </div>
+                                                                        <div class="col-md-6 mb-3">
+                                                                                <label class="form-label fw-bold">Period (Months)</label>
+                                                                                <input type="text" class="form-control" disabled value="<?PHP echo $result_loan['loan_period']?>" />
                                                                         </div>
-                                                                        <div class="col-md-6">
-                                                                                <div class="form-group">
-                                                                                        <label class="font-weight-bold">Loan Fee</label>
-                                                                                        <input type="text" class="form-control" disabled value="<?PHP echo number_format($result_loan['loan_fee']).' '.$_SESSION['set_cur'] ?>" />
-                                                                                </div>
+                                                                        <div class="col-md-6 mb-3">
+                                                                                <label class="form-label fw-bold">Loan Fee</label>
+                                                                                <input type="text" class="form-control" disabled value="<?PHP echo number_format($result_loan['loan_fee']).' '.$_SESSION['set_cur'] ?>" />
                                                                         </div>
                                                                 </div>
 
-                                                                <div class="form-group">
-                                                                        <label class="font-weight-bold">Loan Insurance</label>
+                                                                <div class="mb-3">
+                                                                        <label class="form-label fw-bold">Loan Insurance</label>
                                                                         <input type="text" class="form-control" disabled value="<?PHP echo number_format($result_loan['loan_insurance']).' '.$_SESSION['set_cur'] ?>" />
                                                                 </div>
 
                                                                 <div class="row">
-                                                                        <div class="col-md-6">
-                                                                                <div class="form-group">
-                                                                                        <label class="font-weight-bold">Application Date</label>
-                                                                                        <input type="text" class="form-control" disabled value="<?PHP echo date("d.m.Y", $result_loan['loan_date']) ?>" />
-                                                                                </div>
+                                                                        <div class="col-md-6 mb-3">
+                                                                                <label class="form-label fw-bold">Application Date</label>
+                                                                                <input type="text" class="form-control" disabled value="<?PHP echo date("d.m.Y", $result_loan['loan_date']) ?>" />
                                                                         </div>
-                                                                        <div class="col-md-6">
-                                                                                <div class="form-group">
-                                                                                        <label class="font-weight-bold">Principal Approved</label>
-                                                                                        <?PHP
-                                                                                        if($result_loan['loan_issued'] == 1)
-                                                                                                echo '<input type="text" class="form-control" disabled value="'.number_format($result_loan['loan_principalapproved']).' '.$_SESSION['set_cur'].'" />';
-                                                                                        else
-                                                                                                echo '<input type="number" class="form-control" name="loan_principalapproved" placeholder="Approved Principal Amount" value="'.$result_loan['loan_principal'].'" />';
-                                                                                        ?>
-                                                                                </div>
-                                                                        </div>
+                                                                        <div class="mb-3">
+                                                                        <label class="form-label fw-bold">Principal Approved</label>
+                                                                        <?PHP
+                                                                        if($result_loan['loan_issued'] == 1)
+                                                                                echo '<input type="text" class="form-control" disabled value="'.number_format($result_loan['loan_principalapproved']).' '.$_SESSION['set_cur'].'" />';
+                                                                        else
+                                                                                echo '<input type="number" class="form-control" name="loan_principalapproved" placeholder="Approved Principal Amount" value="'.$result_loan['loan_principal'].'" />';
+                                                                        ?>
+                                                                </div>
                                                                 </div>
 
                                                                 <div class="row">
-                                                                        <div class="col-md-6">
-                                                                                <div class="form-group">
-                                                                                        <label class="font-weight-bold">Issued On</label>
-                                                                                        <input type="text" class="form-control datepicker" name="loan_dateout"
-                                                                                                <?PHP if($result_loan['loan_issued'] == 1) { echo ' disabled'; echo ' value="'.date("d.m.Y", $result_loan['loan_dateout']).'" '; } ?>
-                                                                                                placeholder="DD.MM.YYYY" />
-                                                                                </div>
+                                                                        <div class="col-md-6 mb-3">
+                                                                                <label class="form-label fw-bold">Issued On</label>
+                                                                                <input type="text" class="form-control datepicker" name="loan_dateout"
+                                                                                        <?PHP if($result_loan['loan_issued'] == 1) { echo ' disabled'; echo ' value="'.date("d.m.Y", $result_loan['loan_dateout']).'" '; } ?>
+                                                                                        placeholder="DD.MM.YYYY" />
                                                                         </div>
-                                                                        <div class="col-md-6">
-                                                                                <div class="form-group">
-                                                                                        <label class="font-weight-bold">Status</label>
-                                                                                        <select class="form-control" name="loan_status" id="loan_status">
-                                                                                                <?PHP
-                                                                                                $sql_loanstatus = "SELECT * FROM loanstatus";
-                                                                                                $query_loanstatus = db_query($db_link, $sql_loanstatus);
-                                                                                                while ($row_status = db_fetch_assoc($query_loanstatus)){
-                                                                                                        echo '<option value="'.$row_status['loanstatus_id'].'"';
-                                                                                                        if ($row_status['loanstatus_id'] == $result_loan['loanstatus_id']) echo ' selected ';
-                                                                                                        echo '>'.$row_status['loanstatus_status'].'</option>';
-                                                                                                }
-                                                                                                ?>
-                                                                                        </select>
-                                                                                </div>
+                                                                        <div class="col-md-6 mb-3">
+                                                                                <label class="form-label fw-bold">Status</label>
+                                                                                <select class="form-select" name="loan_status" id="loan_status">
+                                                                                        <?PHP
+                                                                                        $sql_loanstatus = "SELECT * FROM loanstatus";
+                                                                                        $query_loanstatus = db_query($db_link, $sql_loanstatus);
+                                                                                        while ($row_status = db_fetch_assoc($query_loanstatus)){
+                                                                                                echo '<option value="'.$row_status['loanstatus_id'].'"';
+                                                                                                if ($row_status['loanstatus_id'] == $result_loan['loanstatus_id']) echo ' selected ';
+                                                                                                echo '>'.$row_status['loanstatus_status'].'</option>';
+                                                                                        }
+                                                                                        ?>
+                                                                                </select>
                                                                         </div>
                                                                 </div>
 
                                                                 <input type="hidden" name="loan_issued" id="loan_issued" value="<?PHP echo $result_loan['loan_issued']?>" />
                                                                 <input type="hidden" name="loan_fee_receipt" id="loan_fee_receipt" value="" />
-                                                                <button type="submit" name="updatestatus" class="btn btn-success btn-block">
-                                                                        <i class="fa fa-save"></i> Update Loan Status
-                                                                </button>
+                                                                <div class="d-grid">
+                                                                        <button type="submit" name="updatestatus" class="btn btn-success">
+                                                                                <i class="fa fa-save"></i> Update Loan Status
+                                                                        </button>
+                                                                </div>
                                                         </form>
                                                 </div>
                                         </div>

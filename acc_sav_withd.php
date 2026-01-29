@@ -81,8 +81,8 @@ $result_cust = getCustomer($db_link, $_SESSION['cust_id']);
                                                                 </div>
                                                                 <div class="card-body">
                                                                         <form action="acc_sav_withd.php" method="post">
-                                                                                <div class="form-group">
-                                                                                        <label for="sav_date" class="font-weight-bold">Date</label>
+                                                                                <div class="mb-3">
+                                                                                        <label for="sav_date" class="form-label fw-bold">Date</label>
                                                                                         <input type="text" class="form-control datepicker" id="sav_date" name="sav_date" value="<?PHP echo date("d.m.Y",$timestamp); ?>" placeholder="DD.MM.YYYY" required />
                                                                                 </div>
 
